@@ -17,17 +17,18 @@ public class BooksController : ControllerBase
     public async Task<List<Book>> Get() =>
         await _booksService.GetAsync();
 
-    [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<Book>> Get(string id)
+    [HttpGet("{bookname}")]
+    public async Task<ActionResult<Book>> Get(string bookname)
     {
-        var book = await _booksService.GetAsync(id);
+        var allBooks = await _booksService.GetAsync();
+        var matchingBooks = allBooks.Where(allBooks => allBooks.BookName.ToLower().Contains(bookname.ToLower()));
 
-        if (book is null)
+        if (matchingBooks.Count() == 0)
         {
             return NotFound();
         }
 
-        return book;
+        return Ok(matchingBooks);
     }
 
     [HttpPost]
