@@ -6540,24 +6540,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kp\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Dell\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+      "projectUniqueName": "E:\\Nam 3\\HK2\\Lap trinh Window\\Project1\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
       "projectName": "BookstoreApi",
-      "projectPath": "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
-      "packagesPath": "C:\\Users\\kp\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\obj\\",
+      "projectPath": "E:\\Nam 3\\HK2\\Lap trinh Window\\Project1\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+      "packagesPath": "C:\\Users\\Dell\\.nuget\\packages\\",
+      "outputPath": "E:\\Nam 3\\HK2\\Lap trinh Window\\Project1\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\kp\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Dell\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6619,7 +6614,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
