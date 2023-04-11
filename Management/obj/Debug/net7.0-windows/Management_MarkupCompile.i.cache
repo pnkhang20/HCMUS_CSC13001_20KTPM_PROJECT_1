@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\kp\Desktop\project1\Management\obj\Debug\net7.0-windows\
+E:\Nam 3\HK2\Lap trinh Window\Project1\HCMUS_CSC13001_20KTPM_PROJECT_1\Management\obj\Debug\net7.0-windows\
 Management
 none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
-C:\Users\kp\Desktop\project1\Management\App.xaml
-2-299635291
+E:\Nam 3\HK2\Lap trinh Window\Project1\HCMUS_CSC13001_20KTPM_PROJECT_1\Management\App.xaml
+4-378243424
 
-6-176939154
-201-2073638786
-MainWindow.xaml;View\LoginForm.xaml;
+8-277813504
+211-98460780
+MainWindow.xaml;View\DashboardWindow.xaml;View\LoginForm.xaml;View\UserControls\InfoCard.xaml;
 
 False
 

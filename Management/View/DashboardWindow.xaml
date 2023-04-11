@@ -1,0 +1,240 @@
+﻿<Window x:Class="Management.View.DashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:uc="clr-namespace:Management.View.UserControls"
+        mc:Ignorable="d"
+        Title="DashboardWindow" Height="600" Width="1280"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!--Left Menu-->
+        <Border CornerRadius="10 0 0 10">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
+                    <GradientStop Color="#EEEEEE" Offset="0"/>
+                    <GradientStop Color="#EEEEEE" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <StackPanel>
+                <!-- Username -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 35 0 0">
+                    <Border CornerRadius="10" Width="40" Height="40">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0, 0" EndPoint="1, 2">
+                                <GradientStop Color="#7F7CF1" Offset="0"/>
+                                <GradientStop Color="#D3B7FF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <TextBlock Text="TP" Foreground="#FFFFFF" FontSize="22" FontWeight="SemiBold"
+                                   TextAlignment="Center" VerticalAlignment="Center" Margin="3 0 0 2"/>
+                    </Border>
+
+                    <StackPanel Margin="10 0 0 0" VerticalAlignment="Center">
+                        <TextBlock Text="Thien Phu" FontSize="18" Foreground="#0099CC" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Separator Height="0.8" Margin="20 30" Background="#0099CC"/>
+
+                <!--Menu Buttons-->
+                <Button Style="{StaticResource menuButtonActive}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Home" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource menuButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="ShoppingCart" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource menuButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="ChartArea" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Statistics" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource menuButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="Coins" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource menuButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="PowerOff" Style="{StaticResource menuButtonIcon}"/>
+                        <TextBlock Text="Logout" Style="{StaticResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!--Main Section-->
+        <Border Grid.Column="1" CornerRadius="0 10 10 0" MouseDown="Border_MouseDown">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="1, 0" EndPoint="0, 1">
+                    <GradientStop Color="#FFFFFF" Offset="1"/>
+                    <GradientStop Color="#FFFFFF" Offset="0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="50 20 15 40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <uc:InfoCard Grid.Column="0" Title="Total Products" Number="100" Icon="Eye" 
+                                 Background1="#827BFF" Background2="#D9B5FF" 
+                                 EllipseBackground1="#B298FD" EllipseBackground2="#E4BBFF"/>
+
+                    <uc:InfoCard Grid.Column="1" Title="New Orders This Week" Number="100" Icon="ShoppingCart" 
+                                 Background1="#FD8A87" Background2="#F3AB92" 
+                                 EllipseBackground1="#FBD5A8" EllipseBackground2="#FDB89B"/>
+
+                    <uc:InfoCard Grid.Column="2" Title="New Orders This Month" Number="100" Icon="Coins" 
+                                 Background1="#FC84CB" Background2="#FC8FAE" 
+                                 EllipseBackground1="#FC8FAE" EllipseBackground2="#FFABE6"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="50 10 50 50">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="Top 5 Discontinued Product" FontSize="22" FontWeight="SemiBold" Foreground="Blue"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Border CornerRadius="10 10 10 10">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
+                                        <GradientStop Color="#FFFFFF" Offset="0"/>
+                                        <GradientStop Color="#E8D3E3" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0" Padding="10" Margin="0 0 8 0" BorderBrush="#79378B" BorderThickness="2" CornerRadius="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <Border Width="110" Height="140" CornerRadius="5" Margin="0 15 0 0">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="Images/book16.jpg" Stretch="Fill"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Text="Tôi thấy hoa vàng trên cỏ xanh" FontSize="15" FontWeight="Medium"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="130.000" FontSize="15" FontWeight="Bold" Foreground="Red"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="Số lượng: " FontSize="15" FontWeight="Bold" Margin="0 4"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="1" Padding="10" Margin="0 0 8 0" BorderBrush="#79378B" BorderThickness="2" CornerRadius="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <Border Width="110" Height="140" CornerRadius="5" Margin="0 15 0 0">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="Images/book16.jpg" Stretch="Fill"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Text="Tôi thấy hoa vàng trên cỏ xanh" FontSize="15" FontWeight="Medium"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="130.000" FontSize="15" FontWeight="Bold" Foreground="Red"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="Số lượng: " FontSize="15" FontWeight="Bold" Margin="0 4"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="2" Padding="10" Margin="0 0 8 0" BorderBrush="#79378B" BorderThickness="2" CornerRadius="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <Border Width="110" Height="140" CornerRadius="5" Margin="0 15 0 0">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="Images/book16.jpg" Stretch="Fill"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Text="Tôi thấy hoa vàng trên cỏ xanh" FontSize="15" FontWeight="Medium"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="130.000" FontSize="15" FontWeight="Bold" Foreground="Red"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="Số lượng: " FontSize="15" FontWeight="Bold" Margin="0 4"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="3" Padding="10" Margin="0 0 8 0" BorderBrush="#79378B" BorderThickness="2" CornerRadius="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <Border Width="110" Height="140" CornerRadius="5" Margin="0 15 0 0">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="Images/book16.jpg" Stretch="Fill"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Text="Tôi thấy hoa vàng trên cỏ xanh" FontSize="15" FontWeight="Medium"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="130.000" FontSize="15" FontWeight="Bold" Foreground="Red"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="Số lượng: " FontSize="15" FontWeight="Bold" Margin="0 4"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="4" Padding="10" Margin="0 0 8 0" BorderBrush="#79378B" BorderThickness="2" CornerRadius="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <Border Width="110" Height="140" CornerRadius="5" Margin="0 15 0 0">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="Images/book16.jpg" Stretch="Fill"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Text="Tôi thấy hoa vàng trên cỏ xanh" FontSize="15" FontWeight="Medium"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="130.000" FontSize="15" FontWeight="Bold" Foreground="Red"
+                                                       Margin="0 4"/>
+                                            <TextBlock Text="Số lượng: " FontSize="15" FontWeight="Bold" Margin="0 4"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+
+
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

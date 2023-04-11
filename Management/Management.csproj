@@ -14,9 +14,11 @@
     <None Remove="Images\book_logo.png" />
     <None Remove="Images\password_icon.png" />
     <None Remove="Images\user_icon.png" />
+    <None Remove="View\Images\book16.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FontAwesome.Sharp" Version="6.3.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
   </ItemGroup>
 
@@ -25,6 +27,13 @@
     <Resource Include="Images\book_logo.png" />
     <Resource Include="Images\password_icon.png" />
     <Resource Include="Images\user_icon.png" />
+    <Resource Include="View\Images\book16.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="View\UserControls\InfoCard.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>
