@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {}
+    "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {
+    "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+        "projectUniqueName": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
         "projectName": "BookstoreApi",
-        "projectPath": "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+        "projectPath": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
         "packagesPath": "C:\\Users\\kp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kp\\Desktop\\project1\\BookstoreApi\\BookstoreApi\\obj\\",
+        "outputPath": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -59,6 +59,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [

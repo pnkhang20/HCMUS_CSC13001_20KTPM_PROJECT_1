@@ -14,6 +14,5 @@ public class User
     public string UserName { get; set; } = null!;
     [BsonRequired]
     public string Password { get; set; } = null!;
-
     public string FullName { get; set; } = null!;   
 }

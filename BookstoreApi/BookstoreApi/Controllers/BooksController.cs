@@ -14,22 +14,39 @@ public class BooksController : ControllerBase
         _booksService = booksService;
 
     [HttpGet]
-    public async Task<List<Book>> Get() =>
-        await _booksService.GetAsync();
-
-    [HttpGet("{bookname}")]
-    public async Task<ActionResult<Book>> Get(string bookname)
+    public async Task<List<Book>> Get()
     {
         var allBooks = await _booksService.GetAsync();
-        var matchingBooks = allBooks.Where(allBooks => allBooks.BookName.ToLower().Contains(bookname.ToLower()));
+        return allBooks;
+    }
+    
+    [HttpGet("search")]
+    public async Task<List<Book>> Search(
+    [FromQuery] string? name = null,
+    [FromQuery] decimal? minPrice = null,
+    [FromQuery] decimal? maxPrice = null)
+    {
+        var allBooks = await _booksService.GetAsync();
+        var filteredBooks = allBooks;
 
-        if (matchingBooks.Count() == 0)
+        if (!string.IsNullOrEmpty(name))
         {
-            return NotFound();
+            filteredBooks = filteredBooks.Where(b => b.BookName.ToLower().Contains(name.ToLower())).ToList();
         }
 
-        return Ok(matchingBooks);
+        if (minPrice.HasValue)
+        {
+            filteredBooks = filteredBooks.Where(b => b.Price >= minPrice.Value).ToList();
+        }
+
+        if (maxPrice.HasValue)
+        {
+            filteredBooks = filteredBooks.Where(b => b.Price <= maxPrice.Value).ToList();
+        }
+
+        return filteredBooks;
     }
+
 
     [HttpPost]
     public async Task<IActionResult> Post(Book newBook)
@@ -42,7 +59,7 @@ public class BooksController : ControllerBase
     [HttpPut("{id:length(24)}")]
     public async Task<IActionResult> Update(string id, Book updatedBook)
     {
-        var book = await _booksService.GetAsync(id);
+        var book = await _booksService.GetBookNameAsync(id);
 
         if (book is null)
         {
@@ -59,7 +76,7 @@ public class BooksController : ControllerBase
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var book = await _booksService.GetAsync(id);
+        var book = await _booksService.GetBookNameAsync(id);
 
         if (book is null)
         {
@@ -70,4 +87,5 @@ public class BooksController : ControllerBase
 
         return NoContent();
     }
+
 }

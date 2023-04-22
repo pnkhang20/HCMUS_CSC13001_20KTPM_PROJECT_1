@@ -1,1 +1,23 @@
-.gitignore.txt
+# Build output
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.cache
+*.dll.refresh
+*.dbmdl
+
+# NuGet packages
+*.nupkg
+/packages/
+
+# MSTest Test Results
+*.trx
+
+# Ignore project specific files
+*.csproj.user
+*.csproj.user.*
+*.dotnet-test-xunit
