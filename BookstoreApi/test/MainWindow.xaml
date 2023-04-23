@@ -27,7 +27,7 @@
         </ListView.ItemContainerStyle>
         <ListView.View>
             <GridView>
-                <GridViewColumn Header="Book Name" DisplayMemberBinding="{Binding BookName}" />
+                <GridViewColumn Header="Book Name" DisplayMemberBinding="{Binding Title}" />
                 <GridViewColumn Header="Author Name" DisplayMemberBinding="{Binding Author}" />
                 <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" />
                 <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}" />

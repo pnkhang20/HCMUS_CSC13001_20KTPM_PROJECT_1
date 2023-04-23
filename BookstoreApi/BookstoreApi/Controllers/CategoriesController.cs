@@ -9,7 +9,7 @@ namespace BookstoreApi.Controllers;
 public class CategoriesController : ControllerBase
 {
     private readonly CategoriesService _categoriesService;
-
+    private readonly BooksService _booksService;
     public CategoriesController(CategoriesService categoriesService) =>
         _categoriesService = categoriesService;
 
@@ -18,6 +18,17 @@ public class CategoriesController : ControllerBase
     {
         var allCategories = await _categoriesService.GetAsync();
         return allCategories;
+    }
+
+    [HttpGet("{id:length(24)}")]
+    public async Task<ActionResult<Category>> Get(string id)
+    {
+        var category = await _categoriesService.GetAsync(id);
+        if (category is null)
+        {
+            return NotFound();
+        }
+        return category;
     }
 
     [HttpGet("search")]
@@ -33,8 +44,6 @@ public class CategoriesController : ControllerBase
         return filteredCategories;
     }
 
-
-
     [HttpPost]
     public async Task<IActionResult> Post(Category newCategory)
     {
@@ -48,14 +57,16 @@ public class CategoriesController : ControllerBase
     [HttpPut("{id:length(24)}")]
     public async Task<IActionResult> Update(string id, Category updatedCategory)
     {
-        var book = await _categoriesService.GetCategoryNameAsync(id);
-
-        if (book is null)
+        var category = await _categoriesService.GetAsync(id);
+        
+        if (category is null)
         {
             return NotFound();
         }
+        
 
-        updatedCategory.Id = book.Id;
+
+        updatedCategory.Id = category.Id;
 
         await _categoriesService.UpdateAsync(id, updatedCategory);
 
@@ -65,13 +76,12 @@ public class CategoriesController : ControllerBase
     [HttpDelete("{id:length(24)}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var book = await _categoriesService.GetCategoryNameAsync(id);
-
-        if (book is null)
+        var category = await _categoriesService.GetAsync(id);
+        
+        if (category is null)
         {
             return NotFound();
         }
-
         await _categoriesService.RemoveAsync(id);
 
         return NoContent();

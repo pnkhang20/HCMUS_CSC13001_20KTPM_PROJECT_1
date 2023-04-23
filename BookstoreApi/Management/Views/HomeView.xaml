@@ -38,8 +38,7 @@
                                    FontSize="40"
                                    Margin="20, 10, 10, 0"/>
                         <TextBlock Text="25 products"
-                                   Foreground="White"
-                                   
+                                   Foreground="White"                                   
                                    FontSize="28"
                                    Margin="40, 20, 20, 0"/>
                     </StackPanel>

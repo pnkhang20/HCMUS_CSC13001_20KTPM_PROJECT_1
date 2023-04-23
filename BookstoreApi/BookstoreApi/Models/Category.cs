@@ -11,7 +11,7 @@ public class Category
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;
 
-    [BsonElement("Name")]
+    [BsonElement("CategoryName")]
     [BsonRequired]
     public string CategoryName { get; set; } = null!;
 

@@ -12,20 +12,14 @@
     <None Remove="Images\close.png" />
     <None Remove="Images\close2.png" />
     <None Remove="Images\err.jpg" />
-    <None Remove="Images\sell.png" />
-    <None Remove="Images\storefront.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Images\" />
     <Folder Include="Models\" />
     <Folder Include="Converters\" />
     <Folder Include="Base\" />
     <Folder Include="Fonts\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\sell.png" />
-    <Resource Include="Images\storefront.png" />
   </ItemGroup>
 
 </Project>

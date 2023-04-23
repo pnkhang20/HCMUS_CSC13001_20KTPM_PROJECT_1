@@ -27,7 +27,7 @@ public class BooksService
         return await _booksCollection.Find(_ => true).ToListAsync();
     }        
 
-    public async Task<Book?> GetBookNameAsync(string id)
+    public async Task<Book?> GetAsync(string id)
     {
         return await _booksCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
     }
@@ -42,5 +42,21 @@ public class BooksService
 
     public async Task RemoveAsync(string id) =>
         await _booksCollection.DeleteOneAsync(x => x.Id == id);
+
+    public async Task<Book?> GetBookCategoryAsync(string category)
+    {
+        return await _booksCollection.Find(x => x.CategoryId == category).FirstOrDefaultAsync();
+    }
+    public async Task UpdateCategoryAsync(string categoryId, string? newCategoryId)
+    {
+        var filter = Builders<Book>.Filter.Eq(x => x.CategoryId, categoryId);
+        var update = Builders<Book>.Update.Set(x => x.CategoryId, newCategoryId);
+
+        await _booksCollection.UpdateManyAsync(filter, update);
+    }
+    public async Task UpdateManyAsync(FilterDefinition<Book> filter, UpdateDefinition<Book> update)
+    {
+        await _booksCollection.UpdateManyAsync(filter, update);
+    }
 
 }

@@ -17,10 +17,10 @@ public class UsersController : ControllerBase
     public async Task<List<User>> Get() =>
         await _usersService.GetAsync();
 
-    [HttpGet("{username}")]
-    public async Task<ActionResult<User>> Get(string userName)
+    [HttpGet("{id:length(24)}")]
+    public async Task<ActionResult<User>> Get(string Id)
     {
-        var user = await _usersService.GetAsync(userName);
+        var user = await _usersService.GetAsync(Id);
         if (user is null)
         {
             return NotFound();
@@ -28,7 +28,7 @@ public class UsersController : ControllerBase
         return user;
     }
 
-    [HttpPost("{userName}")]
+    [HttpPost("{id:length(24)}")]
     public async Task<IActionResult> Post(User newUser)
     {
         await _usersService.CreateAsync(newUser);

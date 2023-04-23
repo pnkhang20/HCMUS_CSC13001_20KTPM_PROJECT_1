@@ -40,7 +40,7 @@ namespace test
                         {
                             if (SelectedBook != null)
                             {
-                                var messageBoxResult = MessageBox.Show($"Are you sure you want to delete {SelectedBook.BookName}?", "Delete Book", MessageBoxButton.YesNo);
+                                var messageBoxResult = MessageBox.Show($"Are you sure you want to delete {SelectedBook.Title}?", "Delete Book", MessageBoxButton.YesNo);
                                 if (messageBoxResult == MessageBoxResult.Yes)
                                 {
                                     try
