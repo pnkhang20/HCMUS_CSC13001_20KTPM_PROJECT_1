@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Management
+namespace Management.Views
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class HomeView : UserControl
     {
-        public LoginWindow()
+        public HomeView()
         {
             InitializeComponent();
         }

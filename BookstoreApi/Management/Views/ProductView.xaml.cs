@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Management
+namespace Management.Views
 {
     /// <summary>
-    /// Interaction logic for ProductForm.xaml
+    /// Interaction logic for ProductView.xaml
     /// </summary>
-    public partial class ProductForm : Window
+    public partial class ProductView : UserControl
     {
-        public ProductForm()
+        public ProductView()
         {
             InitializeComponent();
         }

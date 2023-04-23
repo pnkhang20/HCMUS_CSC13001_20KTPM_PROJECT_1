@@ -8,15 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
+    <None Remove="Images\cart.jpg" />
+    <None Remove="Images\close.png" />
+    <None Remove="Images\close2.png" />
+    <None Remove="Images\err.jpg" />
+    <None Remove="Images\sell.png" />
+    <None Remove="Images\storefront.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="Converters\" />
+    <Folder Include="Base\" />
+    <Folder Include="Fonts\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookstoreApi\BookstoreApi.csproj" />
+    <Resource Include="Images\sell.png" />
+    <Resource Include="Images\storefront.png" />
   </ItemGroup>
 
 </Project>

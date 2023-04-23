@@ -1,25 +1,47 @@
-﻿using Management.ViewModel;
+﻿using Management.Cores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace Management.ViewModel
+namespace Management.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+    class MainViewModel:ObservableObject
     {
-        // mọi thứ xử lý sẽ nằm trong này
-        public bool isLoaded = false;
-        public MainViewModel()
+        public RelayCommand HomeViewCommand { get; set; }
+        public RelayCommand ProductViewCommand { get; set; }
+
+        public HomeViewModel HomeVM { get; set; }
+        public ProductViewModel ProductVM { get; set; }
+        
+
+        private object _currentView;
+        public object CurrentView
         {
-            if (!isLoaded)
+            get { return _currentView;}
+            set { 
+                _currentView = value; 
+                OnPropertyChanged();
+                }
+        }
+        public MainViewModel()
+        { 
+            HomeVM = new HomeViewModel();
+            ProductVM = new ProductViewModel();
+            
+            CurrentView = HomeVM;
+
+            HomeViewCommand = new RelayCommand(obj =>
             {
-                isLoaded = true;
-                LoginWindow loginWindow = new LoginWindow();
-                loginWindow.ShowDialog();
-            }
+                CurrentView = HomeVM;
+            });
+
+            ProductViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = ProductVM;
+            });
+
 
         }
     }
