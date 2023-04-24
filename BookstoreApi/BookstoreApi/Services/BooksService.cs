@@ -37,7 +37,7 @@ public class BooksService
         await _booksCollection.InsertOneAsync(newBook); 
     }
 
-    public async Task UpdateAsync(string id, Book updatedBook) =>
+    public async Task UpdateAsync(string id, Book updatedBook) =>        
         await _booksCollection.ReplaceOneAsync(x => x.Id == id, updatedBook);
 
     public async Task RemoveAsync(string id) =>

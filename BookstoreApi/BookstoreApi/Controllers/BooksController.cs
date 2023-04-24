@@ -117,7 +117,7 @@ namespace BookstoreApi.Controllers
 
             // Associate the Category with the Book
             updatedBook.Category.Id = category.Id;
-            updatedBook.Category.Id = category.CategoryName;
+            updatedBook.Category.CategoryName = category.CategoryName;
             await _booksService.UpdateAsync(id, updatedBook);
 
             return NoContent();

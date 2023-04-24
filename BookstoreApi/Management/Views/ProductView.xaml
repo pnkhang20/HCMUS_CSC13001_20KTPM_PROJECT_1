@@ -5,10 +5,90 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Management.Views"
              mc:Ignorable="d" 
-             Background="Transparent"
+             Background="Transparent"             
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border CornerRadius="20" Background="#394867">
 
+    <Border CornerRadius="20" Background="#394867">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <WrapPanel>
+                <TextBlock Text="Products"
+                       Foreground="White"
+                       FontSize="30"                       
+                       Margin="25 10"/>
+            </WrapPanel>
+            <ScrollViewer Background="#394867" Margin="10" Grid.Row="1">
+                <ListView x:Name="ListViewProducts" 
+                          PreviewMouseWheel="OnPreviewMouseWheel" 
+                          ItemsSource="{Binding Books}" 
+                          SelectedItem="{Binding SelectedBook}" 
+                          ScrollViewer.CanContentScroll="True" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                          BorderThickness="0" Background="Transparent" >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Background" Value="LightBlue" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border HorizontalAlignment="Center"
+                                CornerRadius="10"
+                                BorderThickness="1" BorderBrush="DarkOrange"
+                                Width="300"
+                                Height="350"                                
+                                Background="#22202f">
+                                <StackPanel Orientation="Vertical">
+                                    <DockPanel Height="210">
+                                        <Border Height="200"
+                                                Padding="0 0 0 0"
+                                                CornerRadius="10"
+                                                BorderThickness="1" BorderBrush="Gray">
+                                            <Border.Background>
+                                                <ImageBrush Stretch="Uniform"                                                             
+                                                            ImageSource="{Binding Cover, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </Border.Background>
+                                        </Border>
+                                    </DockPanel>
+                                    <StackPanel VerticalAlignment="Center" Margin="0 0">
+                                        <TextBlock FontSize="16" FontWeight="DemiBold" HorizontalAlignment="Center" Foreground="White" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock FontSize="15" HorizontalAlignment="Center" Foreground="White" Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock FontSize="15" TextAlignment="Center" Width="142" Foreground="AliceBlue" Text="{Binding Category.CategoryName, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock FontSize="15" TextAlignment="Center" Width="90" Foreground="White" Text="{Binding Price, UpdateSourceTrigger=PropertyChanged,StringFormat=\{0\}$}" />
+                                        <TextBlock FontSize="15" TextAlignment="Center" Width="90" Foreground="White">                                            
+                                            <Run Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Run Text="pieces"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Command="{Binding EditCommand}" CommandParameter="{Binding SelectedBook}"/>
+                            <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedBook}"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+
+                </ListView>
+                
+            </ScrollViewer>
             
+        </Grid>
+
     </Border>
 </UserControl>

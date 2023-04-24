@@ -16,6 +16,6 @@ public class Book
     public int Quantity { get; set; }
     public string Cover { get; set; }
 
-    //public bool IsSelected { get; set; }
+    public Category Category { get; set; }
 
 }

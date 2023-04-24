@@ -81,7 +81,7 @@ namespace test
                     {
                         var content = await response.Content.ReadAsStringAsync();
                         var books = JsonConvert.DeserializeObject<List<Book>>(content);
-
+                        
                         foreach (var book in books)
                         {
                             var existingBook = Books.FirstOrDefault(b => b.Id == book.Id);
