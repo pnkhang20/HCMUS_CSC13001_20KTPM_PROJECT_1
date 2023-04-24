@@ -88,21 +88,34 @@ namespace Management.ViewModels
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(SearchText))
-                {                    
-                    await LoadBooks(SearchText);
+                {
+                    // Load the books for the search text and selected category
+                    await LoadBooks(SearchText, SelectedCategory);
                 }
             };
         }
 
-        private async Task LoadBooks(string searchText = null)
+        private async Task LoadBooks(string searchText = null, Category category = null)
         {
             try
             {
                 var urlBuilder = new StringBuilder(BookApiUrl);
+                urlBuilder.Append("/search");
+
+                // Add query parameters for search text and category filtering, if applicable
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
-                    urlBuilder.Append($"/search?name={HttpUtility.UrlEncode(searchText)}&pageNumber=1&pageSize=10");                
+                    urlBuilder.AppendFormat("?name={0}", HttpUtility.UrlEncode(searchText));
+                    if (category != null && category.CategoryName != "All Category")
+                    {
+                        urlBuilder.AppendFormat("&categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
+                    }
                 }
+                else if (category != null && category.CategoryName != "All Category")
+                {
+                    urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
+                }
+
                 var response = await httpClient.GetAsync(urlBuilder.ToString());
 
                 if (response.IsSuccessStatusCode)
@@ -129,7 +142,9 @@ namespace Management.ViewModels
             try
             {
                 // Add all category
-                Categories.Add(new Category() { CategoryName = "All" });
+                var allCategory = new Category() { CategoryName = "All Category" };
+                Categories.Add(allCategory);
+                //Categories.Add(new Category() { CategoryName = "All" });
                 var response = await httpClient.GetAsync(CategoryApiUrl);
 
                 if (response.IsSuccessStatusCode)
@@ -150,7 +165,7 @@ namespace Management.ViewModels
                             Categories[index] = category;
                         }
                     }
-                                 
+                    SelectedCategory = allCategory;
                 }
             }
             catch (Exception ex)
@@ -159,41 +174,6 @@ namespace Management.ViewModels
             }
         }
 
-        private async Task LoadBooksForCategory(Category category)
-        {
-            try
-            {
-                var urlBuilder = new StringBuilder(BookApiUrl);
-                urlBuilder.Append("/search");
-
-                if (category != null && category.CategoryName != "All")
-                {
-                    // Add query parameters for filtering by category ID
-                    urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
-                }
-                // Add query parameters for filtering by category ID
-                //urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
-
-                var response = await httpClient.GetAsync(urlBuilder.ToString());
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var books = JsonConvert.DeserializeObject<List<Book>>(content);
-
-                    // Update the Books collection with the new books
-                    Books.Clear();
-                    foreach (var book in books)
-                    {
-                        Books.Add(book);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
-        }
 
         private ICommand categorySelectionChangedCommand;
         public ICommand CategorySelectedCommand
@@ -204,8 +184,8 @@ namespace Management.ViewModels
                 {
                     categorySelectionChangedCommand = new RelayCommand(async (param) =>
                     {
-                        // Load the books for the selected category
-                        await LoadBooksForCategory(SelectedCategory);
+                        // Load the books for the selected category and search text
+                        await LoadBooks(SearchText, SelectedCategory);
                     });
                 }
                 return categorySelectionChangedCommand;
