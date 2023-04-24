@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Management.Views"
+             xmlns:local="clr-namespace:Management.Views"             
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              Background="Transparent"             
              d:DesignHeight="450" d:DesignWidth="800">
@@ -19,12 +20,41 @@
                        Foreground="White"
                        FontSize="30"                       
                        Margin="25 10"/>
+                <ComboBox x:Name="categoriesList" 
+                      HorizontalAlignment="Center"                       
+                      Margin="0 0 5 0" 
+                      Width="150" 
+                      Height="30"                      
+                      ItemsSource="{Binding Categories}" 
+                      SelectedItem="{Binding SelectedCategory}"                      
+                      DisplayMemberPath="CategoryName"                       
+                      VerticalAlignment="Center"                       
+                      FontSize="14">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding CategorySelectedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+
+                <TextBox x:Name="searchBox" 
+                         HorizontalAlignment="Center" 
+                         Margin="5 0 0 0" 
+                         Width="150" 
+                         Height="30" 
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                         VerticalAlignment="Center" 
+                         FontSize="14"/>
+
             </WrapPanel>
+            
+            
+
             <ScrollViewer Background="#394867" Margin="10" Grid.Row="1">
                 <ListView x:Name="ListViewProducts" 
                           PreviewMouseWheel="OnPreviewMouseWheel" 
-                          ItemsSource="{Binding Books}" 
-                          SelectedItem="{Binding SelectedBook}" 
+                          ItemsSource="{Binding Books, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding SelectedBook}"                           
                           ScrollViewer.CanContentScroll="True" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                           BorderThickness="0" Background="Transparent" >
@@ -85,9 +115,8 @@
                     </ListView.ContextMenu>
 
                 </ListView>
-                
             </ScrollViewer>
-            
+
         </Grid>
 
     </Border>

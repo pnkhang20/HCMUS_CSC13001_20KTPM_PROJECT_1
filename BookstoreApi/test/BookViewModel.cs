@@ -2,12 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,8 +12,8 @@ namespace test
 {
 
         public class BookViewModel : BaseViewModel
-        {
-            private const string ApiUrl = "https://localhost:7122/api/books";
+        {            
+            private const string ApiUrl = "https://localhost:7122/api/";
 
             private readonly HttpClient httpClient = new HttpClient();
 
@@ -28,42 +25,58 @@ namespace test
                 get { return selectedBook; }
                 set { selectedBook = value; OnPropertyChanged(); }
             }
+            public ObservableCollection<string> Categories { get; } = new ObservableCollection<string>();
 
-            private ICommand deleteCommand;
-            public ICommand DeleteCommand
+            private string selectedCategory;
+            public string SelectedCategory
             {
-                get
+                get { return selectedCategory; }
+                set
                 {
-                    if (deleteCommand == null)
-                    {
-                        deleteCommand = new RelayCommand(async (param) =>
-                        {
-                            if (SelectedBook != null)
-                            {
-                                var messageBoxResult = MessageBox.Show($"Are you sure you want to delete {SelectedBook.Title}?", "Delete Book", MessageBoxButton.YesNo);
-                                if (messageBoxResult == MessageBoxResult.Yes)
-                                {
-                                    try
-                                    {
-                                        HttpResponseMessage response = await httpClient.DeleteAsync($"{ApiUrl}/{SelectedBook.Id}");
-
-                                        if (response.IsSuccessStatusCode)
-                                        {
-                                            Books.Remove(SelectedBook);
-                                            SelectedBook = null;
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        // Handle error
-                                    }
-                                }
-                            }
-                        });
-                    }
-                    return deleteCommand;
+                    selectedCategory = value;
+                    OnPropertyChanged();
+                    FilterBooks();
                 }
             }
+
+
+
+            private ICommand deleteCommand;
+                public ICommand DeleteCommand
+                {
+                    get
+                    {
+                        if (deleteCommand == null)
+                        {
+                            deleteCommand = new RelayCommand(async (param) =>
+                            {
+                                if (SelectedBook != null)
+                                {
+                                    var messageBoxResult = MessageBox.Show($"Are you sure you want to delete {SelectedBook.Title}?", "Delete Book", MessageBoxButton.YesNo);
+                                    if (messageBoxResult == MessageBoxResult.Yes)
+                                    {
+                                        try
+                                        {
+                                            HttpResponseMessage response = await httpClient.DeleteAsync($"{ApiUrl}/books/{SelectedBook.Id}");
+
+                                            if (response.IsSuccessStatusCode)
+                                            {
+                                                Books.Remove(SelectedBook);
+                                                SelectedBook = null;
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // Handle error
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        return deleteCommand;
+                    }
+                }
+
 
             public BookViewModel()
             {
@@ -71,42 +84,68 @@ namespace test
                 SelectedBook = Books.FirstOrDefault();
             }
 
-            private async Task LoadBooks()
+        private async Task LoadBooks()
+        {
+            try
             {
-                try
+                var response = await httpClient.GetAsync(ApiUrl);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = await httpClient.GetAsync(ApiUrl);
+                    var content = await response.Content.ReadAsStringAsync();
+                    var books = JsonConvert.DeserializeObject<List<Book>>(content);
 
-                    if (response.IsSuccessStatusCode)
+                    var categories = books.Select(b => b.Category).Distinct().ToList();
+                    foreach (var category in categories)
                     {
-                        var content = await response.Content.ReadAsStringAsync();
-                        var books = JsonConvert.DeserializeObject<List<Book>>(content);
-                        
-                        foreach (var book in books)
-                        {
-                            var existingBook = Books.FirstOrDefault(b => b.Id == book.Id);
-                            if (existingBook == null)
-                            {
-                                Books.Add(book);
-                            }
-                            else
-                            {
-                                int index = Books.IndexOf(existingBook);
-                                Books[index] = book;
-                            }
-                        }
+                        Categories.Add(category);
+                    }
 
-                        var removedBooks = Books.Where(b => !books.Any(bb => bb.Id == b.Id)).ToList();
-                        foreach (var book in removedBooks)
+                    foreach (var book in books)
+                    {
+                        var existingBook = Books.FirstOrDefault(b => b.Id == book.Id);
+                        if (existingBook == null)
                         {
-                            Books.Remove(book);
+                            Books.Add(book);
+                        }
+                        else
+                        {
+                            int index = Books.IndexOf(existingBook);
+                            Books[index] = book;
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Handle error
+
+                    var removedBooks = Books.Where(b => !books.Any(bb => bb.Id == b.Id)).ToList();
+                    foreach (var book in removedBooks)
+                    {
+                        Books.Remove(book);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                // Handle error
+            }
         }
+
+            private void FilterBooks()
+            {
+                if (string.IsNullOrEmpty(selectedCategory))
+                {
+                    // Show all books
+                    foreach (var book in Books)
+                    {
+                        book.IsVisible = true;
+                    }
+                }
+                else
+                {
+                    // Filter books by category
+                    foreach (var book in Books)
+                    {
+                        book.IsVisible = book.Category == selectedCategory;
+                    }
+                }
+            }
+    }
     }

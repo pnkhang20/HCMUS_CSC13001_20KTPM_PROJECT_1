@@ -45,29 +45,44 @@ namespace BookstoreApi.Controllers
         [HttpGet("search")]
         public async Task<List<Book>> Search(
             [FromQuery] string? name = null,
+            [FromQuery] string? categoryName = null,
             [FromQuery] decimal? minPrice = null,
-            [FromQuery] decimal? maxPrice = null)
-        {
-            var allBooks = await _booksService.GetAsync();
-            var filteredBooks = allBooks;
-
-            if (!string.IsNullOrEmpty(name))
+            [FromQuery] decimal? maxPrice = null,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
             {
-                filteredBooks = filteredBooks.Where(b => b.Title.ToLower().Contains(name.ToLower())).ToList();
-            }
+                var allBooks = await _booksService.GetAsync();
+                var filteredBooks = allBooks;
 
-            if (minPrice.HasValue)
-            {
-                filteredBooks = filteredBooks.Where(b => b.Price >= minPrice.Value).ToList();
-            }
+                if (!string.IsNullOrEmpty(name))
+                {
+                    filteredBooks = filteredBooks.Where(b => b.Title.ToLower().Contains(name.ToLower())).ToList();
+                }
 
-            if (maxPrice.HasValue)
-            {
-                filteredBooks = filteredBooks.Where(b => b.Price <= maxPrice.Value).ToList();
-            }
+                if (!string.IsNullOrEmpty(categoryName))
+                {
+                    filteredBooks = filteredBooks.Where(b => b.Category.CategoryName.ToLower().Contains(categoryName.ToLower())).ToList();
+                }
 
-            return filteredBooks;
+                if (minPrice.HasValue)
+                {
+                    filteredBooks = filteredBooks.Where(b => b.Price >= minPrice.Value).ToList();
+                }
+
+                if (maxPrice.HasValue)
+                {
+                    filteredBooks = filteredBooks.Where(b => b.Price <= maxPrice.Value).ToList();
+                }
+
+                var totalCount = filteredBooks.Count;
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                // Apply pagination
+                var pagedBooks = filteredBooks.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+                return pagedBooks;
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Post(Book newBook)

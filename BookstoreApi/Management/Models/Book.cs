@@ -17,6 +17,8 @@ namespace Management.Models
 
         public Category Category { get; set; }
 
+        public bool IsVisible { get; set; }
+
     }
 
 }
