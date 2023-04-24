@@ -75,15 +75,15 @@ namespace BookstoreApi.Controllers
             try
             {
                 // Look up the Category by ID in the database            
-                var category = await _categoriesService.GetAsync(newBook.CategoryId);
+                var category = await _categoriesService.GetAsync(newBook.Category.Id);
 
                 if (category == null)
                 {
-                    return BadRequest($"Category with ID {newBook.CategoryId} not found.");
+                    return BadRequest($"Category with ID {newBook.Category.Id} not found.");
                 }
-
-                newBook.CategoryId = category.Id;
                 newBook.Id = null;
+                newBook.Category.Id = category.Id;
+                newBook.Category.CategoryName = category.CategoryName;
                 // Add the new Book to the database
                 await _booksService.CreateAsync(newBook);
 
@@ -108,16 +108,16 @@ namespace BookstoreApi.Controllers
             updatedBook.Id = book.Id;
 
             // Look up the Category by ID in the database
-            var category = await _categoriesService.GetAsync(updatedBook.CategoryId);
+            var category = await _categoriesService.GetAsync(updatedBook.Category.Id);
 
             if (category == null)
             {
-                return BadRequest($"Category with ID {updatedBook.CategoryId} not found.");
+                return BadRequest($"Category with ID {updatedBook.Category.Id} not found.");
             }
 
             // Associate the Category with the Book
-            updatedBook.CategoryId = category.Id;
-
+            updatedBook.Category.Id = category.Id;
+            updatedBook.Category.Id = category.CategoryName;
             await _booksService.UpdateAsync(id, updatedBook);
 
             return NoContent();

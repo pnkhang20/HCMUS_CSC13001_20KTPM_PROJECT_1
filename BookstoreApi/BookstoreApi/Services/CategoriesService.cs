@@ -40,20 +40,27 @@ public class CategoriesService
         await _categoryCollection.InsertOneAsync(newCategory);
     }
 
-    public async Task UpdateAsync(string id, Category updatedCategory) =>
+    public async Task UpdateAsync(string id, Category updatedCategory)
+    {
+        
         await _categoryCollection.ReplaceOneAsync(x => x.Id == id, updatedCategory);
+        await _booksService.UpdateCategoryNameAsync(id, updatedCategory.CategoryName);
+    }
+
 
     public async Task RemoveAsync(string id)
     {
         var category = await _categoryCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        if (category is null)
+        if (category != null)
         {
-            return;
+            // Update the CategoryId to empty string in all books with the deleted category id
+            await _booksService.UpdateDeletedCategoryAsync(id);
+
+            // Delete the category
+            await _categoryCollection.DeleteOneAsync(x => x.Id == id); 
         }
-        await _categoryCollection.DeleteOneAsync(x => x.Id == id);
-        // Update the CategoryId to null in all books with the deleted category id
-        await _booksService.UpdateCategoryAsync(id, null);        
+
     }
 
 }

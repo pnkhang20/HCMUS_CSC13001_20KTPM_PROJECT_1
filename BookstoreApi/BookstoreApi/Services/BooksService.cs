@@ -45,15 +45,24 @@ public class BooksService
 
     public async Task<Book?> GetBookCategoryAsync(string category)
     {
-        return await _booksCollection.Find(x => x.CategoryId == category).FirstOrDefaultAsync();
+        return await _booksCollection.Find(x => x.Category.Id == category).FirstOrDefaultAsync();
     }
-    public async Task UpdateCategoryAsync(string categoryId, string? newCategoryId)
+    public async Task UpdateDeletedCategoryAsync(string categoryId)
     {
-        var filter = Builders<Book>.Filter.Eq(x => x.CategoryId, categoryId);
-        var update = Builders<Book>.Update.Set(x => x.CategoryId, newCategoryId);
-
+        var updatedCategory = new Category { Id = null, CategoryName = "" };
+        var filter = Builders<Book>.Filter.Eq(x => x.Category.Id, categoryId);
+        var update = Builders<Book>.Update.Set(x => x.Category, updatedCategory);
         await _booksCollection.UpdateManyAsync(filter, update);
     }
+
+    public async Task UpdateCategoryNameAsync(string categoryId, string updatedCategoryName)
+    {
+        var filter = Builders<Book>.Filter.Eq(x => x.Category.Id, categoryId);
+        var update = Builders<Book>.Update.Set(x => x.Category.CategoryName, updatedCategoryName);
+        await _booksCollection.UpdateManyAsync(filter, update);
+    }
+
+
     public async Task UpdateManyAsync(FilterDefinition<Book> filter, UpdateDefinition<Book> update)
     {
         await _booksCollection.UpdateManyAsync(filter, update);

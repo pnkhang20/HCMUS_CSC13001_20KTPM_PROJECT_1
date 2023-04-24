@@ -1,38 +1,38 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
 
-namespace BookstoreApi.Models
+namespace BookstoreApi.Models;
+
+public class Book
 {
-    public class Book
-    {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; } = null!;
 
-        [BsonElement("name")]
-        [JsonPropertyName("title")]
-        public string Title { get; set; }
+    [BsonElement("Title")]
+    [BsonRequired]
+    public string Title { get; set; } = null!;
 
-        [BsonElement("author")]
-        [JsonPropertyName("author")]
-        public string Author { get; set; }
+    [BsonElement("Author")]
+    [BsonRequired]
+    public string Author { get; set; } = null!;
 
-        [BsonElement("price")]
-        [JsonPropertyName("price")]
-        public decimal Price { get; set; }
+    [BsonElement("Price")]
+    [BsonRequired]
+    public decimal Price { get; set; }
 
-        [BsonElement("quantity")]
-        [JsonPropertyName("quantity")]
-        public int Quantity { get; set; }
+    [BsonElement("Quantity")]
+    [BsonRequired]
+    public int Quantity { get; set; }
 
-        [BsonElement("cover")]
-        [JsonPropertyName("cover")]
-        public string Cover { get; set; }
+    [BsonElement("Cover")]
+    [BsonRequired]
+    public string Cover { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
-        [BsonElement("categoryId")]
-        [JsonPropertyName("categoryId")]
-        public string CategoryId { get; set; }
-    }
+    [BsonElement("Category")]
+    [BsonRequired]
+    public Category Category { get; set; } = null!;
 }
+
