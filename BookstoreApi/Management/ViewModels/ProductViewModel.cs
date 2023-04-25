@@ -59,8 +59,6 @@ namespace Management.ViewModels
         }
 
 
-
-
         private ICommand deleteCommand;
         public ICommand DeleteCommand
         {
