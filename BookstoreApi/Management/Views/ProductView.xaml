@@ -79,6 +79,33 @@
                     </i:Interaction.Triggers>
                 </ComboBox>
 
+                <TextBox x:Name="minPrice"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            materialDesign:HintAssist.Hint="$ Minimum price"
+                            materialDesign:TextFieldAssist.PrefixText="$"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            Margin="5 20 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"/>
+                <TextBox x:Name="maxPrice"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"                         
+                            materialDesign:HintAssist.Hint="$ Maximum price"
+                            materialDesign:TextFieldAssist.PrefixText="$"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            Margin="5 20 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"/>
+
             </WrapPanel>
             
             <ScrollViewer Background="#394867" Margin="50,0,20,50" Grid.Row="1">

@@ -44,6 +44,23 @@ namespace Management.ViewModels
             set { searchText = value; OnPropertyChanged(); }
         }
 
+        private double _minPrice;
+        public double MinPrice
+        {
+            get { return _minPrice; }
+            set { _minPrice = value; OnPropertyChanged(); }
+        }
+
+        private double _maxPrice;
+        public double MaxPrice
+        {
+            get { return _maxPrice; }
+            set { _maxPrice = value; OnPropertyChanged(); }
+        }
+
+
+
+
         private ICommand deleteCommand;
         public ICommand DeleteCommand
         {
@@ -90,12 +107,12 @@ namespace Management.ViewModels
                 if (e.PropertyName == nameof(SearchText))
                 {
                     // Load the books for the search text and selected category
-                    await LoadBooks(SearchText, SelectedCategory);
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
         }
 
-        private async Task LoadBooks(string searchText = null, Category category = null)
+        private async Task LoadBooks(string searchText = null, Category category = null, double minPrice = 0, double maxPrice = 0)
         {
             try
             {

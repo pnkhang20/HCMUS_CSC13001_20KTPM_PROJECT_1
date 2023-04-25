@@ -39,5 +39,6 @@ namespace Management.Views
                 ListViewProducts.ScrollIntoView(ListViewProducts.Items[0]);
             }
         }
+
     }
 }
