@@ -26,17 +26,21 @@ namespace Management.Views
         }
         private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            e.Handled = true;
-
             if (e.Delta < 0)
             {
                 // Scroll down
-                ListViewProducts.ScrollIntoView(ListViewProducts.Items[ListViewProducts.Items.Count - 1]);
+                if (ListViewProducts.Items.Count > 0)
+                {
+                    ListViewProducts.ScrollIntoView(ListViewProducts.Items[ListViewProducts.Items.Count - 1]);
+                }
             }
             else if (e.Delta > 0)
             {
                 // Scroll up
-                ListViewProducts.ScrollIntoView(ListViewProducts.Items[0]);
+                if (ListViewProducts.Items.Count > 0)
+                {
+                    ListViewProducts.ScrollIntoView(ListViewProducts.Items[0]);
+                }
             }
         }
 

@@ -32,20 +32,22 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Rectangle StrokeThickness="1"/>
+                        <Rectangle StrokeThickness="0.1"/>
 
                         <TextBox x:Name="searchBox"                                  
-                                Width="180"
-                                FontSize="16"
-                                materialDesign:HintAssist.Hint="Enter book name"
-                                materialDesign:HintAssist.Foreground="White"
-                                Foreground="#F1F6F9"
-                                materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
-                                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                BorderThickness="0"
-                                Background="Transparent"
-                                VerticalContentAlignment="Center" Margin="10,-15,10,10"/>
+                            materialDesign:HintAssist.Hint="Enter book name"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Margin="5 0 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
                     </Grid>
                 </Border>
 
@@ -80,31 +82,33 @@
                 </ComboBox>
 
                 <TextBox x:Name="minPrice"
-                            HorizontalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Background="Transparent"
-                            Foreground="#F1F6F9"
                             materialDesign:HintAssist.Hint="$ Minimum price"
                             materialDesign:TextFieldAssist.PrefixText="$"
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
-                            Margin="5 20 20 0"
-                            Width="150"
-                            Height="30"
-                            FontSize="16"/>
-                <TextBox x:Name="maxPrice"
                             HorizontalAlignment="Center"
                             VerticalContentAlignment="Center"
                             Background="Transparent"
-                            Foreground="#F1F6F9"                         
+                            Foreground="#F1F6F9"
+                            Margin="5 20 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="maxPrice"
                             materialDesign:HintAssist.Hint="$ Maximum price"
                             materialDesign:TextFieldAssist.PrefixText="$"
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"                         
                             Margin="5 20 20 0"
                             Width="150"
                             Height="30"
-                            FontSize="16"/>
+                            FontSize="16"
+                            Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
 
             </WrapPanel>
             

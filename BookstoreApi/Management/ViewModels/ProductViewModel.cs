@@ -44,15 +44,15 @@ namespace Management.ViewModels
             set { searchText = value; OnPropertyChanged(); }
         }
 
-        private double _minPrice;
-        public double MinPrice
+        private string _minPrice;
+        public string MinPrice
         {
             get { return _minPrice; }
             set { _minPrice = value; OnPropertyChanged(); }
         }
 
-        private double _maxPrice;
-        public double MaxPrice
+        private string _maxPrice;
+        public string MaxPrice
         {
             get { return _maxPrice; }
             set { _maxPrice = value; OnPropertyChanged(); }
@@ -110,9 +110,29 @@ namespace Management.ViewModels
                     await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
+
+            // Wire up the MinPrice property
+            this.PropertyChanged += async (sender, e) =>
+            {
+                if (e.PropertyName == nameof(MinPrice))
+                {
+                    // Load the books for the search text and selected category
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                }
+            };
+
+            // Wire up the MaxPrice property
+            this.PropertyChanged += async (sender, e) =>
+            {
+                if (e.PropertyName == nameof(MaxPrice))
+                {
+                    // Load the books for the search text and selected category
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                }
+            };
         }
 
-        private async Task LoadBooks(string searchText = null, Category category = null, double minPrice = 0, double maxPrice = 0)
+        private async Task LoadBooks(string searchText = null, Category category = null, string minPrice = null, string maxPrice = null)
         {
             try
             {
@@ -123,14 +143,42 @@ namespace Management.ViewModels
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
                     urlBuilder.AppendFormat("?name={0}", HttpUtility.UrlEncode(searchText));
-                    if (category != null && category.CategoryName != "All Category")
+                }
+
+                if (category != null && category.CategoryName != "All Category")
+                {
+                    if (urlBuilder.ToString().Contains("?"))
                     {
                         urlBuilder.AppendFormat("&categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
                     }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
+                    }
                 }
-                else if (category != null && category.CategoryName != "All Category")
+
+                if (!string.IsNullOrWhiteSpace(minPrice))
                 {
-                    urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&minPrice={0}", HttpUtility.UrlEncode(minPrice));
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?minPrice={0}", HttpUtility.UrlEncode(minPrice));
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(maxPrice))
+                {
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&maxPrice={0}", HttpUtility.UrlEncode(maxPrice));
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?maxPrice={0}", HttpUtility.UrlEncode(maxPrice));
+                    }
                 }
 
                 var response = await httpClient.GetAsync(urlBuilder.ToString());
@@ -153,6 +201,7 @@ namespace Management.ViewModels
                 // Handle error
             }
         }
+
 
         private async Task LoadCategory()
         {
