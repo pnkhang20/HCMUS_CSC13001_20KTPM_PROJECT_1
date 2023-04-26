@@ -199,10 +199,8 @@
                                 Background="#212A3E"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
-                                Command="{Binding PreviousPageCommand}" 
-                                IsEnabled="{Binding HasPreviousPage}" />
-                        <TextBlock Text="{Binding CurrentPage}" />
-
+                                Command="{Binding PrevPageCommand}"
+                                IsEnabled="{Binding HasPrevPage}"/>
                     </Grid>
                     <Grid Grid.Column="3">
                         <Button Content="Next" 
@@ -216,6 +214,7 @@
                     </Grid>
                 </Grid>
             </Grid>
+            
         </Grid>
 
     </Border>

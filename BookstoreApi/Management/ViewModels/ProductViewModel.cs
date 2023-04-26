@@ -2,9 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using Management.Models;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System;
@@ -58,6 +56,60 @@ namespace Management.ViewModels
             set { _maxPrice = value; OnPropertyChanged(); }
         }
 
+        public bool HasNextPage;
+        public bool HasPrevPage;
+        public int _page;
+        public int Page
+        {
+            get { return _page; }
+            set { _page = value; OnPropertyChanged(); }
+        }
+
+        private ICommand _nextPageCommand;
+        public ICommand NextPageCommand
+        {
+            get
+            {
+                if (_nextPageCommand == null)
+                {
+                    _nextPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            if (HasNextPage)
+                            {
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);
+                            }
+                        },
+                        (param) => HasNextPage
+                    );
+                }
+
+                return _nextPageCommand;
+            }
+        }
+
+        private ICommand _previousPageCommand;
+        public ICommand PrevPageCommand
+        {
+            get
+            {
+                if (_previousPageCommand == null)
+                {
+                    _previousPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            if (HasPrevPage)
+                            {
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
+                            }
+                        },
+                        (param) => HasPrevPage
+                    );
+                }
+
+                return _previousPageCommand;
+            }
+        }
 
         private ICommand deleteCommand;
         public ICommand DeleteCommand
@@ -96,6 +148,7 @@ namespace Management.ViewModels
         }
         public ProductViewModel()
         {
+            Page = 1;
             LoadBooks();
             LoadCategory();
             SelectedBook = Books.FirstOrDefault();
@@ -104,36 +157,32 @@ namespace Management.ViewModels
             {
                 if (e.PropertyName == nameof(SearchText))
                 {
-                    // Load the books for the search text and selected category
                     await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
-
-            // Wire up the MinPrice property
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(MinPrice))
                 {
-                    // Load the books for the search text and selected category
                     await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
 
-            // Wire up the MaxPrice property
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(MaxPrice))
-                {
-                    // Load the books for the search text and selected category
+                {                    
                     await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
         }
 
-        private async Task LoadBooks(string searchText = null, Category category = null, string minPrice = null, string maxPrice = null)
+        private async Task LoadBooks(string searchText = null, Category category = null, string minPrice = null, string maxPrice = null, int pageNumber = 1, int pageSize = 5)
         {
             try
             {
+                Page = pageNumber;
+
                 var urlBuilder = new StringBuilder(BookApiUrl);
                 urlBuilder.Append("/search");
 
@@ -178,15 +227,29 @@ namespace Management.ViewModels
                         urlBuilder.AppendFormat("?maxPrice={0}", HttpUtility.UrlEncode(maxPrice));
                     }
                 }
+                // Add query parameters for pagination
+                if(pageNumber != 0)
+                {
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&pageNumber={0}&pageSize={1}", pageNumber, pageSize);
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?pageNumber={0}&pageSize={1}", pageNumber, pageSize);
+                    }
+                }
+                
 
                 var response = await httpClient.GetAsync(urlBuilder.ToString());
-
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var books = JsonConvert.DeserializeObject<List<Book>>(content);
 
-                    // Update the Books collection with the new books
+                    var content = await response.Content.ReadAsStringAsync();
+                    var books = JsonConvert.DeserializeObject<List<Book>>(content);                    
+                    HasNextPage = books.Count == pageSize;
+                    HasPrevPage = Page > 1;
+
                     Books.Clear();
                     foreach (var book in books)
                     {
@@ -194,23 +257,16 @@ namespace Management.ViewModels
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            catch (Exception ex){}
         }
-
 
         private async Task LoadCategory()
         {
             try
-            {
-                // Add all category
+            {               
                 var allCategory = new Category() { CategoryName = "All Category" };
-                Categories.Add(allCategory);
-                //Categories.Add(new Category() { CategoryName = "All" });
+                Categories.Add(allCategory);               
                 var response = await httpClient.GetAsync(CategoryApiUrl);
-
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -233,11 +289,9 @@ namespace Management.ViewModels
                 }
             }
             catch (Exception ex)
-            {
-                // Handle error
+            {                
             }
         }
-
 
         private ICommand categorySelectionChangedCommand;
         public ICommand CategorySelectedCommand
@@ -247,8 +301,7 @@ namespace Management.ViewModels
                 if (categorySelectionChangedCommand == null)
                 {
                     categorySelectionChangedCommand = new RelayCommand(async (param) =>
-                    {
-                        // Load the books for the selected category and search text
+                    {                        
                         await LoadBooks(SearchText, SelectedCategory);
                     });
                 }
