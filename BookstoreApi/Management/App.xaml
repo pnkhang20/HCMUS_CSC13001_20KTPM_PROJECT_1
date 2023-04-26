@@ -17,6 +17,10 @@
                 <view:HomeView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodel:ManagementViewModel}">
+                <view:ManagementView/>
+            </DataTemplate>
+
             <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
                 <Setter Property="Template">
                     <Setter.Value>
