@@ -11,6 +11,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text;
 using System.Web;
+using Management.Views;
 
 namespace Management.ViewModels
 {
@@ -65,6 +66,14 @@ namespace Management.ViewModels
             set { _page = value; OnPropertyChanged(); }
         }
 
+        private int _totalPageCount;
+        public int TotalPageCount
+        {
+            get { return _totalPageCount; }
+            set { _totalPageCount = value; OnPropertyChanged(); }
+        }
+
+
         private ICommand _nextPageCommand;
         public ICommand NextPageCommand
         {
@@ -77,7 +86,7 @@ namespace Management.ViewModels
                         {
                             if (HasNextPage)
                             {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);                                
                             }
                         },
                         (param) => HasNextPage
@@ -100,14 +109,26 @@ namespace Management.ViewModels
                         {
                             if (HasPrevPage)
                             {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);                                
                             }
                         },
                         (param) => HasPrevPage
                     );
                 }
-
                 return _previousPageCommand;
+            }
+        }
+
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(nameof(IsLoading));
+                OnPropertyChanged(nameof(HasPrevPage));
+                OnPropertyChanged(nameof(HasNextPage));
             }
         }
 
@@ -144,6 +165,31 @@ namespace Management.ViewModels
                     });
                 }
                 return deleteCommand;
+            }
+        }
+
+        private ICommand editCommand;
+        public ICommand EditCommand
+        {
+            get
+            { 
+                if (editCommand == null)
+                {
+                    editCommand = new RelayCommand(async (param) =>
+                    {
+                        if (SelectedBook != null)
+                        {
+                            // Create a new EditBookViewModel íntance
+                            var editBookVM = new EditProductViewModel(SelectedBook, Categories);
+                            //Create the EditBookWindow nad set DataContext
+                            var editBookWindow = new EditProductView();
+                            editBookWindow.DataContext = editBookVM;
+                            editBookWindow.ShowDialog();
+                            await LoadBooks();
+                        }    
+                    });
+                }
+                return editCommand;
             }
         }
         public ProductViewModel()
@@ -239,9 +285,10 @@ namespace Management.ViewModels
                         urlBuilder.AppendFormat("?pageNumber={0}&pageSize={1}", pageNumber, pageSize);
                     }
                 }
-                
 
+                
                 var response = await httpClient.GetAsync(urlBuilder.ToString());
+                
                 if (response.IsSuccessStatusCode)
                 {
 

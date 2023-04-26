@@ -27,6 +27,16 @@
                 <view:ManagementView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodel:ProductViewModel}">
+                <view:ProductView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodel:EditProductViewModel}">
+                <view:EditProductView/>
+            </DataTemplate>
+            
+            
+
             <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -217,9 +227,7 @@
                     </MultiTrigger>
                 </Style.Triggers>
             </Style>
-            <DataTemplate DataType="{x:Type viewmodel:ProductViewModel}">
-                <view:ProductView/>
-            </DataTemplate>
+
 
             <Style x:Key="gridEditButton" TargetType="Button">
                 <Setter Property="Background" Value="#512DA8" />
