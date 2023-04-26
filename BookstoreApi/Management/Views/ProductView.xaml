@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Management.Views"             
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Background="Transparent"             
              d:DesignHeight="450" d:DesignWidth="800">
@@ -12,24 +13,67 @@
     <Border CornerRadius="20" Background="#394867">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="70"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
+            
             <WrapPanel>
                 <TextBlock Text="Products"
-                       Foreground="White"
-                       FontSize="30"                       
-                       Margin="25 10"/>
-                <ComboBox x:Name="categoriesList" 
-                      HorizontalAlignment="Center"                       
-                      Margin="0 0 5 0" 
-                      Width="150" 
-                      Height="30"                      
-                      ItemsSource="{Binding Categories}" 
-                      SelectedItem="{Binding SelectedCategory}"                      
-                      DisplayMemberPath="CategoryName"                       
-                      VerticalAlignment="Center"                       
-                      FontSize="14">
+                           Foreground="#F1F6F9"
+                           FontSize="30"                       
+                           Margin="25 20 80 0"/>
+
+                <Border CornerRadius="10"
+                        Background="#212A3E"
+                        Margin="0 20 20 0"
+                        Width="200"                        
+                        Height="30">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle StrokeThickness="0.1"/>
+
+                        <TextBox x:Name="searchBox"                                  
+                            materialDesign:HintAssist.Hint="Enter book name"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Margin="5 0 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
+                    </Grid>
+                </Border>
+
+                <ComboBox x:Name="categoriesList"
+                            HorizontalAlignment="Center"
+                            Margin="25 20 20 0"
+                            Width="120"
+                            Height="30"
+                            FontSize="16"                                      
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            materialDesign:ColorZoneAssist.Mode="Dark"
+                            materialDesign:ComboBoxAssist.MaxLength="15"                               
+                            materialDesign:HintAssist.Hint="Category"
+                            materialDesign:HintAssist.HintOpacity="0.8"
+                            materialDesign:HintAssist.Foreground="White"                            
+                            IsEditable="False"                            
+                            ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding SelectedCategory}"
+                            DisplayMemberPath="CategoryName">
+                    <ComboBox.Resources>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Background" Value="White" />
+                        </Style>
+                    </ComboBox.Resources>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding CategorySelectedCommand}" />
@@ -37,26 +81,43 @@
                     </i:Interaction.Triggers>
                 </ComboBox>
 
-                <TextBox x:Name="searchBox" 
-                         HorizontalAlignment="Center" 
-                         Margin="5 0 0 0" 
-                         Width="150" 
-                         Height="30" 
-                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                         VerticalAlignment="Center" 
-                         FontSize="14"/>
-
+                <TextBox x:Name="minPrice"
+                            materialDesign:HintAssist.Hint="$ Minimum price"
+                            materialDesign:TextFieldAssist.PrefixText="$"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Margin="5 20 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="maxPrice"
+                            materialDesign:HintAssist.Hint="$ Maximum price"
+                            materialDesign:TextFieldAssist.PrefixText="$"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"                         
+                            Margin="5 20 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
             </WrapPanel>
-            
-            
 
-            <ScrollViewer Background="#394867" Margin="10" Grid.Row="1">
+            <ScrollViewer Background="#394867" Margin="50,0,20,50" Grid.Row="1">
                 <ListView x:Name="ListViewProducts" 
                           PreviewMouseWheel="OnPreviewMouseWheel" 
                           ItemsSource="{Binding Books, UpdateSourceTrigger=PropertyChanged}" 
                           SelectedItem="{Binding SelectedBook}"                           
                           ScrollViewer.CanContentScroll="True" 
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"                           
                           BorderThickness="0" Background="Transparent" >
                     <ListView.ItemContainerStyle>
                         <Style TargetType="{x:Type ListViewItem}">
@@ -79,7 +140,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <DockPanel Height="210">
                                         <Border Height="200"
-                                                Padding="0 0 0 0"
+                                                Padding="0 0 0 0"                                                
                                                 CornerRadius="10"
                                                 BorderThickness="1" BorderBrush="Gray">
                                             <Border.Background>
@@ -113,10 +174,47 @@
                             <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedBook}"/>
                         </ContextMenu>
                     </ListView.ContextMenu>
-
                 </ListView>
+
             </ScrollViewer>
 
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="45"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="2">
+                        <Button Content="Previous" 
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Margin="0,0,5,0"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Command="{Binding PrevPageCommand}"
+                                IsEnabled="{Binding HasPrevPage}"/>
+                    </Grid>
+                    <Grid Grid.Column="3">
+                        <Button Content="Next" 
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Margin="5,0,0,0"
+                                Command="{Binding NextPageCommand}" 
+                                IsEnabled="{Binding HasNextPage}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            
         </Grid>
 
     </Border>

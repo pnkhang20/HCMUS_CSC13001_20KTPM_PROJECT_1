@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Management"
         xmlns:viewmodel="clr-namespace:Management.ViewModels"
         mc:Ignorable="d"
-        Height="720" Width="1080"              
+        Height="720" Width="1280"              
         Background="Transparent">
     <Window.DataContext>
         <viewmodel:MainViewModel/>
@@ -15,7 +15,7 @@
             >
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"></ColumnDefinition>
+                <ColumnDefinition Width="150"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
@@ -47,7 +47,7 @@
                        FontSize="22"
                        Margin="35, 0, 0, 0"/>
             <StackPanel Grid.Row="1"
-                        Margin="7">
+                        Margin="4">
                 <RadioButton Content="Home"
                              Height="50"                             
                              FontSize="20"

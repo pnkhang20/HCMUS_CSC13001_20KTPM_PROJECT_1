@@ -2,9 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using Management.Models;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 using System;
@@ -44,6 +42,75 @@ namespace Management.ViewModels
             set { searchText = value; OnPropertyChanged(); }
         }
 
+        private string _minPrice;
+        public string MinPrice
+        {
+            get { return _minPrice; }
+            set { _minPrice = value; OnPropertyChanged(); }
+        }
+
+        private string _maxPrice;
+        public string MaxPrice
+        {
+            get { return _maxPrice; }
+            set { _maxPrice = value; OnPropertyChanged(); }
+        }
+
+        public bool HasNextPage;
+        public bool HasPrevPage;
+        public int _page;
+        public int Page
+        {
+            get { return _page; }
+            set { _page = value; OnPropertyChanged(); }
+        }
+
+        private ICommand _nextPageCommand;
+        public ICommand NextPageCommand
+        {
+            get
+            {
+                if (_nextPageCommand == null)
+                {
+                    _nextPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            if (HasNextPage)
+                            {
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);
+                            }
+                        },
+                        (param) => HasNextPage
+                    );
+                }
+
+                return _nextPageCommand;
+            }
+        }
+
+        private ICommand _previousPageCommand;
+        public ICommand PrevPageCommand
+        {
+            get
+            {
+                if (_previousPageCommand == null)
+                {
+                    _previousPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            if (HasPrevPage)
+                            {
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
+                            }
+                        },
+                        (param) => HasPrevPage
+                    );
+                }
+
+                return _previousPageCommand;
+            }
+        }
+
         private ICommand deleteCommand;
         public ICommand DeleteCommand
         {
@@ -81,6 +148,7 @@ namespace Management.ViewModels
         }
         public ProductViewModel()
         {
+            Page = 1;
             LoadBooks();
             LoadCategory();
             SelectedBook = Books.FirstOrDefault();
@@ -88,29 +156,100 @@ namespace Management.ViewModels
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(SearchText))
+                {
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                }
+            };
+            this.PropertyChanged += async (sender, e) =>
+            {
+                if (e.PropertyName == nameof(MinPrice))
+                {
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                }
+            };
+
+            this.PropertyChanged += async (sender, e) =>
+            {
+                if (e.PropertyName == nameof(MaxPrice))
                 {                    
-                    await LoadBooks(SearchText);
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
         }
 
-        private async Task LoadBooks(string searchText = null)
+        private async Task LoadBooks(string searchText = null, Category category = null, string minPrice = null, string maxPrice = null, int pageNumber = 1, int pageSize = 5)
         {
             try
             {
+                Page = pageNumber;
+
                 var urlBuilder = new StringBuilder(BookApiUrl);
+                urlBuilder.Append("/search");
+
+                // Add query parameters for search text and category filtering, if applicable
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
-                    urlBuilder.Append($"/search?name={HttpUtility.UrlEncode(searchText)}&pageNumber=1&pageSize=10");                
+                    urlBuilder.AppendFormat("?name={0}", HttpUtility.UrlEncode(searchText));
                 }
-                var response = await httpClient.GetAsync(urlBuilder.ToString());
 
+                if (category != null && category.CategoryName != "All Category")
+                {
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(minPrice))
+                {
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&minPrice={0}", HttpUtility.UrlEncode(minPrice));
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?minPrice={0}", HttpUtility.UrlEncode(minPrice));
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(maxPrice))
+                {
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&maxPrice={0}", HttpUtility.UrlEncode(maxPrice));
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?maxPrice={0}", HttpUtility.UrlEncode(maxPrice));
+                    }
+                }
+                // Add query parameters for pagination
+                if(pageNumber != 0)
+                {
+                    if (urlBuilder.ToString().Contains("?"))
+                    {
+                        urlBuilder.AppendFormat("&pageNumber={0}&pageSize={1}", pageNumber, pageSize);
+                    }
+                    else
+                    {
+                        urlBuilder.AppendFormat("?pageNumber={0}&pageSize={1}", pageNumber, pageSize);
+                    }
+                }
+                
+
+                var response = await httpClient.GetAsync(urlBuilder.ToString());
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var books = JsonConvert.DeserializeObject<List<Book>>(content);
 
-                    // Update the Books collection with the new books
+                    var content = await response.Content.ReadAsStringAsync();
+                    var books = JsonConvert.DeserializeObject<List<Book>>(content);                    
+                    HasNextPage = books.Count == pageSize;
+                    HasPrevPage = Page > 1;
+
                     Books.Clear();
                     foreach (var book in books)
                     {
@@ -118,20 +257,16 @@ namespace Management.ViewModels
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            catch (Exception ex){}
         }
 
         private async Task LoadCategory()
         {
             try
-            {
-                // Add all category
-                Categories.Add(new Category() { CategoryName = "All" });
+            {               
+                var allCategory = new Category() { CategoryName = "All Category" };
+                Categories.Add(allCategory);               
                 var response = await httpClient.GetAsync(CategoryApiUrl);
-
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -150,48 +285,11 @@ namespace Management.ViewModels
                             Categories[index] = category;
                         }
                     }
-                                 
+                    SelectedCategory = allCategory;
                 }
             }
             catch (Exception ex)
-            {
-                // Handle error
-            }
-        }
-
-        private async Task LoadBooksForCategory(Category category)
-        {
-            try
-            {
-                var urlBuilder = new StringBuilder(BookApiUrl);
-                urlBuilder.Append("/search");
-
-                if (category != null && category.CategoryName != "All")
-                {
-                    // Add query parameters for filtering by category ID
-                    urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
-                }
-                // Add query parameters for filtering by category ID
-                //urlBuilder.AppendFormat("?categoryName={0}", HttpUtility.UrlEncode(category.CategoryName));
-
-                var response = await httpClient.GetAsync(urlBuilder.ToString());
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var books = JsonConvert.DeserializeObject<List<Book>>(content);
-
-                    // Update the Books collection with the new books
-                    Books.Clear();
-                    foreach (var book in books)
-                    {
-                        Books.Add(book);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle error
+            {                
             }
         }
 
@@ -203,9 +301,8 @@ namespace Management.ViewModels
                 if (categorySelectionChangedCommand == null)
                 {
                     categorySelectionChangedCommand = new RelayCommand(async (param) =>
-                    {
-                        // Load the books for the selected category
-                        await LoadBooksForCategory(SelectedCategory);
+                    {                        
+                        await LoadBooks(SearchText, SelectedCategory);
                     });
                 }
                 return categorySelectionChangedCommand;
