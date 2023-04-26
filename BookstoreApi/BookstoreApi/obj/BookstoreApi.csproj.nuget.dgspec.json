@@ -1,36 +1,36 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {}
+    "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {
+    "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+        "projectUniqueName": "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
         "projectName": "BookstoreApi",
-        "projectPath": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
-        "packagesPath": "C:\\Users\\kp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\obj\\",
+        "projectPath": "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+        "outputPath": "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\kp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net7.0-windows"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net7.0-windows7.0": {
+            "targetAlias": "net7.0-windows",
             "projectReferences": {}
           }
         },
@@ -41,9 +41,21 @@
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net7.0-windows7.0": {
+          "targetAlias": "net7.0-windows",
           "dependencies": {
+            "Bunifu.UI.WinForms": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            },
+            "MaterialDesignColors": {
+              "target": "Package",
+              "version": "[2.1.2, )"
+            },
+            "MaterialDesignThemes": {
+              "target": "Package",
+              "version": "[4.8.0, )"
+            },
             "Microsoft.AspNet.WebApi.Client": {
               "target": "Package",
               "version": "[5.2.9, )"
@@ -52,7 +64,15 @@
               "target": "Package",
               "version": "[7.0.4, )"
             },
+            "MongoDB.Bson": {
+              "target": "Package",
+              "version": "[2.19.1, )"
+            },
             "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.19.1, )"
+            },
+            "MongoDB.Driver.Core": {
               "target": "Package",
               "version": "[2.19.1, )"
             },
@@ -84,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
