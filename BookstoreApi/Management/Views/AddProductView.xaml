@@ -1,14 +1,14 @@
-﻿<Window x:Class="Management.Views.EditProductView"
+﻿<Window x:Class="Management.Views.AddProductView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Management.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
+        xmlns:local="clr-namespace:Management.Views"
         WindowStartupLocation="CenterOwner"
         Background="#394867"
-        Title="Edit Product" Height="800" Width="800">
+        mc:Ignorable="d"
+        Title="Add New Product" Height="800" Width="800">
     
     <StackPanel Orientation="Vertical">
         <Border HorizontalAlignment="Center"
@@ -20,10 +20,19 @@
                     Padding="5">
             <Border.Background>
                 <ImageBrush Stretch="Uniform"                                                             
-                            ImageSource="{Binding SelectedBook.Cover, UpdateSourceTrigger=PropertyChanged}"/>
+                            ImageSource="{Binding CoverImg, UpdateSourceTrigger=PropertyChanged}"/>
             </Border.Background>
         </Border>
-        
+        <Button Content="Choose Image" 
+                materialDesign:ButtonAssist.CornerRadius="10"
+                Width="200"
+                Margin="55,10,50,0"
+                Background="#74777f"
+                Foreground="AntiqueWhite"
+                BorderBrush="#74777f"
+                HorizontalAlignment="Center"
+                Command="{Binding SelectCoverCommand}"/>
+
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center" 
                     Width="300"
@@ -54,11 +63,11 @@
                             Width="150"
                             Height="30"
                             FontSize="16"
-                            Text="{Binding SelectedBook.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding NewBook.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
                 </Border>
             </StackPanel>
-            
+
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Author" 
                            Foreground="white"
@@ -85,7 +94,7 @@
                             Width="150"
                             Height="30"
                             FontSize="16"
-                            Text="{Binding SelectedBook.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Text="{Binding NewBook.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
                 </Border>
             </StackPanel>
@@ -116,13 +125,13 @@
                             Width="150"
                             Height="30"
                             FontSize="16"
-                            Text="{Binding SelectedBook.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                            Text="{Binding NewBook.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
                             BorderThickness="0"/>
                     </Border>
                 </StackPanel>
 
                 <StackPanel Width="60">
-                    
+
                 </StackPanel>
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Right">
@@ -150,7 +159,7 @@
                             Width="100"
                             Height="30"
                             FontSize="16"
-                            Text="{Binding SelectedBook.Quantity, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                            Text="{Binding NewBook.Quantity, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
                             BorderThickness="0"/>
                     </Border>
                 </StackPanel>
@@ -179,8 +188,8 @@
                             materialDesign:HintAssist.HintOpacity="0.8"
                             materialDesign:HintAssist.Foreground="White"                            
                             IsEditable="False"                            
-                            ItemsSource="{Binding Categories}"                            
-                            SelectedItem="{Binding SelectedCategory,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            ItemsSource="{Binding Categories}"   
+                            SelectedItem="{Binding NewBook.Category}"
                             DisplayMemberPath="CategoryName">
                     <ComboBox.Resources>
                         <Style TargetType="ComboBoxItem">
@@ -190,7 +199,7 @@
                 </ComboBox>
             </StackPanel>
         </StackPanel>
-        
+
         <StackPanel Orientation="Horizontal"   
                     Margin="0 40 0 0"
                     Width="450"
@@ -204,7 +213,7 @@
                     BorderBrush="#74777f"
                     HorizontalAlignment="Center"
                     Command="{Binding CancelCommand}"/>
-            <Button Content="Save Changes" 
+            <Button Content="Add Product" 
                     materialDesign:ButtonAssist.CornerRadius="10"
                     Width="200"
                     Margin="0,0,100,0"
@@ -212,7 +221,7 @@
                     Foreground="white"
                     HorizontalAlignment="Center"
                     BorderBrush="#305da8"
-                    Command="{Binding SaveChangesCommand}"/>
+                    Command="{Binding AddProductCommand}"/>
         </StackPanel>
     </StackPanel>
 </Window>

@@ -114,8 +114,13 @@ namespace Management.ViewModels
                     _cancelCommand = new RelayCommand(
                         (param) =>
                         {
-                            // Close the window
-                            Application.Current.MainWindow.Close();
+                            var result = MessageBox.Show("Are you sure you want to discard changes?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            if (result == MessageBoxResult.Yes)
+                            {
+                                // Close the window
+                                Window parentWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+                                parentWindow?.Close();
+                            }
                         }
                     );
                 }
@@ -129,6 +134,7 @@ namespace Management.ViewModels
         {
             SelectedBook = selectedBook.Clone();
             Categories = categories;
+            Categories.RemoveAt(0);
             SelectedCategory = Categories.FirstOrDefault(c => c.Id == SelectedBook.Category.Id);
         }
 

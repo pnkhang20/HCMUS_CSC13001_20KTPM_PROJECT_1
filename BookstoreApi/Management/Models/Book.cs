@@ -18,9 +18,7 @@ namespace Management.Models
         public string Cover { get; set; }
 
         public Category Category { get; set; }
-
-        public bool IsVisible { get; set; }
-
+     
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Book Clone()

@@ -119,19 +119,6 @@ namespace Management.ViewModels
             }
         }
 
-        private bool _isLoading;
-        public bool IsLoading
-        {
-            get { return _isLoading; }
-            set
-            {
-                _isLoading = value;
-                OnPropertyChanged(nameof(IsLoading));
-                OnPropertyChanged(nameof(HasPrevPage));
-                OnPropertyChanged(nameof(HasNextPage));
-            }
-        }
-
         private ICommand deleteCommand;
         public ICommand DeleteCommand
         {
@@ -168,14 +155,34 @@ namespace Management.ViewModels
             }
         }
 
-        private ICommand editCommand;
+        private ICommand _addProductCommand;
+        public ICommand AddProductCommand
+        {
+            get
+            {
+                if (_addProductCommand == null)
+                {
+                    _addProductCommand = new RelayCommand(async (param) =>
+                    {
+                        var addBookVM = new AddProductViewModel(Categories);
+                        var addBookWindow = new AddProductView();
+                        addBookWindow.DataContext = addBookVM;
+                        addBookWindow.ShowDialog();
+                        await LoadBooks();
+                    });                    
+                }
+                return _addProductCommand;
+            }
+        }
+
+        private ICommand _editCommand;
         public ICommand EditCommand
         {
             get
             { 
-                if (editCommand == null)
+                if (_editCommand == null)
                 {
-                    editCommand = new RelayCommand(async (param) =>
+                    _editCommand = new RelayCommand(async (param) =>
                     {
                         if (SelectedBook != null)
                         {
@@ -189,7 +196,7 @@ namespace Management.ViewModels
                         }    
                     });
                 }
-                return editCommand;
+                return _editCommand;
             }
         }
         public ProductViewModel()

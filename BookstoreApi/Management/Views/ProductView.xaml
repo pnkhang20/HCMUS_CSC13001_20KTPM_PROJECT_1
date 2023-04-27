@@ -53,7 +53,7 @@
 
                 <ComboBox x:Name="categoriesList"
                             HorizontalAlignment="Center"
-                            Margin="25 20 20 0"
+                            Margin="0 20 20 0"
                             Width="120"
                             Height="30"
                             FontSize="16"                                      
@@ -82,7 +82,7 @@
                 </ComboBox>
 
                 <TextBox x:Name="minPrice"
-                            materialDesign:HintAssist.Hint="$ Minimum price"
+                            materialDesign:HintAssist.Hint="$ Minimum"
                             materialDesign:TextFieldAssist.PrefixText="$"
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
@@ -91,12 +91,12 @@
                             Background="Transparent"
                             Foreground="#F1F6F9"
                             Margin="5 20 20 0"
-                            Width="150"
+                            Width="85"
                             Height="30"
-                            FontSize="16"
+                            FontSize="14"
                             Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox x:Name="maxPrice"
-                            materialDesign:HintAssist.Hint="$ Maximum price"
+                            materialDesign:HintAssist.Hint="$ Maximum"
                             materialDesign:TextFieldAssist.PrefixText="$"
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
@@ -105,10 +105,19 @@
                             Background="Transparent"
                             Foreground="#F1F6F9"                         
                             Margin="5 20 20 0"
-                            Width="150"
+                            Width="85"
                             Height="30"
-                            FontSize="16"
+                            FontSize="14"
                             Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Add Product" 
+                                Width="150"
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Margin="50,20,20,0"
+                                Command="{Binding AddProductCommand}"/>
+
             </WrapPanel>
 
             <ScrollViewer Background="#394867" Margin="50,0,20,50" Grid.Row="1">
