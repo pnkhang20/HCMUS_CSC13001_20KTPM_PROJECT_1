@@ -8,7 +8,7 @@ namespace Management.Models
 {
     public class Category
     {
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } = "string";
         public string CategoryName { get; set; } = null!;
 
     }

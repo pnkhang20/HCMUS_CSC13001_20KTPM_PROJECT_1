@@ -11,64 +11,60 @@ using System.Windows.Input;
 using System.Windows;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Management.Views;
 
 namespace Management.ViewModels
 {
     class CategoryViewModel:ObservableObject
     {
+        private ProductView _productView;
         private const string CategoryApiUrl = "https://localhost:7122/api/Categories";
         private readonly HttpClient httpClient = new HttpClient();
 
-
         public ObservableCollection<Category> Categories { get; } = new ObservableCollection<Category>();
-        private Category selectedCategory;
+        private Category _selectedCategory;
         public Category SelectedCategory
         {
-            get { return selectedCategory; }
-            set { selectedCategory = value; OnPropertyChanged(); }
+            get { return _selectedCategory; }
+            set { _selectedCategory = value; OnPropertyChanged(); }
         }
 
-        private Category _selectedCategoryCopy;
-
-        public Category SelectedCategoryCopy
+        private string _editedCategoryName;
+        public string EditedCategoryName
         {
-            get { return _selectedCategoryCopy; }
-            set
-            {
-                if (_selectedCategoryCopy != value)
-                {
-                    _selectedCategoryCopy = value;
-                    OnPropertyChanged(nameof(SelectedCategoryCopy));
-                }
-            }
+            get { return _editedCategoryName; }
+            set { _editedCategoryName = value; OnPropertyChanged(); }
+        }
+
+        private string _newCategoryText;
+        public string NewCategoryText
+        {
+            get { return _newCategoryText; }
+            set { _newCategoryText = value; OnPropertyChanged(); }
         }
         private async Task LoadCategory()
         {
             try
-            {                
+            {
                 var response = await httpClient.GetAsync(CategoryApiUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var categories = JsonConvert.DeserializeObject<List<Category>>(content);
 
+                    // Clear the existing categories list
+                    Categories.Clear();
+
+                    // Add the updated categories from the server
                     foreach (var category in categories)
                     {
-                        var existingCategory = Categories.FirstOrDefault(b => b.Id == category.Id);
-                        if (existingCategory == null)
-                        {
-                            Categories.Add(category);
-                        }
-                        else
-                        {
-                            int index = Categories.IndexOf(existingCategory);
-                            Categories[index] = category;
-                        }
-                    }                    
+                        Categories.Add(category);
+                    }
                 }
             }
             catch (Exception ex)
             {
+                // Handle the exception
             }
         }
 
@@ -84,9 +80,8 @@ namespace Management.ViewModels
                     {
                         var msgBoxResult = MessageBox.Show("Are you sure you want to edit this category?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (msgBoxResult == MessageBoxResult.Yes)
-                        {
-                            // Check if the cover image is set
-                            if (string.IsNullOrEmpty(SelectedCategory.CategoryName))
+                        {                            
+                            if (string.IsNullOrEmpty(EditedCategoryName))
                             {
                                 MessageBox.Show("Please enter a category name.");
                                 return;
@@ -96,7 +91,7 @@ namespace Management.ViewModels
                                 client.BaseAddress = new Uri("https://localhost:7122/");
                                 client.DefaultRequestHeaders.Accept.Clear();
                                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                                
+                                SelectedCategory.CategoryName = EditedCategoryName;
                                 HttpResponseMessage response = await client.PutAsJsonAsync($"api/Categories/{SelectedCategory.Id}", SelectedCategory);
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -104,7 +99,14 @@ namespace Management.ViewModels
                                     
                                     // Update the original book with the changes made in the SelectedBook object
                                     // Display a success message to the user
-                                    MessageBox.Show("Successfully edited the category!");                                    
+                                    MessageBox.Show("Successfully edited the category!");
+                                    EditedCategoryName = string.Empty;
+                                    var mainWindow = Application.Current.MainWindow;
+                                    var mainViewModel = (MainViewModel)mainWindow.DataContext;
+                                    var productView = (ProductViewModel)mainViewModel.ProductVM;
+                                    productView.LoadCategory();
+                                    productView.LoadBooks();    
+                                    await LoadCategory();
                                 }
                                 else
                                 {
@@ -129,33 +131,35 @@ namespace Management.ViewModels
                 {
                     _deleteCategoryCommand = new RelayCommand(async (param) =>
                     {
-                        var selectedCategory = param as Category;
-                        if (selectedCategory == null)
+                        if (SelectedCategory != null)
                         {
-                            return;
-                        }
-
-                        var msgBoxResult = MessageBox.Show("Are you sure you want to delete this category?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (msgBoxResult == MessageBoxResult.Yes)
-                        {
-                            using (HttpClient client = new HttpClient())
+                            var msgBoxResult = MessageBox.Show("Are you sure you want to delete this category?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            if (msgBoxResult == MessageBoxResult.Yes)
                             {
-                                client.BaseAddress = new Uri("https://localhost:7122/");
-                                client.DefaultRequestHeaders.Accept.Clear();
-                                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    client.BaseAddress = new Uri("https://localhost:7122/");
+                                    client.DefaultRequestHeaders.Accept.Clear();
+                                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                                HttpResponseMessage response = await client.DeleteAsync($"api/Categories/{selectedCategory.Id}");
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    // Display a success message to the user
-                                    MessageBox.Show("Successfully deleted the category!");
-                                    // Remove the category from the list
-                                    LoadCategory();
-                                }
-                                else
-                                {
-                                    // Display an error message to the user
-                                    MessageBox.Show($"Failed to delete the category! {response.ReasonPhrase}");
+                                    HttpResponseMessage response = await client.DeleteAsync($"api/Categories/{SelectedCategory.Id}");
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        // Display a success message to the user
+                                        MessageBox.Show("Successfully deleted the category!");
+                                        // Remove the category from the list
+                                        var mainWindow = Application.Current.MainWindow;
+                                        var mainViewModel = (MainViewModel)mainWindow.DataContext;
+                                        var productView = (ProductViewModel)mainViewModel.ProductVM;
+                                        productView.LoadCategory();
+                                        productView.LoadBooks();
+                                        await LoadCategory();
+                                    }
+                                    else
+                                    {
+                                        // Display an error message to the user
+                                        MessageBox.Show($"Failed to delete the category! {response.ReasonPhrase}");
+                                    }
                                 }
                             }
                         }
@@ -165,9 +169,67 @@ namespace Management.ViewModels
             }
         }
 
+        private ICommand _addNewCategoryCommand;
+        public ICommand AddNewCategoryCommand
+        {
+            get
+            {
+                if (_addNewCategoryCommand == null)
+                {
+                    _addNewCategoryCommand = new RelayCommand(async (param) =>
+                    {
+                  
+                        // Validate that the EditedCategoryName is not empty
+                        if (string.IsNullOrEmpty(NewCategoryText))
+                        {
+                            MessageBox.Show("Please enter a category name!");
+                            return;
+                        }
+
+                        var msgBoxResult = MessageBox.Show("Are you sure you want to add this category?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (msgBoxResult == MessageBoxResult.Yes)
+                        {
+                            // Create a new category object with the EditedCategoryName
+                            Category newCategory = new Category() { CategoryName = NewCategoryText };
+
+                            // Send a POST request to add the new category
+                            using (HttpClient client = new HttpClient())
+                            {
+                                client.BaseAddress = new Uri("https://localhost:7122/");
+                                client.DefaultRequestHeaders.Accept.Clear();
+                                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                                HttpResponseMessage response = await client.PostAsJsonAsync("api/Categories", newCategory);
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    // Display a success message to the user
+                                    MessageBox.Show("Successfully added a new category!");
+                                    // Clear the EditedCategoryName property
+                                    NewCategoryText = string.Empty;
+                                    // Reload the categories list
+                                    var mainWindow = Application.Current.MainWindow;
+                                    var mainViewModel = (MainViewModel)mainWindow.DataContext;
+                                    var productView = (ProductViewModel)mainViewModel.ProductVM;
+                                    productView.LoadCategory();
+                                    productView.LoadBooks();                                    
+                                    await LoadCategory();
+                                }
+                                else
+                                {
+                                    // Display an error message to the user
+                                    MessageBox.Show($"Failed to add a new category! {response.ReasonPhrase}");
+                                }
+                            }
+                        }
+                    });
+                }               
+                return _addNewCategoryCommand;
+            }
+        }
+
 
         public CategoryViewModel()
-        {
+        {            
             LoadCategory();            
         }
     }

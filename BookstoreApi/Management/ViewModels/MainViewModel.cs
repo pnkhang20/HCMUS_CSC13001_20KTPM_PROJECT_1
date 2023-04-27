@@ -28,6 +28,11 @@ namespace Management.ViewModels
                 OnPropertyChanged();
                 }
         }
+        public void ReloadProductView()
+        {
+            ProductVM.LoadCategory();
+            ProductVM.LoadBooks();
+        }
         public MainViewModel()
         { 
             HomeVM = new HomeViewModel();

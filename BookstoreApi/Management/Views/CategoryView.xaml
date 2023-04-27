@@ -57,7 +57,7 @@
                         </ComboBox>
                     </StackPanel>
                     
-                    <TextBlock Text="Category Name" 
+                    <TextBlock Text="Enter New Category" 
                            Foreground="white"
                            FontSize="20"
                            TextAlignment="Center"
@@ -69,7 +69,7 @@
                         Margin="5 0 0 0"
                         Width="300"
                         Height="30">
-                        <TextBox x:Name="titleBox"                                                              
+                        <TextBox x:Name="newCategoryNameBox"                                                              
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
                             HorizontalAlignment="Left"
@@ -81,7 +81,7 @@
                             Width="150"
                             Height="30"
                             FontSize="16"
-                            Text="{Binding SelectedCategory.CategoryName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                            Text="{Binding EditedCategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
                     </Border>
                     <StackPanel Orientation="Vertical"   
@@ -96,7 +96,7 @@
                                 Background="#305da8"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#305da8"                    
-                                Command="{Binding EditCategoryCommand}"/>
+                                Command="{Binding EditCategoryCommand,  UpdateSourceTrigger=PropertyChanged}"/>
                         <Button Content="Delete Category" 
                                 materialDesign:ButtonAssist.CornerRadius="10"
                                 Width="200"
@@ -105,7 +105,7 @@
                                 Foreground="#410002"
                                 HorizontalAlignment="Center"
                                 BorderBrush="#ffdad6"
-                                Command="{Binding DeleteCategoryCommand}"/>
+                                Command="{Binding DeleteCategoryCommand,  UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </StackPanel>
                 <TextBlock Text="Add New Category"
@@ -114,7 +114,7 @@
                            Margin="0, 60, 0, 0"
                            FontSize="25"/>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="New Category Name" 
+                    <TextBlock Text="Enter New Category" 
                            Foreground="white"
                            FontSize="20"
                            TextAlignment="Center"
@@ -126,8 +126,7 @@
                         Margin="5 0 0 0"
                         Width="300"
                         Height="30">
-                        <TextBox x:Name="authorBox"                                  
-                            
+                        <TextBox x:Name="newCategoryBox"                                                              
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
                             HorizontalAlignment="Left"
@@ -150,7 +149,7 @@
                                 Background="#305da8"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#305da8"                    
-                                Command="{Binding AddNewCategoryCommand}"/>
+                                Command="{Binding AddNewCategoryCommand,  UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">

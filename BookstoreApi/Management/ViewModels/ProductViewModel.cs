@@ -315,10 +315,11 @@ namespace Management.ViewModels
             catch (Exception ex){}
         }
 
-        private async Task LoadCategory()
+        public async Task LoadCategory()
         {
             try
-            {               
+            {
+                Categories.Clear();
                 var allCategory = new Category() { CategoryName = "All Category" };
                 Categories.Add(allCategory);               
                 var response = await httpClient.GetAsync(CategoryApiUrl);
@@ -347,6 +348,8 @@ namespace Management.ViewModels
             {                
             }
         }
+
+
 
         private ICommand categorySelectionChangedCommand;
         public ICommand CategorySelectedCommand

@@ -49,7 +49,7 @@ namespace Management.ViewModels
                 }
                 else
                 {
-                    return new ObservableCollection<Category>(_parsedCategories.Where(c => c.Id != null));
+                    return new ObservableCollection<Category>(_parsedCategories.Where(c => c.CategoryName != "All Category"));
                 }
             }
         }

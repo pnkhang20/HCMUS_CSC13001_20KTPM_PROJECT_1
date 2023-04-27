@@ -52,7 +52,7 @@
                              Height="50"                             
                              FontSize="20"
                              IsChecked="True"                             
-                             Command="{Binding HomeViewCommand}"
+                             Command="{Binding HomeViewCommand, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource MenuButtonTheme}"/>
                 <RadioButton Content="Orders"
                              Height="50"                             
@@ -61,12 +61,12 @@
                 <RadioButton Content="Products"
                              Height="50"                             
                              FontSize="20"
-                             Command="{Binding ProductViewCommand}"
+                             Command="{Binding ProductViewCommand, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource MenuButtonTheme}"/>
                 <RadioButton Content="Category"
                              Height="50"                             
                              FontSize="20"
-                             Command="{Binding CategoryViewCommand}"
+                             Command="{Binding CategoryViewCommand, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource MenuButtonTheme}"/>
                 <RadioButton Content="Statistics"
                              Height="50"                             
