@@ -7,17 +7,12 @@ public class Order
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-
-    [BsonElement("Name")]
-    public string BookName { get; set; } = null!;
-
-    public string Author { get; set; } = null!;
-
-    public decimal Price { get; set; }
-
-    public int Quantity { get; set; }
-
-    public ICollection<Category> Categories { get; set; } = null!;
+    public string Id { get; set; } = null!;
+    public ICollection<OrderItem> OrderItemsList { get; set; } = null!;
+    public string ShippingAddress { get; set; } = null!;
+    public string CustomerName { get; set; } = null!;    
+    public string CustomerPhone { get; set; }
+    public decimal TotalPrice { get; set; }
+    public DateTime OrderedDate { get; set; }
 
 }

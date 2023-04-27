@@ -7,5 +7,6 @@
         public string BooksCollectionName { get; set; } = null!;
         public string UsersCollectionName { get; set; } = null!;
         public string CategoriesCollectionName { get; set; } = null!;
+        public string OrdersCollectionName { get; set; } = null!;
     }
 }
