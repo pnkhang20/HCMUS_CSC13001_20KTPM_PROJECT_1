@@ -76,6 +76,31 @@ namespace Management.ViewModels
                     _saveChangesCommand = new RelayCommand(
                         async (param) =>
                         {
+
+                            if (SelectedCategory == null)
+                            {
+                                MessageBox.Show("Category cannot be empty.");
+                                return;
+                            }
+
+                            if (SelectedBook.Price == null)
+                            {
+                                MessageBox.Show("Price cannot be empty.");
+                                return;
+                            }
+
+                            if (SelectedBook.Title == null)
+                            {
+                                MessageBox.Show("Title cannot be empty.");
+                                return;
+                            }
+
+                            if (SelectedBook.Author == null)
+                            {
+                                MessageBox.Show("Author cannot be empty.");
+                                return;
+                            }
+
                             // Confirm with the user that they want to save changes
                             var result = MessageBox.Show("Are you sure you want to save changes?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
                             if (result == MessageBoxResult.Yes)

@@ -78,6 +78,12 @@ namespace Management.ViewModels
                 {
                     _editCategoryCommand = new RelayCommand(async (param) =>
                     {
+                        // Check if the SelectedCategory is null before proceeding
+                        if (SelectedCategory == null)
+                        {
+                            MessageBox.Show("Please select a category to edit.");
+                            return;
+                        }
                         var msgBoxResult = MessageBox.Show("Are you sure you want to edit this category?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (msgBoxResult == MessageBoxResult.Yes)
                         {                            
@@ -183,6 +189,12 @@ namespace Management.ViewModels
                         if (string.IsNullOrEmpty(NewCategoryText))
                         {
                             MessageBox.Show("Please enter a category name!");
+                            return;
+                        }
+                        // Check if the category already exists in the list
+                        if (Categories.Any(c => c.CategoryName == NewCategoryText))
+                        {
+                            MessageBox.Show("This category already exists!");
                             return;
                         }
 

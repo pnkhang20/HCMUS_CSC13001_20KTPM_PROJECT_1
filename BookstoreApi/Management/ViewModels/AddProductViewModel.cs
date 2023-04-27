@@ -120,6 +120,31 @@ namespace Management.ViewModels
 
         }
 
+        private ICommand _cancelCommand;
+        public ICommand CancelCommand
+        {
+            get
+            {
+                if (_cancelCommand == null)
+                {
+                    _cancelCommand = new RelayCommand(
+                        (param) =>
+                        {
+                            var result = MessageBox.Show("Are you sure you want to discard changes?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            if (result == MessageBoxResult.Yes)
+                            {
+                                // Close the window
+                                Window parentWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+                                parentWindow?.Close();
+                            }
+                        }
+                    );
+                }
+
+                return _cancelCommand;
+            }
+        }
+
         private string _coverImg;
         public string CoverImg
         {
