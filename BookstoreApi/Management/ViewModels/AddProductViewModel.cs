@@ -37,9 +37,26 @@ namespace Management.ViewModels
                 OnPropertyChanged(nameof(Categories));
             }
         }
+
+        // Filter out the AllCategory object from the Categories collection
+        public ObservableCollection<Category> FilteredCategories
+        {
+            get
+            {
+                if (_parsedCategories == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return new ObservableCollection<Category>(_parsedCategories.Where(c => c.Id != null));
+                }
+            }
+        }
+
         public AddProductViewModel(ObservableCollection<Category> categories)
         {
-            Categories = new ObservableCollection<Category>(categories.Skip(1));
+            Categories = categories;
             NewBook = new Book();
         }
 

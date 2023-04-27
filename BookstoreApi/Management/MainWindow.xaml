@@ -66,6 +66,7 @@
                 <RadioButton Content="Category"
                              Height="50"                             
                              FontSize="20"
+                             Command="{Binding CategoryViewCommand}"
                              Style="{StaticResource MenuButtonTheme}"/>
                 <RadioButton Content="Statistics"
                              Height="50"                             
@@ -74,7 +75,7 @@
                 <RadioButton Content="Management"
                              Height="50"                             
                              FontSize="20"
-                               Command="{Binding ManagementViewCommand}"
+                             Command="{Binding ManagementViewCommand}"
                              Style="{StaticResource MenuButtonTheme}"/>
             </StackPanel>
         </Grid>

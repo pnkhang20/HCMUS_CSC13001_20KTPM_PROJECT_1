@@ -28,14 +28,29 @@ namespace Management.ViewModels
                 OnPropertyChanged(nameof(SelectedBook));
             }
         }
-        private ObservableCollection<Category> parsedCategories;
+        private ObservableCollection<Category> _parsedCategories;
         public ObservableCollection<Category> Categories
         {
-            get { return parsedCategories;}
+            get { return _parsedCategories; }
             set
             {
-                parsedCategories = value;
+                _parsedCategories = value;
                 OnPropertyChanged(nameof(Categories));
+            }
+        }
+        // Filter out the AllCategory object from the Categories collection
+        public ObservableCollection<Category> FilteredCategories
+        {
+            get
+            {
+                if (_parsedCategories == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return new ObservableCollection<Category>(_parsedCategories.Where(c => c.Id != null));
+                }
             }
         }
 
@@ -71,7 +86,7 @@ namespace Management.ViewModels
                                     client.BaseAddress = new Uri("https://localhost:7122/");
                                     client.DefaultRequestHeaders.Accept.Clear();
                                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+                                    SelectedBook.Category = SelectedCategory;
                                     // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
                                     HttpResponseMessage response = await client.PutAsJsonAsync($"api/Books/{SelectedBook.Id}", SelectedBook);
 
@@ -96,7 +111,7 @@ namespace Management.ViewModels
                         (param) =>
                         {
                             // Enable the command only if the SelectedBook object is not null and valid
-                            return SelectedBook != null && SelectedBook.IsValid();
+                            return SelectedBook != null;
                         }
                     );
                 }
@@ -133,8 +148,7 @@ namespace Management.ViewModels
         public EditProductViewModel(Book selectedBook, ObservableCollection<Category> categories )
         {
             SelectedBook = selectedBook.Clone();
-            Categories = categories;
-            Categories.RemoveAt(0);
+            Categories = categories;                    
             SelectedCategory = Categories.FirstOrDefault(c => c.Id == SelectedBook.Category.Id);
         }
 

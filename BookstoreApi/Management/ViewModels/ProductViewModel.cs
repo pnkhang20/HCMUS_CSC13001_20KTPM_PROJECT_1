@@ -17,6 +17,7 @@ namespace Management.ViewModels
 {
     class ProductViewModel : ObservableObject
     {
+
         private const string BookApiUrl = "https://localhost:7122/api/Books";
         private const string CategoryApiUrl = "https://localhost:7122/api/Categories";
         private readonly HttpClient httpClient = new HttpClient();
@@ -186,7 +187,7 @@ namespace Management.ViewModels
                     {
                         if (SelectedBook != null)
                         {
-                            // Create a new EditBookViewModel íntance
+                            // Create a new EditBookViewModel instance
                             var editBookVM = new EditProductViewModel(SelectedBook, Categories);
                             //Create the EditBookWindow nad set DataContext
                             var editBookWindow = new EditProductView();
@@ -230,7 +231,7 @@ namespace Management.ViewModels
             };
         }
 
-        private async Task LoadBooks(string searchText = null, Category category = null, string minPrice = null, string maxPrice = null, int pageNumber = 1, int pageSize = 5)
+        public async Task LoadBooks(string searchText = null, Category category = null, string minPrice = null, string maxPrice = null, int pageNumber = 1, int pageSize = 5)
         {
             try
             {

@@ -188,7 +188,7 @@
                             materialDesign:HintAssist.HintOpacity="0.8"
                             materialDesign:HintAssist.Foreground="White"                            
                             IsEditable="False"                            
-                            ItemsSource="{Binding Categories}"   
+                            ItemsSource="{Binding FilteredCategories}"   
                             SelectedItem="{Binding NewBook.Category}"
                             DisplayMemberPath="CategoryName">
                     <ComboBox.Resources>

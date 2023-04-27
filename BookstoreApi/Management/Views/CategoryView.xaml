@@ -1,0 +1,171 @@
+﻿<UserControl x:Class="Management.Views.CategoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Management.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Background="Transparent"             
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Border CornerRadius="20" Background="#394867">
+        <StackPanel Orientation="Vertical">
+
+            
+            
+            <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Center" 
+                    Width="310"
+                    Margin="0 30 0 0">
+                <TextBlock Text="Edit Category"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           FontSize="25"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        
+                        <TextBlock Text="Select a Category" 
+                           Foreground="white"
+                           FontSize="20"
+                           TextAlignment="Center"
+                           Margin="0, 15, 0, 0"
+                           HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="categoriesList"
+                            HorizontalAlignment="Center"
+                            Margin="30 15 0 0"
+                            Width="120"
+                            Height="30"
+                            FontSize="16"                                      
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            materialDesign:ColorZoneAssist.Mode="Dark"
+                            materialDesign:ComboBoxAssist.MaxLength="15"                               
+                            materialDesign:HintAssist.Hint="Category"
+                            materialDesign:HintAssist.HintOpacity="0.8"
+                            materialDesign:HintAssist.Foreground="White"                            
+                            IsEditable="False"                            
+                            ItemsSource="{Binding Categories}" 
+                            SelectedItem="{Binding SelectedCategory}"
+                            DisplayMemberPath="CategoryName">
+                            <ComboBox.Resources>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="White" />
+                                </Style>
+                            </ComboBox.Resources>
+                        </ComboBox>
+                    </StackPanel>
+                    
+                    <TextBlock Text="Category Name" 
+                           Foreground="white"
+                           FontSize="20"
+                           TextAlignment="Center"
+                           Margin="0, 15, 0, 0"
+                           HorizontalAlignment="Left"/>
+                    <Border CornerRadius="10"
+                        HorizontalAlignment="Left"
+                        Background="#212A3E"
+                        Margin="5 0 0 0"
+                        Width="300"
+                        Height="30">
+                        <TextBox x:Name="titleBox"                                                              
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Opacity="1"
+                            Margin="10 0 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding SelectedCategory.CategoryName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                            BorderThickness="0"/>
+                    </Border>
+                    <StackPanel Orientation="Vertical"   
+                                Margin="0 10 0 0"
+                                Width="300"
+                                HorizontalAlignment="Center">   
+                        <Button Content="Edit Category" 
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                HorizontalAlignment="Center"
+                                Width="200"
+                                Margin="5,0,0,10"
+                                Background="#305da8"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#305da8"                    
+                                Command="{Binding EditCategoryCommand}"/>
+                        <Button Content="Delete Category" 
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Width="200"
+                                Margin="5,0,0,0"
+                                Background="#ffdad6"
+                                Foreground="#410002"
+                                HorizontalAlignment="Center"
+                                BorderBrush="#ffdad6"
+                                Command="{Binding DeleteCategoryCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock Text="Add New Category"
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           Margin="0, 60, 0, 0"
+                           FontSize="25"/>
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="New Category Name" 
+                           Foreground="white"
+                           FontSize="20"
+                           TextAlignment="Center"
+                           Margin="0, 15, 0, 0"
+                           HorizontalAlignment="Left"/>
+                    <Border CornerRadius="10"
+                        HorizontalAlignment="Left"
+                        Background="#212A3E"
+                        Margin="5 0 0 0"
+                        Width="300"
+                        Height="30">
+                        <TextBox x:Name="authorBox"                                  
+                            
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Opacity="1"
+                            Margin="10 0 0 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding NewCategoryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
+                    </Border>
+                    <Button Content="Add Category" 
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                HorizontalAlignment="Center"
+                                Width="200"
+                                Margin="5,10,0,10"
+                                Background="#305da8"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#305da8"                    
+                                Command="{Binding AddNewCategoryCommand}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical"/>
+
+                    <StackPanel Width="60">
+
+                    </StackPanel>
+                </StackPanel>
+
+
+                
+            </StackPanel>
+
+
+        </StackPanel>
+    </Border>
+</UserControl>

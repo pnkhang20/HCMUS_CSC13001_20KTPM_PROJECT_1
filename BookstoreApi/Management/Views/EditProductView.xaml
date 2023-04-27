@@ -179,7 +179,7 @@
                             materialDesign:HintAssist.HintOpacity="0.8"
                             materialDesign:HintAssist.Foreground="White"                            
                             IsEditable="False"                            
-                            ItemsSource="{Binding Categories}"                            
+                            ItemsSource="{Binding FilteredCategories}"                            
                             SelectedItem="{Binding SelectedCategory,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             DisplayMemberPath="CategoryName">
                     <ComboBox.Resources>
