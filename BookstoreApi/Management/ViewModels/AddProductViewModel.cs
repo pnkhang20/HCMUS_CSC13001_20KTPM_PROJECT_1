@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Net.Http.Json;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using System.IO;
 
 namespace Management.ViewModels
 {
@@ -49,17 +52,17 @@ namespace Management.ViewModels
                 {
                     _addProductCommand = new RelayCommand(async (param) =>
                     {
-                        //// Check if the cover image is set
-                        //if (string.IsNullOrEmpty(NewBook.Cover))
-                        //{
-                        //    MessageBox.Show("Please select a cover image.");
-                        //    return;
-                        //}
 
                         // Confirm with the user that they want to save changes
                         var result = MessageBox.Show("Are you sure you want to save changes?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes)
                         {
+                            // Check if the cover image is set
+                            if (string.IsNullOrEmpty(CoverImg))
+                            {
+                                MessageBox.Show("Please select a cover image.");
+                                return;
+                            }
                             // Make a POST request to update the book
                             using (HttpClient client = new HttpClient())
                             {
@@ -67,8 +70,12 @@ namespace Management.ViewModels
                                 client.DefaultRequestHeaders.Accept.Clear();
                                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                                // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
-                                Book toParse = NewBook;
+                                // Upload the cover image to Azure Blob Storage and get the URL
+                                string imageUrl = await UploadImage(CoverImg);
+
+                                // Set the Cover property of the new book to the URL of the uploaded blob
+                                NewBook.Cover = imageUrl;
+                                NewBook.Id = "string";
                                 HttpResponseMessage response = await client.PostAsJsonAsync($"api/Books/", NewBook);
 
                                 if (response.IsSuccessStatusCode)
@@ -114,15 +121,11 @@ namespace Management.ViewModels
                         {
                             OpenFileDialog openFileDialog = new OpenFileDialog();
                             openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
-                            // Upload service: imguploadwpf@quiet-dryad-385006.iam.gserviceaccount.com
+                            // Upload service: imagehost@wpfproject-385006.iam.gserviceaccount.com
                             if (openFileDialog.ShowDialog() == true)
                             {
                                 string imagePath = openFileDialog.FileName;
                                 CoverImg = imagePath;
-                                
-                                // Upload the image to a hosting service and get the URL
-                                //string imageUrl = await UploadImage(imagePath);
-                                //NewBook.Cover = imageUrl;
                             }
                         }
                     );
@@ -132,7 +135,39 @@ namespace Management.ViewModels
             }
         }
 
-       
+        private async Task<string> UploadImage(string imagePath)
+        {
+            // Get the connection string and container name from app settings or a configuration file
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=kpwpf;AccountKey=AUW9ZL+TCxx0aj6GF5/DC3wRz1oHUgVMJuxbRfrJk+JFEec9xxF9mrK5wrtmXA0MpHLrV0xm9wyF+AStoAFX0w==;EndpointSuffix=core.windows.net";
+            string containerName = "covers";
+
+            // Create the blob service client and get a reference to the container
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            // Create the container if it does not exist
+            if (!containerClient.Exists())
+            {
+                await containerClient.CreateAsync();
+            }
+
+            // Create a reference to the blob and upload the image
+            BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(imagePath));
+            using (FileStream stream = File.OpenRead(imagePath))
+            {
+                var blobUploadOptions = new BlobUploadOptions()
+                {
+                    HttpHeaders = new BlobHttpHeaders()
+                    {
+                        ContentType = "image/jpeg"
+                    }
+                };
+                await blobClient.UploadAsync(stream, blobUploadOptions);
+            }
+            // Return the URL of the uploaded blob
+            return blobClient.Uri.ToString();
+        }
+
 
 
     }
