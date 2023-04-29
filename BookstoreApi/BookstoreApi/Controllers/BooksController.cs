@@ -15,7 +15,6 @@ namespace BookstoreApi.Controllers
     {
         private readonly BooksService _booksService;
         private readonly CategoriesService _categoriesService;
-
         public BooksController(BooksService booksService, CategoriesService categoriesService)
         {
             _booksService = booksService;
@@ -76,13 +75,10 @@ namespace BookstoreApi.Controllers
 
                 var totalCount = filteredBooks.Count;
                 var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
                 // Apply pagination
                 var pagedBooks = filteredBooks.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-
                 return pagedBooks;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Post(Book newBook)
@@ -101,7 +97,6 @@ namespace BookstoreApi.Controllers
                 newBook.Category.CategoryName = category.CategoryName;
                 // Add the new Book to the database
                 await _booksService.CreateAsync(newBook);
-
                 return Ok(newBook);
             }
             catch (Exception ex)
@@ -121,7 +116,6 @@ namespace BookstoreApi.Controllers
             }
 
             updatedBook.Id = book.Id;
-
             // Look up the Category by ID in the database
             var category = await _categoriesService.GetAsync(updatedBook.Category.Id);
 
@@ -129,12 +123,10 @@ namespace BookstoreApi.Controllers
             {
                 return BadRequest($"Category with ID {updatedBook.Category.Id} not found.");
             }
-
             // Associate the Category with the Book
             updatedBook.Category.Id = category.Id;
             updatedBook.Category.CategoryName = category.CategoryName;
             await _booksService.UpdateAsync(id, updatedBook);
-
             return NoContent();
         }
 
@@ -142,14 +134,11 @@ namespace BookstoreApi.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var book = await _booksService.GetAsync(id);
-
             if (book is null)
             {
                 return NotFound();
             }
-
             await _booksService.RemoveAsync(id);
-
             return NoContent();
         }
     }

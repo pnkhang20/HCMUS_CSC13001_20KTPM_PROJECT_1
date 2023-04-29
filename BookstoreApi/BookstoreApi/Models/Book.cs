@@ -34,5 +34,10 @@ public class Book
     [BsonElement("Category")]
     [BsonRequired]
     public Category Category { get; set; } = null!;
+
+    [BsonElement("TotalSold")]
+    [BsonRequired]
+    public int TotalSold { get; set; } = 0;
+
 }
 
