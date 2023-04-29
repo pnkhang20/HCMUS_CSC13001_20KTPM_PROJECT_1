@@ -16,9 +16,8 @@ namespace Management.Models
         public string Price { get; set; }
         public int Quantity { get; set; }
         public string Cover { get; set; }
-
         public Category Category { get; set; }
-     
+        public int TotalSold { get; set; }     
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Book Clone()
@@ -37,30 +36,6 @@ namespace Management.Models
                 },
                 Cover = this.Cover
             };
-        }
-
-        public bool IsValid()
-        {
-            if (string.IsNullOrWhiteSpace(Title))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(Author))
-            {
-                return false;
-            }
-
-            if (Price == null)
-            {
-                return false;
-            }
-
-            if (Category == null || Category.Id == null)
-            {
-                return false;
-            }
-            return true;
         }
 
     }

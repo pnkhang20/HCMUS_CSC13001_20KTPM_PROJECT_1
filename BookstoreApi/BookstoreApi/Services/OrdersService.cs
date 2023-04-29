@@ -29,6 +29,10 @@ public class OrdersService
 
     public async Task<Order?> GetAsync(string id)
     {
+        if (!ObjectId.TryParse(id, out ObjectId objectId))
+        {
+            return null;
+        }
         return await _ordersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
     }
 

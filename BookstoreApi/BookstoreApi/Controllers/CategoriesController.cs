@@ -62,10 +62,7 @@ public class CategoriesController : ControllerBase
         if (category is null)
         {
             return NotFound();
-        }
-        
-
-
+        }        
         updatedCategory.Id = category.Id;
 
         await _categoriesService.UpdateAsync(id, updatedCategory);
