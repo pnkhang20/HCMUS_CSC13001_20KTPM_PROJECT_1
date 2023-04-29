@@ -10,10 +10,10 @@ namespace Management.ViewModels
     class AddOrderViewModel : ObservableObject
     {
         public RelayCommand ProductViewCommand { get; set; }
-      
+        public RelayCommand OrderViewCommand { get; set; }
 
         public ShoppingViewModel ProductVM { get; set; }
-    
+        public CartViewModel OrderVM { get; set; }
         private object _currentView;
         public object CurrentView
         {
@@ -28,6 +28,7 @@ namespace Management.ViewModels
         {
          
             ProductVM = new ShoppingViewModel();
+            OrderVM = new CartViewModel();
       
             CurrentView = ProductVM;
 
@@ -36,7 +37,12 @@ namespace Management.ViewModels
                 CurrentView = ProductVM;
             });
 
-         
+            OrderViewCommand = new RelayCommand(obj =>
+            {
+                CurrentView = OrderVM;
+            });
+
+
         }
     }
 }

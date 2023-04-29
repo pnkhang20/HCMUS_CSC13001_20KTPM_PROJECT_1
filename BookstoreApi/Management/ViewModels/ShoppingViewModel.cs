@@ -119,7 +119,28 @@ namespace Management.ViewModels
             }
         }
 
-      
+        private ICommand _addIntoCartCommand;
+        public ICommand AddIntoCartCommand
+        {
+            get
+            {
+                if (_addIntoCartCommand == null)
+                {
+                    _previousPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            if (HasPrevPage)
+                            {
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
+                            }
+                        },
+                        (param) => HasPrevPage
+                    );
+                }
+                return _previousPageCommand;
+            }
+        }
+
         public ShoppingViewModel()
         {
             Page = 1;
