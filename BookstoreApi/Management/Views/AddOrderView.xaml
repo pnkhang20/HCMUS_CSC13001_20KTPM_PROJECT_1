@@ -26,7 +26,7 @@
                                                
                              IsChecked="True"     
                             
-                             Command="{Binding HomeViewCommand, UpdateSourceTrigger=PropertyChanged}"
+                             Command="{Binding ProductViewCommand, UpdateSourceTrigger=PropertyChanged}"
                            >
 
 
@@ -59,7 +59,7 @@
                              FontSize="20"
                             
                             
-                             Command="{Binding HomeViewCommand, UpdateSourceTrigger=PropertyChanged}"
+                             Command="{Binding OrderViewCommand, UpdateSourceTrigger=PropertyChanged}"
                            >
 
 

@@ -156,7 +156,7 @@
                                         <TextBlock FontSize="15" HorizontalAlignment="Center" Foreground="White" Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBlock FontSize="15" TextAlignment="Center" Width="142" Foreground="AliceBlue" Text="{Binding Category.CategoryName, UpdateSourceTrigger=PropertyChanged}" />
                                         <TextBlock FontSize="15" TextAlignment="Center" Width="90" Foreground="White" Text="{Binding Price, UpdateSourceTrigger=PropertyChanged,StringFormat=\{0\}$}" />
-                                        <Button Style="{StaticResource addButton}" Command="{Binding AddOrderCommand}" HorizontalAlignment="Center">
+                                        <Button Style="{StaticResource addButton}" Command="{Binding AddIntoCartCommand}" HorizontalAlignment="Center">
                                          
                                                 <TextBlock Text="Add To Cart"/>
                                            

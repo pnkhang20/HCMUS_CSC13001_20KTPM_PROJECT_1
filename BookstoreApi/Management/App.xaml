@@ -48,6 +48,11 @@
                 <view:ShoppingView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodel:CartViewModel}">
+                <view:CartView/>
+            </DataTemplate>
+
+
 
 
 

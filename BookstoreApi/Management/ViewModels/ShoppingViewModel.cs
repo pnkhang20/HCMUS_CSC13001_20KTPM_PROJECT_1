@@ -119,6 +119,8 @@ namespace Management.ViewModels
             }
         }
 
+        public event EventHandler<Book> OrderPlaced;
+
         private ICommand _addIntoCartCommand;
         public ICommand AddIntoCartCommand
         {
@@ -126,18 +128,18 @@ namespace Management.ViewModels
             {
                 if (_addIntoCartCommand == null)
                 {
-                    _previousPageCommand = new RelayCommand(
-                        async (param) =>
-                        {
-                            if (HasPrevPage)
-                            {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
-                            }
-                        },
-                        (param) => HasPrevPage
+
+                    //var addOrderViewModel = new AddOrderViewModel(selectedBook);
+                    _addIntoCartCommand = new RelayCommand(
+                          async (param) =>
+                          {
+                              OrderPlaced?.Invoke(this, selectedBook);
+
+                          }
                     );
+
                 }
-                return _previousPageCommand;
+                return _addIntoCartCommand;
             }
         }
 
