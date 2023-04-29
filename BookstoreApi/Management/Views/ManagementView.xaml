@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Management.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="800">
@@ -28,39 +29,54 @@
                  
 
                 <!--<DatePicker Style="{StaticResource MyDatePickerStyle}" />-->
-                <Button Style="{StaticResource addButton}" Grid.Column="2">
+                <!--<Button Style="{StaticResource addButton}" Grid.Column="2"  Command="{Binding AddOrderCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                        <TextBlock Text="Add New Order"/>
+                    </StackPanel>
+                </Button>-->
+                <Button Grid.Column="2"
+                                Width="150"
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                HorizontalAlignment="Right"
+                                Margin="20,20,20,0"
+                                Command="{Binding AddOrderCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
                         <TextBlock Text="Add New Order"/>
                     </StackPanel>
                 </Button>
+
             </Grid>
-            <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="2" x:Name="ordersDataGrid">
+            <DataGrid Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" RowStyle="{DynamicResource DataGridRowStyle1}" Grid.Row="2" x:Name="ordersDataGrid"  ItemsSource="{Binding OrdersList, UpdateSourceTrigger=PropertyChanged}">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="auto" ElementStyle="{StaticResource CheckBoxStyle1}">
+                    <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="auto" ElementStyle="{StaticResource CheckBoxStyle1}" Binding="{Binding OrderIsDone, UpdateSourceTrigger=PropertyChanged }">
                         <DataGridCheckBoxColumn.HeaderTemplate>
                             <DataTemplate>
-                                <CheckBox Style="{StaticResource CheckBoxStyle1}" />
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"  />
                             </DataTemplate>
                         </DataGridCheckBoxColumn.HeaderTemplate>
                     </DataGridCheckBoxColumn>
-                    <DataGridTextColumn Header="Id" IsReadOnly="True" CanUserResize="False" Width="auto" Binding="{Binding Number}"/>
+                    <DataGridTextColumn Header="Id" IsReadOnly="True" CanUserResize="False" Width="auto" Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged }"/>
                     <DataGridTemplateColumn Header="Customer Name" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Border Width="25" Height="25" CornerRadius="50" Margin="0 0 10 0" Background="{Binding BgColor}">
-                                        <TextBlock Text="{Binding Character}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
+                                        <TextBlock Text="{Binding CustomerName[0], UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
                                     </Border>
 
-                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding CustomerName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Customer Phone" Binding="{Binding Position}" IsReadOnly="True" Width="*"/>
-                    <DataGridTextColumn Header="Total Price" Binding="{Binding Phone}" IsReadOnly="True" Width="*"/>
-                    <DataGridTextColumn Header="Ordered Date" Binding="{Binding Phone}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Customer Phone" Binding="{Binding CustomerPhone, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Total Price" Binding="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Ordered Date" Binding="{Binding OrderedDate, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Width="*"/>
                     <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="auto">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

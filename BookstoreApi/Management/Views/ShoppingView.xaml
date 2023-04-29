@@ -1,0 +1,213 @@
+﻿<UserControl x:Class="Management.Views.ShoppingView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Management.Views"             
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             Background="Transparent"             
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Border CornerRadius="20" Background="#394867">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <WrapPanel>
+                <TextBlock Text="Products"
+                           Foreground="#F1F6F9"
+                           FontSize="30"                       
+                           Margin="25 20 80 0"/>
+
+                <Border CornerRadius="10"
+                        Background="#212A3E"
+                        Margin="0 20 20 0"
+                        Width="200"                        
+                        Height="30">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle StrokeThickness="0.1"/>
+
+                        <TextBox x:Name="searchBox"                                  
+                            materialDesign:HintAssist.Hint="Enter book name"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Margin="5 0 20 0"
+                            Width="150"
+                            Height="30"
+                            FontSize="16"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
+                    </Grid>
+                </Border>
+
+                <ComboBox x:Name="categoriesList"
+                            HorizontalAlignment="Center"
+                            Margin="0 20 20 0"
+                            Width="120"
+                            Height="30"
+                            FontSize="16"                                      
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            materialDesign:ColorZoneAssist.Mode="Dark"
+                            materialDesign:ComboBoxAssist.MaxLength="15"                               
+                            materialDesign:HintAssist.Hint="Category"
+                            materialDesign:HintAssist.HintOpacity="0.8"
+                            materialDesign:HintAssist.Foreground="White"                            
+                            IsEditable="False"                            
+                            ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding SelectedCategory}"
+                            DisplayMemberPath="CategoryName">
+                    <ComboBox.Resources>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Background" Value="White" />
+                        </Style>
+                    </ComboBox.Resources>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding CategorySelectedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+
+                <TextBox x:Name="minPrice"
+                            materialDesign:HintAssist.Hint="$ Minimum"
+                            materialDesign:TextFieldAssist.PrefixText="$"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Margin="5 20 20 0"
+                            Width="85"
+                            Height="30"
+                            FontSize="14"
+                            Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="maxPrice"
+                            materialDesign:HintAssist.Hint="$ Maximum"
+                            materialDesign:TextFieldAssist.PrefixText="$"
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"                         
+                            Margin="5 20 20 0"
+                            Width="85"
+                            Height="30"
+                            FontSize="14"
+                            Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                
+
+            </WrapPanel>
+
+            <ScrollViewer Background="#394867" Margin="50,0,20,50" Grid.Row="1">
+                <ListView x:Name="ListViewProducts" 
+                          PreviewMouseWheel="OnPreviewMouseWheel" 
+                          ItemsSource="{Binding Books, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding SelectedBook}"                           
+                          ScrollViewer.CanContentScroll="True" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"                           
+                          BorderThickness="0" Background="Transparent" >
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter Property="Background" Value="LightBlue" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border HorizontalAlignment="Center"
+                                CornerRadius="10"
+                                BorderThickness="1" BorderBrush="DarkOrange"
+                                Width="300"
+                                Height="350"                                
+                                Background="#22202f">
+                                <StackPanel Orientation="Vertical">
+                                    <DockPanel Height="210">
+                                        <Border Height="200"
+                                                Padding="0 0 0 0"                                                
+                                                CornerRadius="10"
+                                                BorderThickness="1" BorderBrush="Gray">
+                                            <Border.Background>
+                                                <ImageBrush Stretch="Uniform"                                                             
+                                                            ImageSource="{Binding Cover, UpdateSourceTrigger=PropertyChanged}"/>
+                                            </Border.Background>
+                                        </Border>
+                                    </DockPanel>
+                                    <StackPanel VerticalAlignment="Center" Margin="0 0">
+                                        <TextBlock FontSize="16" FontWeight="DemiBold" HorizontalAlignment="Center" Foreground="White" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock FontSize="15" HorizontalAlignment="Center" Foreground="White" Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock FontSize="15" TextAlignment="Center" Width="142" Foreground="AliceBlue" Text="{Binding Category.CategoryName, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBlock FontSize="15" TextAlignment="Center" Width="90" Foreground="White" Text="{Binding Price, UpdateSourceTrigger=PropertyChanged,StringFormat=\{0\}$}" />
+                                        <Button Style="{StaticResource addButton}" Command="{Binding AddOrderCommand}" HorizontalAlignment="Center">
+                                         
+                                                <TextBlock Text="Add To Cart"/>
+                                           
+                                        </Button>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+
+            </ScrollViewer>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="45"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="Previous"
+                                Width="200"
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Margin="0,0,5,0"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Command="{Binding PrevPageCommand}"
+                                IsEnabled="{Binding HasPrevPage}"/>
+
+                        <Button Content="Next" 
+                                Width="200"
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Margin="5,0,0,0"
+                                Command="{Binding NextPageCommand}" 
+                                IsEnabled="{Binding HasNextPage}" />
+                    </StackPanel>
+
+                </Grid>
+            </Grid>
+            <StackPanel>
+            </StackPanel>
+        </Grid>
+
+    </Border>
+</UserControl>

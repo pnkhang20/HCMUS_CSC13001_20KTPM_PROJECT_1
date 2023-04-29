@@ -1,0 +1,98 @@
+﻿<Window x:Class="Management.Views.AddOrderView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:Management.Views"
+        xmlns:viewmodel="clr-namespace:Management.ViewModels"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="AddOrderView" Height="720" Width="1280">
+    <Window.DataContext>
+        <viewmodel:AddOrderViewModel/>
+    </Window.DataContext>
+    <Border Background="#212A3E">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="50 20">
+                <RadioButton
+                                               
+                             IsChecked="True"     
+                            
+                             Command="{Binding HomeViewCommand, UpdateSourceTrigger=PropertyChanged}"
+                           >
+
+
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="RadioButton">
+                                        <Border 
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10">
+                                            <Icon:PackIconMaterial Kind="Shopping" Foreground="White" Height="30" Width="30"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" Value="#394867"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+                <RadioButton
+                            
+                                                 
+                             FontSize="20"
+                            
+                            
+                             Command="{Binding HomeViewCommand, UpdateSourceTrigger=PropertyChanged}"
+                           >
+
+
+                    <RadioButton.Style>
+                        <Style TargetType="RadioButton">
+                          
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="RadioButton">
+                                        <Border 
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="10">
+                                            <Icon:PackIconMaterial Kind="Cart" Foreground="White" Height="30" Width="30"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" Value="#394867"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </RadioButton.Style>
+                </RadioButton>
+
+            </StackPanel>
+            <ContentControl Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5,5,10,73"
+                                Content="{Binding CurrentView}"/>
+        </Grid>
+    </Border>
+</Window>

@@ -24,8 +24,8 @@ namespace Management.Views
         public ManagementView()
         {
             InitializeComponent();
-            var converter = new BrushConverter();
-            ObservableCollection<Member> members = new ObservableCollection<Member>();
+            //var converter = new BrushConverter();
+            //ObservableCollection<Member> members = new ObservableCollection<Member>();
 
             //members.Add(new Member { Number = "1", Character = "J", BgColor = (Brush)converter.ConvertFromString("#1098AD"), Name = "John Doe", Position = "Coach", Email = "john.doe@gmail.com", Phone = "415-954-1475" });
             //members.Add(new Member { Number = "2", Character = "R", BgColor = (Brush)converter.ConvertFromString("#1E88E5"), Name = "Reza Alavi", Position = "Administrator", Email = "reza110@hotmail.com", Phone = "254-451-7893" });
@@ -60,18 +60,9 @@ namespace Management.Views
             //members.Add(new Member { Number = "29", Character = "F", BgColor = (Brush)converter.ConvertFromString("#1E88E5"), Name = "Frank Underwood", Position = "Manager", Email = "frank@yahoo.com", Phone = "301-584-6966" });
             //members.Add(new Member { Number = "30", Character = "S", BgColor = (Brush)converter.ConvertFromString("#0CA678"), Name = "Saeed Dasman", Position = "Coach", Email = "saeed.dasi@hotmail.com", Phone = "817-320-5052" });
 
-            ordersDataGrid.ItemsSource = members;
+            //ordersDataGrid.ItemsSource = members;
         }
 
-        public class Member
-        {
-            public string Character { get; set; }
-            public Brush BgColor { get; set; }
-            public string Number { get; set; }
-            public string Name { get; set; }
-            public string Position { get; set; }
-            public string Email { get; set; }
-            public string Phone { get; set; }
-        }
+       
     }
 }
