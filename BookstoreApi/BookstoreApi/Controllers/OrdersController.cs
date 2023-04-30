@@ -97,7 +97,6 @@ namespace BookstoreApi.Controllers
         }
 
 
-
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, Order updatedOrder)
         {
@@ -107,46 +106,75 @@ namespace BookstoreApi.Controllers
                 return NotFound();
             }
 
+            // variable to mark for updatedOrder is done
             var isDone = updatedOrder.OrderIsDone;
-            
-            // Loop through the updated order items and update the corresponding book quantities
-            foreach (var updatedOrderItem in order.OrderItemsList)
+            var newOrderItems = new List<OrderItem>();
+
+            // item list of the order
+            var oderItemList = order.OrderItemsList;
+
+            foreach (var updatedOrderItem in updatedOrder.OrderItemsList)
             {
                 var book = await _booksService.GetAsync(updatedOrderItem.Book.Id);
-                if (book == null)
-                {
-                    return BadRequest($"Book with Id {updatedOrderItem.Book.Id} not found.");
-                }
 
-                // Check if the updated order item is already in the order or not
                 var existingOrderItem = order.OrderItemsList.FirstOrDefault(item => item.Book.Id == updatedOrderItem.Book.Id);
+
                 if (existingOrderItem != null)
                 {
-                    // If the updated order item is already in the order, update the book quantity based on the difference
+
+                    // Update the book quantity based on the difference between the current order item quantity and the updated order item quantity
                     var quantityDifference = updatedOrderItem.Quantity - existingOrderItem.Quantity;
+
+                    // Update the quantity of the existing order item
+                    existingOrderItem.Quantity = updatedOrderItem.Quantity;
+
+
+                    if (quantityDifference > book.Quantity)
+                    {
+                        return BadRequest($"Not enough stock for book {book.Title} ({book.Id}). Available stock: {book.Quantity}");
+                    }
                     book.Quantity -= quantityDifference;
+                    existingOrderItem.Book.Quantity -= quantityDifference;
+                    // Check if the order is done and update the book's total sold if it is
+                    if (isDone)
+                    {
+                        book.TotalSold += updatedOrderItem.Quantity;
+                        existingOrderItem.Book.TotalSold += updatedOrderItem.Quantity;
+                    }
+                    await _booksService.UpdateAsync(book.Id, book);
                 }
+
                 else
                 {
                     // If the updated order item is not in the order yet, add it and update the book quantity accordingly
+                    if (updatedOrderItem.Quantity > book.Quantity)
+                    {
+                        return BadRequest($"Not enough stock for book {book.Title} ({book.Id}). Available stock: {book.Quantity}");
+                    }
+                    
+                    book.Quantity -= updatedOrderItem.Quantity;
                     var newOrderItem = new OrderItem
                     {
                         Book = book,
                         Quantity = updatedOrderItem.Quantity
                     };
                     order.OrderItemsList.Add(newOrderItem);
-                    book.Quantity -= updatedOrderItem.Quantity;
+                    // Check if the order is done and update the book's total sold if it is
+                    if (isDone)
+                    {
+                        book.TotalSold += updatedOrderItem.Quantity;
+                        newOrderItem.Book.TotalSold += updatedOrderItem.Quantity;
+                    }
+                    await _booksService.UpdateAsync(book.Id, book);
                 }
 
-                // Check if the order is done and update the book's total sold if it is
-                if (isDone)
-                {
-                    book.TotalSold += updatedOrderItem.Quantity;
-                }
-                await _booksService.UpdateAsync(book.Id, book);
+
             }
-            
+
             order.OrderIsDone = isDone;
+
+            // Recalculate the total price of the order
+            order.TotalPrice = order.OrderItemsList.Sum(item => item.Book.Price * item.Quantity);
 
             // Update the order
             await _ordersService.UpdateAsync(id, order);
@@ -164,6 +192,11 @@ namespace BookstoreApi.Controllers
                 return NotFound();
             }
 
+            if (order.OrderIsDone)
+            {
+                return BadRequest("Cannot delete an order that is marked as done.");
+            }
+
             await _ordersService.RemoveAsync(id);
 
             // Update book quantities
@@ -175,5 +208,6 @@ namespace BookstoreApi.Controllers
             }
             return NoContent();
         }
+
     }
 }

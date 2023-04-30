@@ -16,8 +16,7 @@ namespace Management.ViewModels
 
         public HomeViewModel HomeVM { get; set; }
         public ProductViewModel ProductVM { get; set; }
-        
-        public ManagementViewModel ManagementVM { get; set; }
+                
         public CategoryViewModel CategoryVM { get; set; }
         private object _currentView;
         public object CurrentView
@@ -36,8 +35,7 @@ namespace Management.ViewModels
         public MainViewModel()
         { 
             HomeVM = new HomeViewModel();
-            ProductVM = new ProductViewModel();
-            ManagementVM = new ManagementViewModel();
+            ProductVM = new ProductViewModel();        
             CategoryVM = new CategoryViewModel();
             CurrentView = HomeVM;
 
@@ -49,11 +47,6 @@ namespace Management.ViewModels
             ProductViewCommand = new RelayCommand(obj =>
             {
                 CurrentView = ProductVM;
-            });
-
-            ManagementViewCommand = new RelayCommand(obj =>
-            {
-                CurrentView = ManagementVM;
             });
 
             CategoryViewCommand = new RelayCommand(obj =>
