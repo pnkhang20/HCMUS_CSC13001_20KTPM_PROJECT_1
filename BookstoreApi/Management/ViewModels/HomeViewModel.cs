@@ -20,7 +20,7 @@ namespace Management.ViewModels
     {
         private const string BookApiUrl = "https://localhost:7122/api/Books";
         private readonly HttpClient httpClient = new HttpClient();
-        public ObservableCollection<Book> Books { get; } = new ObservableCollection<Book>();
+        public ObservableCollection<Book> Books { get; set; } = new ObservableCollection<Book>();
 
      
         public int _total = 0;
@@ -37,7 +37,6 @@ namespace Management.ViewModels
           
             LoadBooks();
 
-     
         }
 
         public async Task LoadBooks()
@@ -60,12 +59,28 @@ namespace Management.ViewModels
                     Books.Clear();
                     foreach (var book in books)
                     {
-                        if (Books.Count == 5) break;
+                        
                         if (book.Quantity >= 0 && book.Quantity < 5)
                         {
                             Books.Add(book);
+                           
+                            
+                        }
+                        if (Books.Count == 5) break;
+                    }
+
+                   for (int i = 0; i< Books.Count; i++)
+                    {
+                        for (int j = i+1; j < Books.Count; j++)
+                        {
+                            if (Books[j].Quantity <= Books[i].Quantity)
+                            {
+                                (Books[i], Books[j]) = (Books[j], Books[i]);
+
+                            }
                         }
                     }
+                   
                 }
             }
             catch (Exception ex) { }
