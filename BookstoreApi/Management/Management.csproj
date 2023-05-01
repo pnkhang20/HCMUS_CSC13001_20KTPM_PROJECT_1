@@ -11,11 +11,11 @@
     <None Remove="Images\cart.jpg" />
     <None Remove="Images\close.png" />
     <None Remove="Images\close2.png" />
+    <None Remove="Images\default-thumbnail.jpg" />
     <None Remove="Images\err.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
     <Folder Include="Base\" />
     <Folder Include="Fonts\" />
   </ItemGroup>
@@ -35,6 +35,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\default-thumbnail.jpg" />
   </ItemGroup>
 
 </Project>

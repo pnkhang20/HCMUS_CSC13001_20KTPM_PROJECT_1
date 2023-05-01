@@ -22,6 +22,7 @@ namespace Management.ViewModels
         private readonly HttpClient httpClient = new HttpClient();
         public ObservableCollection<Book> Books { get; } = new ObservableCollection<Book>();
 
+     
         public int _total = 0;
         public int Total
         {
@@ -35,8 +36,8 @@ namespace Management.ViewModels
         {
           
             LoadBooks();
-           
-            // Wire up the SearchText property
+
+     
         }
 
         public async Task LoadBooks()
@@ -56,9 +57,10 @@ namespace Management.ViewModels
                
                     Total = books.Count;
 
-                  
+                    Books.Clear();
                     foreach (var book in books)
                     {
+                        if (Books.Count == 5) break;
                         if (book.Quantity >= 0 && book.Quantity < 5)
                         {
                             Books.Add(book);

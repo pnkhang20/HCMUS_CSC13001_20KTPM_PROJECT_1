@@ -6,7 +6,9 @@
              xmlns:local="clr-namespace:Management.Views"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"                         
-             d:DesignHeight="500" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800" 
+          
+             >
     
     <Border CornerRadius="20" Background="#394867">
     <!--<StackPanel Margin="25, 10, 5, 20">
@@ -246,34 +248,54 @@
                    FontSize="28"
                    HorizontalAlignment="Left"
                    Margin="0, 10, 0, 10"/>
-
-                 <ListView Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="10, 10, 0, 0"  ItemsSource="{Binding Books}" >
-                            
+                      
+                        <ListView x:Name="listProductsView" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Padding="10, 10, 0, 0"  ItemsSource="{Binding Books}"
+                         PreviewMouseWheel="OnPreviewMouseWheel"
+                         ScrollViewer.CanContentScroll="True" 
+                        >
+                           
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Width="150"
-                        Height="150"
-                        CornerRadius="15"
-                        Margin="5"
-                        Background="#844eff">
-                                        <Border.Clip>
-                                            <RectangleGeometry RadiusX="15" RadiusY="15" Rect="1,1,149,149"/>
-                                        </Border.Clip>
-                                        <Grid>
-                                            <Ellipse Width="230" Height="230" Margin="-140 -50 0 0" HorizontalAlignment="Left">
-                                                <Ellipse.Fill>
-                                                    <ImageBrush ImageSource="{Binding Cover}" Stretch="Fill"></ImageBrush>
-                                                </Ellipse.Fill>
-                                            </Ellipse>
 
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
+                                    <Border HorizontalAlignment="Center"
+                                CornerRadius="10"
+                                BorderThickness="1" BorderBrush="DarkOrange"
+                                Width="150"
+                                Height="230"                                
+                                Background="#22202f">
+                                    <StackPanel Orientation="Vertical">
+                                        <DockPanel Height="150">
+                                            <Border Height="140"
+                                                Padding="0 0 0 0"                                                
+                                                CornerRadius="10"
+                                                BorderThickness="1" BorderBrush="Gray">
+                                                <Border.Background>
+                                                    <ImageBrush Stretch="Uniform"                                                             
+                                                            ImageSource="{Binding Cover, UpdateSourceTrigger=PropertyChanged, IsAsync=True}"  RenderOptions.BitmapScalingMode="HighQuality"/>
+                                                </Border.Background>
+                                            </Border>
+                                        </DockPanel>
+                                        <StackPanel VerticalAlignment="Center" Margin="0 0">
+                                                <TextBlock FontSize="16" FontWeight="DemiBold" TextAlignment="Center" RibbonTwoLineText.HasTwoLines="True"  TextWrapping="Wrap" HorizontalAlignment="Center" Foreground="White" Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+                                                <TextBlock FontSize="15" TextAlignment="Center" Width="90" Foreground="White">                                            
+                                            <Run Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" d:Text="20" />
+                                            <Run Text="pieces"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+    </Border>
+
+    </DataTemplate>
+                                
+                                
                             </ListView.ItemTemplate>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
                         </ListView>
+                     
                     </Grid>
             </StackPanel>
             </ScrollViewer>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Management.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,26 @@ namespace Management.Views
         public HomeView()
         {
             InitializeComponent();
+            
+        }
+        private void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta < 0)
+            {
+                // Scroll down
+                if (listProductsView.Items.Count > 0)
+                {
+                    listProductsView.ScrollIntoView(listProductsView.Items[listProductsView.Items.Count - 1]);
+                }
+            }
+            else if (e.Delta > 0)
+            {
+                // Scroll up
+                if (listProductsView.Items.Count > 0)
+                {
+                    listProductsView.ScrollIntoView(listProductsView.Items[0]);
+                }
+            }
         }
     }
 }

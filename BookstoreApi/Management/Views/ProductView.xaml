@@ -144,7 +144,8 @@
                                 CornerRadius="10"
                                 BorderThickness="1" BorderBrush="DarkOrange"
                                 Width="300"
-                                Height="350"                                
+                                Height="350"    
+                                x:Name="bookBackground"
                                 Background="#22202f">
                                 <StackPanel Orientation="Vertical">
                                     <DockPanel Height="210">
