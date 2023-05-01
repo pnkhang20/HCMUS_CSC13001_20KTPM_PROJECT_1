@@ -108,6 +108,9 @@ namespace BookstoreApi.Controllers
 
             // variable to mark for updatedOrder is done
             var isDone = updatedOrder.OrderIsDone;
+            var customerName = updatedOrder.CustomerName;
+            var customerPhone = updatedOrder.CustomerPhone;
+            var customerShippingAddress = updatedOrder.ShippingAddress;
             var newOrderItems = new List<OrderItem>();
 
             // item list of the order
@@ -172,6 +175,9 @@ namespace BookstoreApi.Controllers
             }
 
             order.OrderIsDone = isDone;
+            order.CustomerName = customerName;
+            order.CustomerPhone = customerPhone;
+            order.ShippingAddress = customerShippingAddress;
 
             // Recalculate the total price of the order
             order.TotalPrice = order.OrderItemsList.Sum(item => item.Book.Price * item.Quantity);
