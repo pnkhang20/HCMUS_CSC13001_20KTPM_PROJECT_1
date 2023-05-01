@@ -15,7 +15,7 @@
             >
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="180"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
@@ -24,16 +24,7 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-            </Grid>
+            
 
 
             <ContentControl Grid.Row="1"
@@ -42,10 +33,10 @@
                                 Content="{Binding CurrentView}"/>
             <TextBlock Text="Online Shop"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
+                       HorizontalAlignment="Center"
                        Foreground="#F1F6F9"
                        FontSize="22"
-                       Margin="35, 0, 0, 0"/>
+                       Margin="20"/>
             <StackPanel Grid.Row="1"
                         Margin="4">
                 <RadioButton Content="Home"
