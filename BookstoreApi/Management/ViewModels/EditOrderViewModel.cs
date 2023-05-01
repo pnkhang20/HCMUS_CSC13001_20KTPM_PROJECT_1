@@ -20,6 +20,7 @@ namespace Management.ViewModels
     {
         private const string OrderApiUrl = "https://localhost:7122/api/Orders";
         private Order _selectedOrder;   
+
         public Order SelectedOrder
         {
             get { return _selectedOrder; }
@@ -31,6 +32,32 @@ namespace Management.ViewModels
         {
             get { return _orderItems; }
             set { _orderItems = value; OnPropertyChanged(); }
+        }
+
+        private ObservableCollection<Book> _booksList;
+        public ObservableCollection<Book> BooksList
+        {
+            get { return _booksList; }
+            set { _booksList = value; OnPropertyChanged(); }
+        }
+        private ICommand _addNewOrderItemCommand;
+        public ICommand AddNewOrderItemCommand
+        {
+            get
+            {
+                if (_addNewOrderItemCommand == null)
+                {
+                    _addNewOrderItemCommand = new RelayCommand(param =>
+                    {
+                        var addOrderItemVM = new AddOrderItemViewModel(BooksList, SelectedOrder);
+                        var addOrderItemWindow = new AddOrderItemView();
+                        addOrderItemWindow.DataContext = addOrderItemVM;
+                        addOrderItemWindow.ShowDialog();                        
+
+                    });
+                }
+                return _addNewOrderItemCommand;
+            }
         }
 
         private ICommand _saveEditedOrder;
@@ -90,10 +117,86 @@ namespace Management.ViewModels
             }
         }
 
+        private ICommand _markOrderAsDoneCommand;
+        public ICommand MarkOrderAsDoneCommand
+        {
+            get
+            {
+                if (_markOrderAsDoneCommand == null)
+                {
+                    _markOrderAsDoneCommand = new RelayCommand(async (param) =>
+                    {
+                        // Prompt the user for confirmation before saving changes
+                        MessageBoxResult result = MessageBox.Show("Are you sure to mark this order as done? This cannot be undone", "Confirm Changes", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            try
+                            {
+                                // Send a PUT request to update the order
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    SelectedOrder.OrderIsDone = true;
+                                    // Set the ID parameter in the URL
+                                    string url = $"{OrderApiUrl}/{SelectedOrder.Id}";
+                                    // Serialize the edited order as JSON and send the PUT request
+                                    client.BaseAddress = new Uri("https://localhost:7122/");
+                                    client.DefaultRequestHeaders.Accept.Clear();
+                                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                    // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
+                                    HttpResponseMessage response = await client.PutAsJsonAsync(url, SelectedOrder);
+                                    // Check if the response is successful
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        var newOrderVM = new OrderViewModel();
+                                        // Update the original book with the changes made in the SelectedBook object
+                                        // Display a success message to the user                                                                                
+                                        var mainWindow = Application.Current.MainWindow;
+                                        var mainViewModel = (MainViewModel)mainWindow.DataContext;
+                                        var orderView = (OrderViewModel)mainViewModel.OrderVM;
+                                        orderView.LoadOrders();
+                                        MessageBox.Show("Changes saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    }
+                                    else
+                                    {
+                                        string errorMessage = $"Failed to save changes. Error message: {response.ReasonPhrase}";
+                                        MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"An error occurred while saving changes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    });
+                }
+                return _markOrderAsDoneCommand;
+            }
+        }
+
+        public async Task LoadBooksAsync()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync("https://localhost:7122/api/Books");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var books = JsonConvert.DeserializeObject<List<Book>>(json);
+                    BooksList = new ObservableCollection<Book>(books);
+                }
+                else
+                {
+                    // Handle error
+                }
+            }
+        }
+
         public EditOrderViewModel(Order selectedOrder)
         {
             SelectedOrder = selectedOrder;
             OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);
+            LoadBooksAsync();
         }
     }
 }

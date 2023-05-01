@@ -64,7 +64,7 @@
                                 BorderBrush="#212A3E"
                                 HorizontalAlignment="Right"
                                 Margin="250, 0 ,0, 0"
-                                Command="{Binding AddNewItem}">
+                                Command="{Binding AddNewOrderItemCommand}">
                 <StackPanel Orientation="Horizontal">
                     <Icon:PackIconMaterial Kind="Plus" 
                                            VerticalAlignment="Center"
@@ -150,6 +150,20 @@
                                 Command="{Binding SaveEditedOrder}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Save"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="2"
+                                Width="150"
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                HorizontalAlignment="Right"
+                                Margin="0, 0 ,30, 0"
+                                Command="{Binding MarkOrderAsDoneCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mark Order Done"/>
                     </StackPanel>
                 </Button>
 
