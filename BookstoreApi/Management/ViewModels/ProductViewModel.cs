@@ -328,7 +328,7 @@ namespace Management.ViewModels
 
                             } while (idCell?.InnerText.Length > 0);
 
-                            Console.ReadLine();
+                           
 
 
                         }
