@@ -75,7 +75,7 @@
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
                                 Margin="10,20,50,0"
-                                Command="{Binding AddProductCommand}"/>
+                                Command="{Binding ImportProductCommand}"/>
 
 
             </WrapPanel>

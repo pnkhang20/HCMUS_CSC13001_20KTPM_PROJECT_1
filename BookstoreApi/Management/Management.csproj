@@ -11,7 +11,6 @@
     <None Remove="Images\cart.jpg" />
     <None Remove="Images\close.png" />
     <None Remove="Images\close2.png" />
-    <None Remove="Images\default-thumbnail.jpg" />
     <None Remove="Images\err.jpg" />
   </ItemGroup>
 
@@ -39,7 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\default-thumbnail.jpg" />
+    <None Update="Images\default-thumbnail.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

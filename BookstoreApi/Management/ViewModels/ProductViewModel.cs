@@ -12,6 +12,13 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Web;
 using Management.Views;
+using Microsoft.Win32;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO;
+using System.Net.Http.Json;
+using System.Net.Http.Headers;
+using Azure;
 
 namespace Management.ViewModels
 {
@@ -173,6 +180,161 @@ namespace Management.ViewModels
                     });                    
                 }
                 return _addProductCommand;
+            }
+        }
+
+
+        private ICommand _importProductCommand;
+        public ICommand ImportProductCommand
+        {
+            get
+            {
+                if (_importProductCommand == null)
+                {
+                    _importProductCommand = new RelayCommand(async (param) =>
+                    {
+                        OpenFileDialog openFileDialog = new OpenFileDialog();
+                        openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+                        if (openFileDialog.ShowDialog() == true)
+                        {
+                            string filename = openFileDialog.FileName;
+                            var document = SpreadsheetDocument.Open(filename, false);
+                            var wbPart = document.WorkbookPart!;
+                            var sheets = wbPart.Workbook.Descendants<Sheet>()!;
+
+                            var sheet = sheets.FirstOrDefault(s => s.Name == "Products");
+                            var wsPart = (WorksheetPart)(wbPart!.GetPartById(sheet.Id!));
+                            var cells = wsPart.Worksheet.Descendants<Cell>();
+
+                            int row = 2;
+                            Cell idCell;
+                            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                            do
+                            {
+                                idCell = cells.FirstOrDefault(
+                                    c => c?.CellReference == $"A{row}"
+                                )!;
+
+                                if (idCell?.InnerText.Length > 0)
+                                {
+
+
+                                    string titleId = idCell.InnerText;
+                                    var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+
+
+                                    string title = stringTable.SharedStringTable.ElementAt(int.Parse(titleId)).InnerText;
+
+
+
+                                    Cell authorCell = cells.FirstOrDefault(
+                                        c => c?.CellReference == $"B{row}"
+                                    )!;
+                                    string authorId = authorCell!.InnerText;
+                                    
+
+
+                                    string author = stringTable.SharedStringTable.ElementAt(int.Parse(authorId)).InnerText;
+
+
+
+
+                                    Cell priceCell = cells.FirstOrDefault(
+                                        c => c?.CellReference == $"C{row}"
+                                    )!;
+                                    string price = priceCell!.InnerText;
+                                   
+
+
+                                    //string price = stringTable.SharedStringTable.ElementAt(int.Parse(priceId)).InnerText;
+
+
+
+
+                                    Cell quantityCell = cells.FirstOrDefault(
+                                        c => c?.CellReference == $"D{row}"
+                                    )!;
+                                    string quantity = quantityCell!.InnerText;
+
+
+                                    //string quantity = stringTable.SharedStringTable.ElementAt(int.Parse(quantityId)).InnerText;
+
+
+
+                                    Cell categoryCell = cells.FirstOrDefault(
+                                        c => c?.CellReference == $"E{row}"
+                                    )!;
+                                    string categoryId = categoryCell!.InnerText;
+                                    
+
+                                    string category = stringTable.SharedStringTable.ElementAt(int.Parse(categoryId)).InnerText;
+
+
+                                    if (!Categories.Any(c => c.CategoryName == category))
+                                    {
+                                        // Create a new category object with the EditedCategoryName
+                                        Category newCategory = new Category() { CategoryName = category };
+
+                                        // Send a POST request to add the new category
+                                        using (HttpClient client = new HttpClient())
+                                        {
+                                            client.BaseAddress = new Uri("https://localhost:7122/");
+                                            client.DefaultRequestHeaders.Accept.Clear();
+                                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                                            await client.PostAsJsonAsync("api/Categories", newCategory);
+                                          
+                                        }
+                                    }
+
+                                  
+                                      
+
+                                        string id = "string";
+                                    int temp;
+
+                                    var NewBook = new Book()
+                                    {
+                                        Id = id,
+                                        Title = title,
+                                        Author = author,
+                                        Price = price,
+                                        Quantity = int.TryParse(quantity, out temp) ? temp : 0,
+                                        Category = new Category { CategoryName = category },
+                                        Cover = Path.Combine(baseDirectory, "Images\\default-thumbnail.jpg")
+
+                                    };
+                                    using (HttpClient client = new HttpClient())
+                                    {
+                                        client.BaseAddress = new Uri("https://localhost:7122/");
+                                        client.DefaultRequestHeaders.Accept.Clear();
+                                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                        var response = await client.PostAsJsonAsync($"api/Books/", NewBook);
+
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            
+                                            MessageBox.Show("Successfully imported new product!");
+                                            await LoadBooks();
+                                        }
+                                    }
+
+                                }
+
+                                
+                
+                                row++;
+
+                            } while (idCell?.InnerText.Length > 0);
+
+                            Console.ReadLine();
+
+
+                        }
+                    });
+                }
+                return _importProductCommand;
             }
         }
 
