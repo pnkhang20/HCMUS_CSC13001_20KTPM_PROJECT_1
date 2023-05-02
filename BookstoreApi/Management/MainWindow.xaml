@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Management"
         xmlns:viewmodel="clr-namespace:Management.ViewModels"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Height="720" Width="1280"              
         Background="Transparent">
@@ -29,7 +30,7 @@
 
             <ContentControl Grid.Row="1"
                                 Grid.Column="1"
-                                Margin="5,5,10,73"
+                                Margin="5,5,10,50"
                                 Content="{Binding CurrentView}"/>
             <TextBlock Text="Online Shop"
                        VerticalAlignment="Center"

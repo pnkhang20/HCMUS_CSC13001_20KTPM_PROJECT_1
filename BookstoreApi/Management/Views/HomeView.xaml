@@ -119,7 +119,7 @@
         </StackPanel>
 
         </StackPanel>-->
-        <Grid Margin="25,20">
+        <Grid Margin="25,20,25,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition ></RowDefinition>
@@ -130,7 +130,7 @@
                    FontSize="28"
                    HorizontalAlignment="Left"
                    Margin="0, 0, 0, 20"/>
-            <ScrollViewer Background="#394867" Margin="50,0,20,50" Grid.Row="1">
+            <ScrollViewer Background="#394867" Margin="50,0,20,20" Grid.Row="1">
                 <StackPanel>
                 <WrapPanel>
                 <Border Width="300"

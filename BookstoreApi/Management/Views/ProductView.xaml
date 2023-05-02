@@ -3,34 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Management.Views"             
+             xmlns:local="clr-namespace:Management.Views"          
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Background="Transparent"             
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
 
     <Border CornerRadius="20" Background="#394867">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
             <WrapPanel>
                 <TextBlock Text="Products"
                            Foreground="#F1F6F9"
-                           FontSize="30"                       
+                           FontSize="28"                       
                            Margin="25 20 80 0"/>
 
                 <Border CornerRadius="10"
                         Background="#212A3E"
-                        Margin="0 20 20 0"
-                        Width="200"                        
+                        Margin="0 20 0 0"
+                        Width="400"                        
                         Height="30">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="350" />
+                            <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Rectangle StrokeThickness="0.1"/>
 
@@ -38,22 +42,49 @@
                             materialDesign:HintAssist.Hint="Enter book name"
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
-                            HorizontalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            
                             VerticalContentAlignment="Center"
                             Background="Transparent"
                             Foreground="#F1F6F9"
-                            Margin="5 0 20 0"
-                            Width="150"
+                            Margin="20 0 20 0"
+                           
                             Height="30"
                             FontSize="16"
                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
+                        <Icon:PackIconMaterial VerticalAlignment="Center" Width="15" Height="15" HorizontalAlignment="Right" Kind="Magnify" Foreground="#F1F6F9" Grid.Column="1" Margin="10 0 10 0" />
                     </Grid>
                 </Border>
 
-                <ComboBox x:Name="categoriesList"
+         
+                <Button Content="Add Product" 
+                                Width="150"
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Margin="50,20,10,0"
+                                Command="{Binding AddProductCommand}"/>
+
+                <Button Content="Import Excel" 
+                                Width="150"
+                        
+                                materialDesign:ButtonAssist.CornerRadius="10"
+                                Background="#212A3E"
+                                Foreground="AntiqueWhite"
+                                BorderBrush="#212A3E"
+                                Margin="10,20,50,0"
+                                Command="{Binding AddProductCommand}"/>
+
+
+            </WrapPanel>
+            <Border Grid.Row="1" HorizontalAlignment="Right" Padding="0 0 70 10">
+            <WrapPanel  >
+                    
+                    <ComboBox x:Name="categoriesList"
                             HorizontalAlignment="Center"
-                            Margin="0 20 20 0"
+                            Margin="0 0 20 0"
                             Width="120"
                             Height="30"
                             FontSize="16"                                      
@@ -90,7 +121,7 @@
                             VerticalContentAlignment="Center"
                             Background="Transparent"
                             Foreground="#F1F6F9"
-                            Margin="5 20 20 0"
+                            Margin="5 0 20 0"
                             Width="85"
                             Height="30"
                             FontSize="14"
@@ -104,23 +135,14 @@
                             VerticalContentAlignment="Center"
                             Background="Transparent"
                             Foreground="#F1F6F9"                         
-                            Margin="5 20 20 0"
+                            Margin="5 0 20 0"
                             Width="85"
                             Height="30"
                             FontSize="14"
                             Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Content="Add Product" 
-                                Width="150"
-                                materialDesign:ButtonAssist.CornerRadius="10"
-                                Background="#212A3E"
-                                Foreground="AntiqueWhite"
-                                BorderBrush="#212A3E"
-                                Margin="50,20,20,0"
-                                Command="{Binding AddProductCommand}"/>
-
             </WrapPanel>
-
-            <ScrollViewer Background="#394867" Margin="50,0,20,50" Grid.Row="1">
+            </Border>
+            <ScrollViewer Background="#394867" Margin="50,0,20,40" Grid.Row="2">
                 <ListView x:Name="ListViewProducts" 
                           PreviewMouseWheel="OnPreviewMouseWheel" 
                           ItemsSource="{Binding Books, UpdateSourceTrigger=PropertyChanged}" 
@@ -188,7 +210,7 @@
 
             </ScrollViewer>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="45"/>
