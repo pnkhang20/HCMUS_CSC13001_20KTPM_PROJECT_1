@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -40,6 +42,90 @@ namespace Management.ViewModels
             get { return _booksList; }
             set { _booksList = value; OnPropertyChanged(); }
         }
+
+        private OrderItem _selectedOrderItem;
+        public OrderItem SelectedOrderItem
+        {
+            get { return _selectedOrderItem; }
+            set { _selectedOrderItem = value; OnPropertyChanged(); }
+        }
+
+
+        public EditOrderViewModel(Order selectedOrder)
+        {
+            SelectedOrder = selectedOrder;
+            SelectedOrderItem = SelectedOrder.OrderItemsList.FirstOrDefault();
+            OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);
+            LoadBooksAsync();
+        }
+
+        private ICommand _deleteOrderItemCommand;
+        public ICommand DeleteOrderItemCommand
+        {
+            get
+            {
+                if (_deleteOrderItemCommand == null)
+                {
+                    _deleteOrderItemCommand = new RelayCommand(async (param) =>
+                    {                        
+                        // Prompt the user for confirmation before saving changes
+                        MessageBoxResult result = MessageBox.Show($"Delete this item?", "Confirm Changes", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.Yes)
+                        {
+
+                            SelectedOrder.OrderItemsList.Remove(SelectedOrderItem);
+                            // Reload the OrderItems collection to update the UI
+                            OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);                            
+                            try
+                            {
+                                // Send a PUT request to update the order
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    // Set the ID parameter in the URL
+                                    string url = $"{OrderApiUrl}/{SelectedOrder.Id}";
+                                    // Serialize the edited order as JSON and send the PUT request
+                                    client.BaseAddress = new Uri("https://localhost:7122/");
+                                    client.DefaultRequestHeaders.Accept.Clear();
+                                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+  
+                                    // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
+                                    HttpResponseMessage response = await client.PutAsJsonAsync(url, SelectedOrder);
+                                    // Check if the response is successful
+                                    if (response.IsSuccessStatusCode)
+                                    {                                        
+                                        MessageBox.Show($"Item removed!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                        OrderItems.Remove(SelectedOrderItem); // Remove the item from the collection
+                                        OnPropertyChanged(nameof(OrderItems)); // add this line to reload the order items
+                                        var editOrderViewModel = new EditOrderViewModel(SelectedOrder);
+                                        var editOrderView = (EditOrderView)Application.Current.Windows.OfType<EditOrderView>().FirstOrDefault();
+                                        
+                                        LoadOrderItems();
+                                        OnPropertyChanged(nameof(OrderItems)); // Notify the view to update the collection
+                                        
+                                        if (editOrderView != null)
+                                        {
+                                            editOrderView.DataContext = editOrderViewModel;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        string errorMessage = $"Failed to save changes. Error message: {response.ReasonPhrase}";
+                                        MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"An error occurred while saving changes: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                    });
+                }
+                return _deleteOrderItemCommand;
+            }
+        }
+
+
         private ICommand _addNewOrderItemCommand;
         public ICommand AddNewOrderItemCommand
         {
@@ -51,15 +137,17 @@ namespace Management.ViewModels
                     {
                         var addOrderItemVM = new AddOrderItemViewModel(BooksList, SelectedOrder);
                         var addOrderItemWindow = new AddOrderItemView();
-                        addOrderItemWindow.DataContext = addOrderItemVM;
-                        addOrderItemWindow.ShowDialog();                        
-
+                        addOrderItemWindow.DataContext = addOrderItemVM;                        
+                        addOrderItemWindow.ShowDialog();
+                        OnPropertyChanged(nameof(OrderItems)); // add this line to reload the order items
                     });
                 }
+                OnPropertyChanged(nameof(OrderItems)); // add this line to reload the order items
                 return _addNewOrderItemCommand;
+                
             }
         }
-
+        
         private ICommand _saveEditedOrder;
         public ICommand SaveEditedOrder
         {
@@ -89,14 +177,13 @@ namespace Management.ViewModels
                                     // Check if the response is successful
                                     if (response.IsSuccessStatusCode)
                                     {
-                                        var newOrderVM = new OrderViewModel();
-
-                                        // Update the original book with the changes made in the SelectedBook object
-                                        // Display a success message to the user                                                                                
+                                        var newOrderVM = new OrderViewModel();                                                                           
                                         var mainWindow = Application.Current.MainWindow;
                                         var mainViewModel = (MainViewModel)mainWindow.DataContext;
                                         var orderView = (OrderViewModel)mainViewModel.OrderVM;
-                                        orderView.LoadOrders();                                        
+                                        orderView.LoadOrders();
+                                        Window parentWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+                                        parentWindow?.Close();
                                         MessageBox.Show("Changes saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                                     }
                                     else
@@ -146,8 +233,7 @@ namespace Management.ViewModels
                                     HttpResponseMessage response = await client.PutAsJsonAsync(url, SelectedOrder);
                                     // Check if the response is successful
                                     if (response.IsSuccessStatusCode)
-                                    {
-                                        var newOrderVM = new OrderViewModel();
+                                    {                                        
                                         // Update the original book with the changes made in the SelectedBook object
                                         // Display a success message to the user                                                                                
                                         var mainWindow = Application.Current.MainWindow;
@@ -191,12 +277,30 @@ namespace Management.ViewModels
                 }
             }
         }
-
-        public EditOrderViewModel(Order selectedOrder)
+        public async void LoadOrderItems()
         {
-            SelectedOrder = selectedOrder;
-            OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);
-            LoadBooksAsync();
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    string url = $"{OrderApiUrl}/{SelectedOrder.Id}";
+                    client.BaseAddress = new Uri("https://localhost:7122/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var orderJson = await response.Content.ReadAsStringAsync();
+                        SelectedOrder = JsonConvert.DeserializeObject<Order>(orderJson);
+                        OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading the order items: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

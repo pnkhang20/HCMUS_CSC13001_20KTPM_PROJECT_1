@@ -125,6 +125,15 @@
                                         Width="Auto"/>
 
                 </DataGrid.Columns>
+
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Delete" 
+                                  Command="{Binding DeleteOrderItemCommand}" 
+                                  CommandParameter="{Binding SelectedOrderItem, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+
             </DataGrid>
 
         </StackPanel>

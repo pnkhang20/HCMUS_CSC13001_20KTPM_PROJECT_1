@@ -115,6 +115,28 @@ namespace BookstoreApi.Controllers
 
             // item list of the order
             var oderItemList = order.OrderItemsList;
+            // Remove existing order items that are not in the edited order item list
+            foreach (var existingOrderItem in order.OrderItemsList.ToList())
+            {
+                if (!updatedOrder.OrderItemsList.Any(item => item.Book.Id == existingOrderItem.Book.Id))
+                {
+                    var book = await _booksService.GetAsync(existingOrderItem.Book.Id);
+
+                    // Update the book quantity based on the quantity of the existing order item
+                    book.Quantity += existingOrderItem.Quantity;
+
+                    // Check if the order is done and update the book's total sold if it is
+                    if (isDone)
+                    {
+                        book.TotalSold -= existingOrderItem.Quantity;
+                    }
+                    await _booksService.UpdateAsync(book.Id, book);
+
+                    // Remove the existing order item from the original order item list
+                    order.OrderItemsList.Remove(existingOrderItem);
+                }
+            }
+
 
             foreach (var updatedOrderItem in updatedOrder.OrderItemsList)
             {
