@@ -200,7 +200,7 @@
                         <TextBlock Text="Add New Category"
                            Foreground="White"
                            HorizontalAlignment="Center"
-                           Margin="0, 60, 0, 0"
+                          
                            FontSize="25"/>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="Enter New Category" 
