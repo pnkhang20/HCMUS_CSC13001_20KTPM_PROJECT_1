@@ -117,8 +117,5 @@ namespace Management.ViewModels
                 return _addNewOrderItemCommand;
             }
         }
-
-
-
     }
 }

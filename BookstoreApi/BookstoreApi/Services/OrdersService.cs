@@ -26,6 +26,10 @@ public class OrdersService
     {
         return await _ordersCollection.Find(_ => true).ToListAsync();
     }
+    public async Task<List<Order>> GetOrdersBetweenDatesAsync(DateTime fromDate, DateTime toDate)
+    {
+        return await _ordersCollection.Find(o => o.OrderedDate >= fromDate && o.OrderedDate <= toDate).ToListAsync();
+    }
 
     public async Task<Order?> GetAsync(string id)
     {

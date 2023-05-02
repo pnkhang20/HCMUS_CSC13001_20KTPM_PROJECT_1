@@ -250,5 +250,66 @@ namespace BookstoreApi.Controllers
             return NoContent();
         }
 
+
+        [HttpGet("revenue/day")]
+        public async Task<ActionResult<List<RevenueByDay>>> GetRevenueByDay([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            var revenueByDay = new List<RevenueByDay>();
+            var currentDate = fromDate.Date;
+
+            while (currentDate <= toDate.Date)
+            {
+                var ordersOnCurrentDate = orders.Where(order => order.OrderedDate.Date == currentDate);
+                var totalRevenue = ordersOnCurrentDate.Sum(order => order.OrderItemsList.Sum(orderItem => orderItem.Book.Price * orderItem.Quantity));
+
+                revenueByDay.Add(new RevenueByDay
+                {
+                    Date = currentDate,
+                    TotalRevenue = totalRevenue
+                });
+
+                currentDate = currentDate.AddDays(1);
+            }
+
+            return revenueByDay;
+        }
+
+        [HttpGet("revenue/month")]
+        public async Task<ActionResult<List<RevenueByMonth>>> GetRevenueByMonth([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            var revenueByMonth = orders.GroupBy(
+                order => new { order.OrderedDate.Year, order.OrderedDate.Month },
+                (key, group) => new RevenueByMonth
+                {
+                    Year = key.Year,
+                    Month = key.Month,
+                    TotalRevenue = group.Sum(order => order.OrderItemsList.Sum(orderItem => orderItem.Book.Price * orderItem.Quantity))
+                }
+            ).ToList();
+
+            return revenueByMonth;
+        }
+
+        [HttpGet("revenue/year")]
+        public async Task<ActionResult<List<RevenueByYear>>> GetRevenueByYear([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            var revenueByYear = orders.GroupBy(
+                order => order.OrderedDate.Year,
+                (key, group) => new RevenueByYear
+                {
+                    Year = key,
+                    TotalRevenue = group.Sum(order => order.OrderItemsList.Sum(orderItem => orderItem.Book.Price * orderItem.Quantity))
+                }
+            ).ToList();
+
+            return revenueByYear;
+        }
+
     }
 }
