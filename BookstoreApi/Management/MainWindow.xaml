@@ -49,7 +49,6 @@
                 <RadioButton Content="Orders"
                              Height="50"                             
                              FontSize="20"
-                             Command="{Binding OrderViewCommand, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource MenuButtonTheme}"/>
                 <RadioButton Content="Products"
                              Height="50"                             
@@ -65,7 +64,11 @@
                              Height="50"                             
                              FontSize="20"
                              Style="{StaticResource MenuButtonTheme}"/>
-
+                <RadioButton Content="Management"
+                             Height="50"                             
+                             FontSize="20"
+                             Command="{Binding ManagementViewCommand}"
+                             Style="{StaticResource MenuButtonTheme}"/>
             </StackPanel>
         </Grid>
     </Border>

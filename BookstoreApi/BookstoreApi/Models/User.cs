@@ -19,5 +19,5 @@ public class User
     public string Password { get; set; } = null!;
 
     [BsonElement("FullName")]
-    public string FullName { get; set; } = null!;
+    public string FullName { get; set; } = null!;   
 }

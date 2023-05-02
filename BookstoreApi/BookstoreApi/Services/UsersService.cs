@@ -36,7 +36,7 @@ public class UsersService
         }
         await _userCollection.InsertOneAsync(newUser);
     }
-
+        
 
     public async Task UpdateAsync(string Id, User updatedUser) =>
         await _userCollection.ReplaceOneAsync(x => x.Id == Id, updatedUser);

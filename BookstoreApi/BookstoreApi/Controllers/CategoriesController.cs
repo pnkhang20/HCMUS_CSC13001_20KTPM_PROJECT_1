@@ -58,11 +58,11 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> Update(string id, Category updatedCategory)
     {
         var category = await _categoriesService.GetAsync(id);
-
+        
         if (category is null)
         {
             return NotFound();
-        }
+        }        
         updatedCategory.Id = category.Id;
 
         await _categoriesService.UpdateAsync(id, updatedCategory);
@@ -74,7 +74,7 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> Delete(string id)
     {
         var category = await _categoriesService.GetAsync(id);
-
+        
         if (category is null)
         {
             return NotFound();

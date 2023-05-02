@@ -1,12 +1,14 @@
 ﻿using Management.Cores;
-using Management.Models;
-using Management.Views;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
+using Management.Models;
 using System.Net.Http;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Windows.Input;
+using System.Windows;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Management.Views;
@@ -20,7 +22,7 @@ using System.Windows.Input;
 
 namespace Management.ViewModels
 {
-    class CategoryViewModel : ObservableObject
+    class CategoryViewModel:ObservableObject
     {
         private ProductView _productView;
         private const string CategoryApiUrl = "https://localhost:7122/api/Categories";
@@ -91,7 +93,7 @@ namespace Management.ViewModels
                         }
                         var msgBoxResult = MessageBox.Show("Are you sure you want to edit this category?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (msgBoxResult == MessageBoxResult.Yes)
-                        {
+                        {                            
                             if (string.IsNullOrEmpty(EditedCategoryName))
                             {
                                 MessageBox.Show("Please enter a category name.");
@@ -107,7 +109,7 @@ namespace Management.ViewModels
                                 if (response.IsSuccessStatusCode)
                                 {
                                     var newProductVM = new ProductViewModel();
-
+                                    
                                     // Update the original book with the changes made in the SelectedBook object
                                     // Display a success message to the user
                                     MessageBox.Show("Successfully edited the category!");
@@ -116,7 +118,7 @@ namespace Management.ViewModels
                                     var mainViewModel = (MainViewModel)mainWindow.DataContext;
                                     var productView = (ProductViewModel)mainViewModel.ProductVM;
                                     productView.LoadCategory();
-                                    productView.LoadBooks();
+                                    productView.LoadBooks();    
                                     await LoadCategory();
                                 }
                                 else
@@ -130,7 +132,7 @@ namespace Management.ViewModels
                 }
                 return _editCategoryCommand;
             }
-
+        
         }
 
         private ICommand _deleteCategoryCommand;
@@ -189,7 +191,7 @@ namespace Management.ViewModels
                 {
                     _addNewCategoryCommand = new RelayCommand(async (param) =>
                     {
-
+                  
                         // Validate that the EditedCategoryName is not empty
                         if (string.IsNullOrEmpty(NewCategoryText))
                         {
@@ -228,7 +230,7 @@ namespace Management.ViewModels
                                     var mainViewModel = (MainViewModel)mainWindow.DataContext;
                                     var productView = (ProductViewModel)mainViewModel.ProductVM;
                                     productView.LoadCategory();
-                                    productView.LoadBooks();
+                                    productView.LoadBooks();                                    
                                     await LoadCategory();
                                 }
                                 else
@@ -239,7 +241,7 @@ namespace Management.ViewModels
                             }
                         }
                     });
-                }
+                }               
                 return _addNewCategoryCommand;
             }
         }
@@ -344,8 +346,8 @@ namespace Management.ViewModels
         }
         
         public CategoryViewModel()
-        {
-            LoadCategory();
+        {            
+            LoadCategory();            
         }
     }
 }

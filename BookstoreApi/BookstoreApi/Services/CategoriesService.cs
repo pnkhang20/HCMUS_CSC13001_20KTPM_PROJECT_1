@@ -1,5 +1,6 @@
 ﻿using BookstoreApi.Models;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BookstoreApi.Services;
@@ -7,7 +8,7 @@ namespace BookstoreApi.Services;
 public class CategoriesService
 {
     private readonly IMongoCollection<Category> _categoryCollection;
-    private readonly BooksService _booksService;
+    private readonly BooksService _booksService;    
 
     public CategoriesService(
         IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings,
@@ -41,7 +42,7 @@ public class CategoriesService
 
     public async Task UpdateAsync(string id, Category updatedCategory)
     {
-
+        
         await _categoryCollection.ReplaceOneAsync(x => x.Id == id, updatedCategory);
         await _booksService.UpdateCategoryNameAsync(id, updatedCategory.CategoryName);
     }
@@ -57,7 +58,7 @@ public class CategoriesService
             await _booksService.UpdateDeletedCategoryAsync(id);
 
             // Delete the category
-            await _categoryCollection.DeleteOneAsync(x => x.Id == id);
+            await _categoryCollection.DeleteOneAsync(x => x.Id == id); 
         }
 
     }

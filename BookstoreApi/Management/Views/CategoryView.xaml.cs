@@ -26,6 +26,5 @@ namespace Management.Views
         }
 
     
-
     }
 }

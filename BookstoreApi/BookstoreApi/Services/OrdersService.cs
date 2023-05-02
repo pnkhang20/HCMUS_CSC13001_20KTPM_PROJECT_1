@@ -14,7 +14,7 @@ public class OrdersService
     {
         var mongoClient = new MongoClient(
             bookStoreDatabaseSettings.Value.ConnectionString);
-
+        
         var mongoDatabase = mongoClient.GetDatabase(
             bookStoreDatabaseSettings.Value.DatabaseName);
 
@@ -38,7 +38,7 @@ public class OrdersService
 
     public async Task CreateAsync(Order newOrder)
     {
-        await _ordersCollection.InsertOneAsync(newOrder);
+        await _ordersCollection.InsertOneAsync(newOrder);         
     }
 
     public async Task UpdateAsync(string id, Order updatedOrder) =>
