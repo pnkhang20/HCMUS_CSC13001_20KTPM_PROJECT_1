@@ -190,32 +190,33 @@
                         </Style.Triggers>
                     </Style>
                 </TabItem.Style>
-
-                    <StackPanel Orientation="Vertical"
+                
+                
+                <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center" 
                     Width="310"
                     Margin="0 30 0 0"
                          
                             >
-                        <TextBlock Text="Add New Category"
+                    <TextBlock Text="Add New Category"
                            Foreground="White"
                            HorizontalAlignment="Center"
                            Margin="0, 60, 0, 0"
                            FontSize="25"/>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Enter New Category" 
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Enter New Category" 
                            Foreground="white"
                            FontSize="20"
                            TextAlignment="Center"
                            Margin="0, 15, 0, 0"
                            HorizontalAlignment="Left"/>
-                            <Border CornerRadius="10"
+                        <Border CornerRadius="10"
                         HorizontalAlignment="Left"
                         Background="#212A3E"
                         Margin="0 15 0 0"
                         Width="300"
                         Height="30">
-                                <TextBox x:Name="newCategoryBox"                                                              
+                            <TextBox x:Name="newCategoryBox"                                                              
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
                             HorizontalAlignment="Left"
@@ -229,8 +230,8 @@
                             FontSize="16"
                             Text="{Binding NewCategoryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
-                            </Border>
-                            <Button Content="Add Category" 
+                        </Border>
+                        <Button Content="Add Category" 
                                 materialDesign:ButtonAssist.CornerRadius="10"
                                 HorizontalAlignment="Center"
                                 Width="200"
@@ -239,21 +240,8 @@
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#305da8"                    
                                 Command="{Binding AddNewCategoryCommand,  UpdateSourceTrigger=PropertyChanged}"/>
-                            <Button Content="Import Category" 
-                                materialDesign:ButtonAssist.CornerRadius="10"
-                                HorizontalAlignment="Center"
-                                Width="200"
-                                Margin="5,10,0,10"
-                                Background="#305d"
-                                Foreground="AntiqueWhite"
-                                BorderBrush="#305daa"                    
-                                Command="{Binding ImportNewCategoryCommand,  UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
-                    </StackPanel>
-
-              
-                
-                
+                </StackPanel>
             </TabItem>
         </TabControl>
 
