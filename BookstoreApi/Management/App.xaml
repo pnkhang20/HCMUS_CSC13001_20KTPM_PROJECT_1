@@ -47,10 +47,11 @@
             <DataTemplate DataType="{x:Type viewmodel:EditOrderViewModel}">
                 <view:EditOrderView/>
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type viewmodel:AddOrderItemViewModel}">
                 <view:AddOrderItemView/>
             </DataTemplate>
+
             <!--grid styling-->
             <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
                 <Setter Property="Template">

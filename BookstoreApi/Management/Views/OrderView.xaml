@@ -23,10 +23,10 @@
                    Margin="25,10"/>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="500"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+                
                 <Button Grid.Column="2"
                                 Width="150"
                                 materialDesign:ButtonAssist.CornerRadius="10"
@@ -34,13 +34,41 @@
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
                                 HorizontalAlignment="Right"
-                                Margin="20,20,20,0"
+                                Margin="20,0,20,0"
                                 Command="{Binding AddOrderCommand}">
                     <StackPanel Orientation="Horizontal">
                         <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
                         <TextBlock Text="Add New Order"/>
                     </StackPanel>
                 </Button>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <DatePicker x:Name="StartDatePicker" 
+                                Margin="50, 0 ,0 ,0"
+                                Width="100"         
+                                materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                                materialDesign:ThemeAssist.Theme="Dark"
+                                Foreground="White"
+                                SelectedDate="{Binding StartDate}" 
+                                DisplayDateEnd="{Binding EndDate}" />
+                        
+                    <DatePicker x:Name="EndDatePicker" 
+                                Margin="50, 0 ,0 ,0"
+                                Width="100"
+                                materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                                materialDesign:ThemeAssist.Theme="Dark"
+                                Foreground="White"
+                                SelectedDate="{Binding EndDate}" 
+                                DisplayDateStart="{Binding StartDate}" />
+                    
+                    <Button Content="Apply" 
+                            materialDesign:ButtonAssist.CornerRadius="10"
+                            Background="#212A3E"
+                            Foreground="AntiqueWhite"
+                            BorderBrush="#212A3E"
+                            Command="{Binding FilterOrdersCommand}" 
+                            Margin="50, 0, 0, 0"/>
+                </StackPanel>
+
             </Grid>
             
             <DataGrid Style="{DynamicResource DataGridStyle1}" 

@@ -47,7 +47,6 @@ namespace Management.ViewModels
             set { _selectedOrderItem = value; OnPropertyChanged(); }
         }
 
-
         public EditOrderViewModel(Order selectedOrder)
         {
             SelectedOrder = selectedOrder;
@@ -237,6 +236,8 @@ namespace Management.ViewModels
                                         var mainViewModel = (MainViewModel)mainWindow.DataContext;
                                         var orderView = (OrderViewModel)mainViewModel.OrderVM;
                                         orderView.LoadOrders();
+                                        Window parentWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
+                                        parentWindow?.Close();
                                         MessageBox.Show("Changes saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                                     }
                                     else

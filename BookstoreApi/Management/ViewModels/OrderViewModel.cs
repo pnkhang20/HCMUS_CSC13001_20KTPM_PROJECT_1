@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -21,6 +23,20 @@ namespace Management.ViewModels
         private const string OrderApiUrl = "https://localhost:7122/api/Orders";
         private readonly HttpClient httpClient = new HttpClient();
 
+        private DateTime? _startDate;
+        public DateTime? StartDate
+        {
+            get { return _startDate; }
+            set { _startDate = value; OnPropertyChanged(); }
+        }
+
+        private DateTime? _endDate;
+        public DateTime? EndDate
+        {
+            get { return _endDate; }
+            set { _endDate = value; OnPropertyChanged(); }
+        }
+
         public ObservableCollection<Order> Orders { get; } = new ObservableCollection<Order>();
 
         private Order _selectedOrder;
@@ -28,6 +44,26 @@ namespace Management.ViewModels
         {
             get { return _selectedOrder; }
             set { _selectedOrder = value; OnPropertyChanged(); }
+        }
+
+        public OrderViewModel()
+        {
+            LoadOrders();
+        }
+        private ICommand _filterOrdersCommand;
+        public ICommand FilterOrdersCommand
+        {
+            get
+            {
+                if (_filterOrdersCommand == null)
+                {
+                    _filterOrdersCommand = new RelayCommand(param =>
+                    {
+                        LoadOrders(StartDate, EndDate);
+                    });
+                }
+                return _filterOrdersCommand;
+            }
         }
 
         private ICommand _removeOrderCommand;
@@ -102,28 +138,69 @@ namespace Management.ViewModels
         }
 
 
-        //private ICommand _addOrderCommand;
-        //public ICommand AddOrderCommand
-        //{
-        //    get
-        //    {
-        //        if (_addOrderCommand == null)
-        //        {
-        //            _addOrderCommand = new RelayCommand(async (param) =>
-        //            {
-        //                var addOrderVM = new AddOrderViewModel();
-        //                var addOrderWindow = new AddProductView();
-        //                addOrderWindow.DataContext = addOrderVM;
-        //                addOrderWindow.ShowDialog();
-        //                //await LoadBooks();
-        //            });
-        //        }
-        //        return _addOrderCommand;
-        //    }
-        //}
+        private ICommand _addOrderCommand;
+        public ICommand AddOrderCommand
+        {
+            get
+            {
+                if (_addOrderCommand == null)
+                {
+                    _addOrderCommand = new RelayCommand(async (param) =>
+                    {
+                        var messageBoxResult = MessageBox.Show($"Create a new order?", "Create new Order", MessageBoxButton.YesNo);
+                        if (messageBoxResult == MessageBoxResult.Yes)
+                        {
+                            var to_add = new Order
+                            {
+                                Id = "string", // Set the ID to an empty string or a default value
+                                OrderItemsList = new ObservableCollection<OrderItem>(), // Initialize the order items list to an empty list
+                                ShippingAddress = "string",
+                                CustomerName = "string",
+                                CustomerPhone = "string",
+                                OrderIsDone = false,
+                                TotalPrice = 0,
+                                OrderedDate = DateTime.UtcNow
+                            };
+
+                            try
+                            {
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    client.BaseAddress = new Uri("https://localhost:7122/");
+                                    client.DefaultRequestHeaders.Accept.Clear();
+                                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                    HttpResponseMessage response = await httpClient.PostAsJsonAsync(OrderApiUrl, to_add);
+                                    if (response.IsSuccessStatusCode)
+                                    {
+
+                                        // Update the original book with the changes made in the SelectedBook object
+                                        // Display a success message to the user                                        
+                                        MessageBox.Show("Successfully added new order! Please edit it later on!");
+                                        // Close the current window and update the parent view
+                                        LoadOrders();
+
+                                    }
+                                    else
+                                    {
+                                        // Display an error message to the user
+                                        MessageBox.Show($"Failed to add new product! {response.ReasonPhrase}");
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        }
+
+                    });
+                }
+                return _addOrderCommand;
+            }
+        }
 
 
-        public async Task LoadOrders()
+        public async Task LoadOrders(DateTime? startDate = null, DateTime? endDate = null)
         {
             try
             {
@@ -136,15 +213,20 @@ namespace Management.ViewModels
 
                     foreach (var order in orders)
                     {
-                        var existingOrder = Orders.FirstOrDefault(b => b.Id == order.Id);
-                        if (existingOrder == null)
+                        // Filter the orders based on the selected date range
+                        if ((startDate == null || order.OrderedDate >= startDate.Value.AddDays(-1)) &&
+                            (endDate == null || order.OrderedDate <= endDate.Value.AddDays(1)))
                         {
-                            Orders.Add(order);
-                        }
-                        else
-                        {
-                            int index = Orders.IndexOf(existingOrder);
-                            Orders[index] = order;
+                            var existingOrder = Orders.FirstOrDefault(b => b.Id == order.Id);
+                            if (existingOrder == null)
+                            {
+                                Orders.Add(order);
+                            }
+                            else
+                            {
+                                int index = Orders.IndexOf(existingOrder);
+                                Orders[index] = order;
+                            }
                         }
                     }
                 }
@@ -155,10 +237,8 @@ namespace Management.ViewModels
         }
 
 
-        public OrderViewModel()
-        {
-            LoadOrders();
-        }
+
+
     }
 
 }

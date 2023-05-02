@@ -47,6 +47,24 @@ namespace BookstoreApi.Controllers
 
             var orderItemsList = new List<OrderItem>();
 
+            // Check if OrderItemsList is null
+            if (newOrder.OrderItemsList == null)
+            {
+                // Create a new order with empty OrderItemsList
+                var to_add = new Order
+                {
+                    ShippingAddress = newOrder.ShippingAddress,
+                    CustomerName = newOrder.CustomerName,
+                    CustomerPhone = newOrder.CustomerPhone,
+                    OrderIsDone = false,
+                    TotalPrice = 0,
+                    OrderedDate = DateTime.UtcNow
+                };
+
+                await _ordersService.CreateAsync(to_add);
+                return Ok(to_add);
+            }
+
             foreach (var requestItem in newOrder.OrderItemsList)
             {
                 // Find the corresponding Book Item

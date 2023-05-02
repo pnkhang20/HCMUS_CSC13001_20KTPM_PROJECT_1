@@ -41,6 +41,7 @@ public class Order
 
     public Order()
     {
+        Id = ObjectId.GenerateNewId().ToString();
         OrderIsDone = false;
     }
 }
