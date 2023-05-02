@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -61,8 +59,8 @@ namespace Management.ViewModels
                                         {
                                             var msgBox = MessageBox.Show($"This ordered is already marked as done so you cannot delete it!", "Delete Order");
                                         }
-                                    } 
-                                        
+                                    }
+
                                 }
                                 catch (Exception ex)
                                 {
@@ -102,7 +100,7 @@ namespace Management.ViewModels
                 return _editOrderCommand;
             }
         }
-        
+
 
         //private ICommand _addOrderCommand;
         //public ICommand AddOrderCommand
@@ -129,7 +127,7 @@ namespace Management.ViewModels
         {
             try
             {
-                Orders.Clear();                
+                Orders.Clear();
                 var response = await httpClient.GetAsync(OrderApiUrl);
                 if (response.IsSuccessStatusCode)
                 {
@@ -148,7 +146,7 @@ namespace Management.ViewModels
                             int index = Orders.IndexOf(existingOrder);
                             Orders[index] = order;
                         }
-                    }                    
+                    }
                 }
             }
             catch (Exception ex)

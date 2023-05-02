@@ -5,13 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Input;
-using System.Net.Http.Json;
 
 namespace Management.ViewModels
 {
@@ -62,7 +60,7 @@ namespace Management.ViewModels
             {
                 if (_addNewOrderItemCommand == null)
                 {
-                    _addNewOrderItemCommand = new RelayCommand(async(param) =>
+                    _addNewOrderItemCommand = new RelayCommand(async (param) =>
                     {
                         // Prompt the user for confirmation before saving changes
                         MessageBoxResult result = MessageBox.Show($"Add {SelectedBook.Title} to cart?", "Confirm Changes", MessageBoxButton.YesNo, MessageBoxImage.Question);

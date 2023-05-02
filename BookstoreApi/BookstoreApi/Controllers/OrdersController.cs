@@ -1,12 +1,7 @@
 ﻿using BookstoreApi.Models;
 using BookstoreApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookstoreApi.Controllers
 {
@@ -16,7 +11,7 @@ namespace BookstoreApi.Controllers
     {
         private readonly OrdersService _ordersService;
         private readonly BooksService _booksService;
-        
+
         public OrdersController(OrdersService ordersService, BooksService booksService)
         {
             _ordersService = ordersService;
@@ -76,7 +71,7 @@ namespace BookstoreApi.Controllers
                     Quantity = requestItem.Quantity
                 };
 
-                book.Quantity -= requestItem.Quantity;                
+                book.Quantity -= requestItem.Quantity;
                 await _booksService.UpdateAsync(book.Id, book);
                 orderItemsList.Add(orderItem);
             }
@@ -92,7 +87,7 @@ namespace BookstoreApi.Controllers
                 OrderedDate = DateTime.UtcNow
             };
 
-            await _ordersService.CreateAsync(order);            
+            await _ordersService.CreateAsync(order);
             return Ok(order);
         }
 
@@ -176,7 +171,7 @@ namespace BookstoreApi.Controllers
                     {
                         return BadRequest($"Not enough stock for book {book.Title} ({book.Id}). Available stock: {book.Quantity}");
                     }
-                    
+
                     book.Quantity -= updatedOrderItem.Quantity;
                     var newOrderItem = new OrderItem
                     {

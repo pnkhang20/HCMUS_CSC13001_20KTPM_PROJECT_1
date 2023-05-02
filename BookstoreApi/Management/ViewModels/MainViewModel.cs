@@ -1,13 +1,8 @@
 ﻿using Management.Cores;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Management.ViewModels
 {
-    class MainViewModel:ObservableObject
+    class MainViewModel : ObservableObject
     {
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ProductViewCommand { get; set; }
@@ -16,18 +11,19 @@ namespace Management.ViewModels
         public RelayCommand OrderViewCommand { get; set; }
 
         public HomeViewModel HomeVM { get; set; }
-        public ProductViewModel ProductVM { get; set; }                
+        public ProductViewModel ProductVM { get; set; }
         public CategoryViewModel CategoryVM { get; set; }
         public OrderViewModel OrderVM { get; set; }
 
         private object _currentView;
         public object CurrentView
         {
-            get { return _currentView;}
-            set { 
-                _currentView = value; 
+            get { return _currentView; }
+            set
+            {
+                _currentView = value;
                 OnPropertyChanged();
-                }
+            }
         }
         public void ReloadProductView()
         {
@@ -35,9 +31,9 @@ namespace Management.ViewModels
             ProductVM.LoadBooks();
         }
         public MainViewModel()
-        { 
+        {
             HomeVM = new HomeViewModel();
-            ProductVM = new ProductViewModel();        
+            ProductVM = new ProductViewModel();
             CategoryVM = new CategoryViewModel();
             OrderVM = new OrderViewModel();
             CurrentView = HomeVM;

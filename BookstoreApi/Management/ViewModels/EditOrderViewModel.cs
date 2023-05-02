@@ -5,13 +5,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -21,7 +18,7 @@ namespace Management.ViewModels
     class EditOrderViewModel : ObservableObject
     {
         private const string OrderApiUrl = "https://localhost:7122/api/Orders";
-        private Order _selectedOrder;   
+        private Order _selectedOrder;
 
         public Order SelectedOrder
         {
@@ -67,7 +64,7 @@ namespace Management.ViewModels
                 if (_deleteOrderItemCommand == null)
                 {
                     _deleteOrderItemCommand = new RelayCommand(async (param) =>
-                    {                        
+                    {
                         // Prompt the user for confirmation before saving changes
                         MessageBoxResult result = MessageBox.Show($"Delete this item?", "Confirm Changes", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes)
@@ -75,7 +72,7 @@ namespace Management.ViewModels
 
                             SelectedOrder.OrderItemsList.Remove(SelectedOrderItem);
                             // Reload the OrderItems collection to update the UI
-                            OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);                            
+                            OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);
                             try
                             {
                                 // Send a PUT request to update the order
@@ -87,21 +84,21 @@ namespace Management.ViewModels
                                     client.BaseAddress = new Uri("https://localhost:7122/");
                                     client.DefaultRequestHeaders.Accept.Clear();
                                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-  
+
                                     // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
                                     HttpResponseMessage response = await client.PutAsJsonAsync(url, SelectedOrder);
                                     // Check if the response is successful
                                     if (response.IsSuccessStatusCode)
-                                    {                                        
+                                    {
                                         MessageBox.Show($"Item removed!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                                         OrderItems.Remove(SelectedOrderItem); // Remove the item from the collection
                                         OnPropertyChanged(nameof(OrderItems)); // add this line to reload the order items
                                         var editOrderViewModel = new EditOrderViewModel(SelectedOrder);
                                         var editOrderView = (EditOrderView)Application.Current.Windows.OfType<EditOrderView>().FirstOrDefault();
-                                        
+
                                         LoadOrderItems();
                                         OnPropertyChanged(nameof(OrderItems)); // Notify the view to update the collection
-                                        
+
                                         if (editOrderView != null)
                                         {
                                             editOrderView.DataContext = editOrderViewModel;
@@ -137,17 +134,17 @@ namespace Management.ViewModels
                     {
                         var addOrderItemVM = new AddOrderItemViewModel(BooksList, SelectedOrder);
                         var addOrderItemWindow = new AddOrderItemView();
-                        addOrderItemWindow.DataContext = addOrderItemVM;                        
+                        addOrderItemWindow.DataContext = addOrderItemVM;
                         addOrderItemWindow.ShowDialog();
                         OnPropertyChanged(nameof(OrderItems)); // add this line to reload the order items
                     });
                 }
                 OnPropertyChanged(nameof(OrderItems)); // add this line to reload the order items
                 return _addNewOrderItemCommand;
-                
+
             }
         }
-        
+
         private ICommand _saveEditedOrder;
         public ICommand SaveEditedOrder
         {
@@ -171,13 +168,13 @@ namespace Management.ViewModels
                                     // Serialize the edited order as JSON and send the PUT request
                                     client.BaseAddress = new Uri("https://localhost:7122/");
                                     client.DefaultRequestHeaders.Accept.Clear();
-                                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));                                    
+                                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                                     // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
                                     HttpResponseMessage response = await client.PutAsJsonAsync(url, SelectedOrder);
                                     // Check if the response is successful
                                     if (response.IsSuccessStatusCode)
                                     {
-                                        var newOrderVM = new OrderViewModel();                                                                           
+                                        var newOrderVM = new OrderViewModel();
                                         var mainWindow = Application.Current.MainWindow;
                                         var mainViewModel = (MainViewModel)mainWindow.DataContext;
                                         var orderView = (OrderViewModel)mainViewModel.OrderVM;
@@ -233,7 +230,7 @@ namespace Management.ViewModels
                                     HttpResponseMessage response = await client.PutAsJsonAsync(url, SelectedOrder);
                                     // Check if the response is successful
                                     if (response.IsSuccessStatusCode)
-                                    {                                        
+                                    {
                                         // Update the original book with the changes made in the SelectedBook object
                                         // Display a success message to the user                                                                                
                                         var mainWindow = Application.Current.MainWindow;
