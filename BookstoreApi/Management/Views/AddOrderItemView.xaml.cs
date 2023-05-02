@@ -10,22 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Management.Views
 {
     /// <summary>
-    /// Interaction logic for CategoryView.xaml
+    /// Interaction logic for AddOrderItemView.xaml
     /// </summary>
-    public partial class CategoryView : UserControl
+    public partial class AddOrderItemView : Window
     {
-        public CategoryView()
+        public AddOrderItemView()
         {
             InitializeComponent();
         }
-
-    
-
     }
 }

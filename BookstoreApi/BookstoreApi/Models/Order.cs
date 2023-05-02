@@ -11,9 +11,9 @@ public class Order
     public ICollection<OrderItem> OrderItemsList { get; set; } = null!;
 
     // Order shipping address
-    [BsonElement("ShippingAddress")]     
+    [BsonElement("ShippingAddress")]
     public string ShippingAddress { get; set; } = null!;
-    
+
     // Order customer name
     [BsonElement("CustomerName")]
     [BsonRequired]
@@ -32,7 +32,7 @@ public class Order
     // Order status
     [BsonElement("IsDone")]
     [BsonRequired]
-     public bool OrderIsDone { get; set; } = false;
+    public bool OrderIsDone { get; set; } = false;
 
     // Order date
     [BsonElement("OrderedDate")]
@@ -41,6 +41,7 @@ public class Order
 
     public Order()
     {
+        Id = ObjectId.GenerateNewId().ToString();
         OrderIsDone = false;
     }
 }

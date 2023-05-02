@@ -1,11 +1,6 @@
 ﻿using BookstoreApi.Models;
 using BookstoreApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookstoreApi.Controllers
 {
@@ -49,35 +44,35 @@ namespace BookstoreApi.Controllers
             [FromQuery] decimal? maxPrice = null,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
+        {
+            var allBooks = await _booksService.GetAsync();
+            var filteredBooks = allBooks;
+
+            if (!string.IsNullOrEmpty(name))
             {
-                var allBooks = await _booksService.GetAsync();
-                var filteredBooks = allBooks;
+                filteredBooks = filteredBooks.Where(b => b.Title.ToLower().Contains(name.ToLower())).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(name))
-                {
-                    filteredBooks = filteredBooks.Where(b => b.Title.ToLower().Contains(name.ToLower())).ToList();
-                }
+            if (!string.IsNullOrEmpty(categoryName))
+            {
+                filteredBooks = filteredBooks.Where(b => b.Category.CategoryName.ToLower().Contains(categoryName.ToLower())).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(categoryName))
-                {
-                    filteredBooks = filteredBooks.Where(b => b.Category.CategoryName.ToLower().Contains(categoryName.ToLower())).ToList();
-                }
+            if (minPrice.HasValue)
+            {
+                filteredBooks = filteredBooks.Where(b => b.Price >= minPrice.Value).ToList();
+            }
 
-                if (minPrice.HasValue)
-                {
-                    filteredBooks = filteredBooks.Where(b => b.Price >= minPrice.Value).ToList();
-                }
+            if (maxPrice.HasValue)
+            {
+                filteredBooks = filteredBooks.Where(b => b.Price <= maxPrice.Value).ToList();
+            }
 
-                if (maxPrice.HasValue)
-                {
-                    filteredBooks = filteredBooks.Where(b => b.Price <= maxPrice.Value).ToList();
-                }
-
-                var totalCount = filteredBooks.Count;
-                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-                // Apply pagination
-                var pagedBooks = filteredBooks.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-                return pagedBooks;
+            var totalCount = filteredBooks.Count;
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            // Apply pagination
+            var pagedBooks = filteredBooks.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            return pagedBooks;
         }
 
         [HttpPost]

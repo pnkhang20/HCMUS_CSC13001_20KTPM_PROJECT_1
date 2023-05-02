@@ -14,6 +14,11 @@ public class OrderItem
 
     [BsonElement("OrderItemQuantity")]
     [BsonRequired]
-    public int Quantity { get; set; }   
+    public int Quantity { get; set; }
+
+    public OrderItem()
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+    }
 
 }
