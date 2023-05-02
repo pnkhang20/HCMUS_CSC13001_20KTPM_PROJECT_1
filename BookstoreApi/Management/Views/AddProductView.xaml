@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Management.Views"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         Background="#394867"
         mc:Ignorable="d"
         Title="Add New Product" Height="800" Width="800">
     
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+        
         <Border HorizontalAlignment="Center"
                     CornerRadius="10"
                     Margin="0 30 0 0"

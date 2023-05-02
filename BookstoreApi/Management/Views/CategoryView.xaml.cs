@@ -24,5 +24,7 @@ namespace Management.Views
         {
             InitializeComponent();
         }
+
+    
     }
 }
