@@ -1,7 +1,13 @@
 ﻿using Management.Cores;
-using System.Collections.ObjectModel;
-using System.Net.Http;
 using Management.Models;
+using Management.Views;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Management.Views;
@@ -38,7 +44,7 @@ namespace Management.ViewModels
 
         public ObservableCollection<Category> Categories { get; } = new ObservableCollection<Category>();
         private Category selectedCategory;
-        
+
         public Category SelectedCategory
         {
             get { return selectedCategory; }
@@ -94,7 +100,7 @@ namespace Management.ViewModels
                         {
                             if (HasNextPage)
                             {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);                                
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);
                             }
                         },
                         (param) => HasNextPage
@@ -117,7 +123,7 @@ namespace Management.ViewModels
                         {
                             if (HasPrevPage)
                             {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);                                
+                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
                             }
                         },
                         (param) => HasPrevPage
@@ -177,7 +183,7 @@ namespace Management.ViewModels
                         addBookWindow.DataContext = addBookVM;
                         addBookWindow.ShowDialog();
                         await LoadBooks();
-                    });                    
+                    });
                 }
                 return _addProductCommand;
             }
@@ -342,7 +348,7 @@ namespace Management.ViewModels
         public ICommand EditCommand
         {
             get
-            { 
+            {
                 if (_editCommand == null)
                 {
                     _editCommand = new RelayCommand(async (param) =>
@@ -356,7 +362,7 @@ namespace Management.ViewModels
                             editBookWindow.DataContext = editBookVM;
                             editBookWindow.ShowDialog();
                             await LoadBooks();
-                        }    
+                        }
                     });
                 }
                 return _editCommand;
@@ -387,7 +393,7 @@ namespace Management.ViewModels
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(MaxPrice))
-                {                    
+                {
                     await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
                 }
             };
@@ -444,7 +450,7 @@ namespace Management.ViewModels
                     }
                 }
                 // Add query parameters for pagination
-                if(pageNumber != 0)
+                if (pageNumber != 0)
                 {
                     if (urlBuilder.ToString().Contains("?"))
                     {
@@ -456,14 +462,14 @@ namespace Management.ViewModels
                     }
                 }
 
-                
+
                 var response = await httpClient.GetAsync(urlBuilder.ToString());
-                
+
                 if (response.IsSuccessStatusCode)
                 {
 
                     var content = await response.Content.ReadAsStringAsync();
-                    var books = JsonConvert.DeserializeObject<List<Book>>(content);                    
+                    var books = JsonConvert.DeserializeObject<List<Book>>(content);
                     HasNextPage = books.Count == pageSize;
                     HasPrevPage = Page > 1;
 
@@ -474,7 +480,7 @@ namespace Management.ViewModels
                     }
                 }
             }
-            catch (Exception ex){}
+            catch (Exception ex) { }
         }
 
         public async Task LoadCategory()
@@ -483,7 +489,7 @@ namespace Management.ViewModels
             {
                 Categories.Clear();
                 var allCategory = new Category() { CategoryName = "All Category" };
-                Categories.Add(allCategory);               
+                Categories.Add(allCategory);
                 var response = await httpClient.GetAsync(CategoryApiUrl);
                 if (response.IsSuccessStatusCode)
                 {
@@ -507,7 +513,7 @@ namespace Management.ViewModels
                 }
             }
             catch (Exception ex)
-            {                
+            {
             }
         }
 
@@ -521,7 +527,7 @@ namespace Management.ViewModels
                 if (categorySelectionChangedCommand == null)
                 {
                     categorySelectionChangedCommand = new RelayCommand(async (param) =>
-                    {                        
+                    {
                         await LoadBooks(SearchText, SelectedCategory);
                     });
                 }

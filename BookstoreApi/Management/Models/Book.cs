@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
+﻿using System.ComponentModel;
 
 namespace Management.Models
 {
@@ -17,7 +11,7 @@ namespace Management.Models
         public int Quantity { get; set; }
         public string Cover { get; set; }
         public Category Category { get; set; }
-        public int TotalSold { get; set; }     
+        public int TotalSold { get; set; }
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Book Clone()
@@ -26,7 +20,7 @@ namespace Management.Models
             {
                 Id = this.Id,
                 Title = this.Title,
-                Author = this.Author,                
+                Author = this.Author,
                 Price = this.Price,
                 Quantity = this.Quantity,
                 Category = new Category

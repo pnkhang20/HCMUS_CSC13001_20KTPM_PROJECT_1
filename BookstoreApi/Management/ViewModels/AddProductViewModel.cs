@@ -1,13 +1,15 @@
-﻿using Management.Cores;
+﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Management.Cores;
 using Management.Models;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Http;
-using System.Text;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -155,7 +157,7 @@ namespace Management.ViewModels
         private string _coverImg;
         public string CoverImg
         {
-            get { return _coverImg; } 
+            get { return _coverImg; }
             set { _coverImg = value; OnPropertyChanged(); }
         }
         private ICommand _selectCoverCommand;

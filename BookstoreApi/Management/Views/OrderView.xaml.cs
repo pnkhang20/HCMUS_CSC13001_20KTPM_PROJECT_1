@@ -16,16 +16,18 @@ using System.Windows.Shapes;
 namespace Management.Views
 {
     /// <summary>
-    /// Interaction logic for CategoryView.xaml
+    /// Interaction logic for OrderView.xaml
     /// </summary>
-    public partial class CategoryView : UserControl
+    public partial class OrderView : UserControl
     {
-        public CategoryView()
+        public OrderView()
         {
             InitializeComponent();
         }
 
-    
+        private void Button_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
 
+        }
     }
 }

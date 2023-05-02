@@ -39,6 +39,20 @@
                 <view:CategoryView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodel:OrderViewModel}">
+                <view:OrderView/>
+            </DataTemplate>
+
+
+            <DataTemplate DataType="{x:Type viewmodel:EditOrderViewModel}">
+                <view:EditOrderView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodel:AddOrderItemViewModel}">
+                <view:AddOrderItemView/>
+            </DataTemplate>
+
+            <!--grid styling-->
             <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -145,7 +159,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-               
+
             </Style>
             <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
                 <Setter Property="Width" Value="8"/>
@@ -162,7 +176,7 @@
             <Style x:Key="DataGridColumnHeaderStyle1" TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Foreground" Value="#69717D" />
+                <Setter Property="Foreground" Value="White" />
                 <Setter Property="Margin" Value="15 0 15 10" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -271,6 +285,73 @@
                 <Setter Property="Height" Value="12" />
             </Style>
 
+            <!--add btn-->
+            <Style x:Key="addButton" TargetType="Button">
+                <Setter Property="Background" Value="#6741D9" />
+                <Setter Property="Foreground" Value="#ffffff" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="Template" >
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="7">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#7B5CD6" />
+                        <Setter Property="Foreground" Value="#ffffff" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+
+            <!--date picker-->
+            <Style x:Key="datePicker" TargetType="DatePicker">
+                <Setter Property="Background" Value="#ffffff" />
+                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="200" />
+                <Setter Property="Margin" Value="20" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Template" >
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DatePicker">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="7">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+
+
+            <!--checkbox-->
+            <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070"/>
+            <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121"/>
+            <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#FFF3F9FF"/>
+            <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#FF5593FF"/>
+            <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#FF212121"/>
+            <SolidColorBrush x:Key="OptionMark.Pressed.Background" Color="#FFD9ECFF"/>
+            <SolidColorBrush x:Key="OptionMark.Pressed.Border" Color="#FF3C77DD"/>
+            <SolidColorBrush x:Key="OptionMark.Pressed.Glyph" Color="#FF212121"/>
+            <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="#FFE6E6E6"/>
+            <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC"/>
+            <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="#FF707070"/>
+            
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>
