@@ -1,10 +1,13 @@
-﻿using Management.Cores;
+﻿using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using Management.Cores;
 using Management.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
 
 namespace Management.ViewModels
 {
@@ -65,6 +69,12 @@ namespace Management.ViewModels
             }
         }
 
+        private string _coverImg;
+        public string CoverImg
+        {
+            get { return _coverImg; }
+            set { _coverImg = value; OnPropertyChanged(); }
+        }
 
         private ICommand _saveChangesCommand;
         public ICommand SaveChangesCommand
@@ -106,11 +116,30 @@ namespace Management.ViewModels
                             if (result == MessageBoxResult.Yes)
                             {
                                 // Make a PUT request to update the book
-                                using (HttpClient client = new HttpClient())
+
+                                if (string.IsNullOrEmpty(CoverImg))
+                                {
+                                    //MessageBox.Show("Please select a cover image.");
+                                    //return;
+
+                                    string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                                    CoverImg = Path.Combine(baseDirectory, "Images\\default-thumbnail.jpg");
+
+                                }
+                                // Make a POST request to update the book
+                               
+
+                                    using (HttpClient client = new HttpClient())
                                 {
                                     client.BaseAddress = new Uri("https://localhost:7122/");
                                     client.DefaultRequestHeaders.Accept.Clear();
                                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                                    string imageUrl = await UploadImage(CoverImg);
+
+                                    // Set the Cover property of the new book to the URL of the uploaded blob
+                                    SelectedBook.Cover = imageUrl;
+
                                     SelectedBook.Category = SelectedCategory;
                                     // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
                                     HttpResponseMessage response = await client.PutAsJsonAsync($"api/Books/{SelectedBook.Id}", SelectedBook);
@@ -173,8 +202,69 @@ namespace Management.ViewModels
         public EditProductViewModel(Book selectedBook, ObservableCollection<Category> categories )
         {
             SelectedBook = selectedBook.Clone();
-            Categories = categories;                    
+            Categories = categories;
+            CoverImg = SelectedBook.Cover;
             SelectedCategory = Categories.FirstOrDefault(c => c.Id == SelectedBook.Category.Id);
+        }
+
+
+        private ICommand _selectCoverCommand;
+        public ICommand SelectCoverCommand
+        {
+            get
+            {
+                if (_selectCoverCommand == null)
+                {
+                    _selectCoverCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            OpenFileDialog openFileDialog = new OpenFileDialog();
+                            openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
+                            // Upload service: imagehost@wpfproject-385006.iam.gserviceaccount.com
+                            if (openFileDialog.ShowDialog() == true)
+                            {
+                                string imagePath = openFileDialog.FileName;
+                                CoverImg = imagePath;
+                            }
+                        }
+                    );
+                }
+
+                return _selectCoverCommand;
+            }
+        }
+
+        private async Task<string> UploadImage(string imagePath)
+        {
+            // Get the connection string and container name from app settings or a configuration file
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=kpwpf;AccountKey=AUW9ZL+TCxx0aj6GF5/DC3wRz1oHUgVMJuxbRfrJk+JFEec9xxF9mrK5wrtmXA0MpHLrV0xm9wyF+AStoAFX0w==;EndpointSuffix=core.windows.net";
+            string containerName = "covers";
+
+            // Create the blob service client and get a reference to the container
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            // Create the container if it does not exist
+            if (!containerClient.Exists())
+            {
+                await containerClient.CreateAsync();
+            }
+
+            // Create a reference to the blob and upload the image
+            BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(imagePath));
+            using (FileStream stream = File.OpenRead(imagePath))
+            {
+                var blobUploadOptions = new BlobUploadOptions()
+                {
+                    HttpHeaders = new BlobHttpHeaders()
+                    {
+                        ContentType = "image/jpeg"
+                    }
+                };
+                await blobClient.UploadAsync(stream, blobUploadOptions);
+            }
+            // Return the URL of the uploaded blob
+            return blobClient.Uri.ToString();
         }
 
     }

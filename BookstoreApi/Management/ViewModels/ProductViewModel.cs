@@ -301,7 +301,7 @@ namespace Management.ViewModels
                                         Author = author,
                                         Price = price,
                                         Quantity = int.TryParse(quantity, out temp) ? temp : 0,
-                                        Category = new Category { CategoryName = category },
+                                        Category = Categories.FirstOrDefault(c => c.CategoryName == category),
                                         Cover = Path.Combine(baseDirectory, "Images\\default-thumbnail.jpg")
 
                                     };
