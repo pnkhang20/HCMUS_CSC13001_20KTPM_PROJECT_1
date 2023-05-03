@@ -231,7 +231,7 @@
                                        FontSize="25" 
                                        FontWeight="SemiBold">
                                 <Run Text="{Binding TotalOrder}" FontSize="30" d:Text="25"/>
-                                 orders
+                                 orders / week
                             </TextBlock>
                         </StackPanel>
                     </Grid>
