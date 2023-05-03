@@ -100,8 +100,10 @@ namespace Management.ViewModels
                                     if (response.IsSuccessStatusCode)
                                     {
                                         Orders.Remove(SelectedOrder);
+                                        LoadOrders(StartDate, EndDate, CurrentPage);
                                         SelectedOrder = null;
                                         SelectedPage = CurrentPage - 1;
+                                        
                                     }
                                     else
                                     {
