@@ -3,9 +3,8 @@
 namespace Mangement.Models
 {
     public class Revenue
-    {
-        public string OrderId { get; set; }
-        public decimal TotalPrice { get; set; }
+    {        
+        public decimal TotalRevenue { get; set; }
         public DateTime Date { get; set; }
     }
 }

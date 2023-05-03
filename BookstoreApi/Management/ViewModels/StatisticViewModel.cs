@@ -1,10 +1,17 @@
 ﻿using LiveCharts;
+using LiveCharts.Wpf;
 using Management.Cores;
+using Mangement.Models;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net.Http;
+using System.Windows;
 using System.Windows.Input;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Management.ViewModels
 {
@@ -42,7 +49,33 @@ namespace Management.ViewModels
             {
                 if (_generateChartCommand == null)
                 {
+                    _generateChartCommand = new RelayCommand(async (param) =>
+                    {
+                        string apiUrl = dailyRevenueApi;
+                        string queryString = $"fromDate={FromDate.ToString("yyyy-MM-dd")}&toDate={ToDate.ToString("yyyy-MM-dd")}";
+                        string apiUrlWithQuery = $"{apiUrl}{queryString}";
 
+                        using (HttpClient client = new HttpClient())
+                        {
+                            HttpResponseMessage response = await client.GetAsync(apiUrlWithQuery);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string jsonResponse = await response.Content.ReadAsStringAsync();
+                                List<RevenueByDay> revenueData = JsonConvert.DeserializeObject<List<RevenueByDay>>(jsonResponse);
+
+                                // Update RevenueValues property with the fetched data
+                                RevenueValues = new SeriesCollection
+                            {
+                                new ColumnSeries
+                                {
+                                    Title = "Revenue",
+                                    Values = new ChartValues<double>((IEnumerable<double>)revenueData.Select(rd => rd.TotalRevenue)),
+                                }
+                            };
+                            }
+                        }
+                    });
                 }
                 return _generateChartCommand;
             }
