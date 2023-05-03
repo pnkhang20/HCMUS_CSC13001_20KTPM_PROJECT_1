@@ -152,7 +152,7 @@ namespace Management.ViewModels
                     _generateChartCommand = new RelayCommand(async (param) =>
                     {
                         string apiUrl = string.Empty;
-                        string queryString = $"fromDate={FromDate.ToString("yyyy-MM-dd")}&toDate={ToDate.ToString("yyyy-MM-dd")}";
+                        string queryString = $"fromDate={FromDate.AddDays(-1).ToString("yyyy-MM-dd")}&toDate={ToDate.AddDays(1).ToString("yyyy-MM-dd")}";
 
                         switch (SelectedGroupByOption)
                         {

@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:Management"
         xmlns:viewmodel="clr-namespace:Management.ViewModels"
         mc:Ignorable="d"
-        Height="720" Width="1280"              
+        Height="720" Width="1280"    
+        WindowStartupLocation="CenterScreen"
         Background="Transparent">
     <Window.DataContext>
         <viewmodel:MainViewModel/>
     </Window.DataContext>
-    <Border Background="#212A3E"
-            >
+    <Border Background="#212A3E">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"></ColumnDefinition>

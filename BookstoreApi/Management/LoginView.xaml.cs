@@ -43,10 +43,12 @@ namespace Management.Views
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var users = JsonConvert.DeserializeObject<List<User>>(responseContent);
-                var matchingUser = users.FirstOrDefault(user => user.Username == loginRequest.usr && user.Password == loginRequest.pwd);
+                var matchingUser = users.FirstOrDefault(user => user.UserName == loginRequest.usr);
 
-                if (matchingUser != null)
+                if (matchingUser != null && BCrypt.Net.BCrypt.Verify(loginRequest.pwd, matchingUser.Password))
                 {
+                    MessageBox.Show("Successfully Logged In!");
+                    // The password is correct, so login was successful
                     var mainWindow = new MainWindow();
                     mainWindow.Show();
                     Close();

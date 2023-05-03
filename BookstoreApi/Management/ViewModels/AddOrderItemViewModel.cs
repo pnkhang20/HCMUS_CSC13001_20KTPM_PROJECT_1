@@ -45,6 +45,8 @@ namespace Management.ViewModels
             set { _orderItems = value; OnPropertyChanged(); }
         }
 
+
+
         public AddOrderItemViewModel(ObservableCollection<Book> booksList, Order selectedOrder)
         {
             SelectedOrder = selectedOrder;
@@ -66,6 +68,11 @@ namespace Management.ViewModels
                         MessageBoxResult result = MessageBox.Show($"Add {SelectedBook.Title} to cart?", "Confirm Changes", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes)
                         {
+                            if (SelectedBook.Quantity == 0)
+                            {
+                                MessageBox.Show("This book is out of stock! You can't add it to the order!");
+                                return;
+                            }
                             try
                             {
                                 // Send a PUT request to update the order
