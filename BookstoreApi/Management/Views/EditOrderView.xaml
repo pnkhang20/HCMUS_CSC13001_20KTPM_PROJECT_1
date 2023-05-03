@@ -12,25 +12,27 @@
         WindowStartupLocation="CenterScreen"
         >
     <Border Padding="20">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="2*"></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition Height="60"></RowDefinition>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"     
-                    Margin="10">
+            <Grid Grid.Row="0"     
+                    Margin="10" HorizontalAlignment="Center"
+                   Width="450"
+                  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <StackPanel Grid.Column="0" Orientation="Vertical" Margin="10">
                     <TextBlock Text="Customer Name: "
                        Foreground="White"
-                       FontSize="15"
+                       FontSize="20"
                        Margin="0 10 20 10"
                        VerticalAlignment="Center"/>
                     <Border CornerRadius="10"
@@ -56,19 +58,19 @@
                             BorderThickness="0"/>
                     </Border>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Text="Phone: " 
-                       FontSize="15"
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Phone: " 
+                       FontSize="20"
                        Foreground="White"
                        VerticalAlignment="Center"
-                        Margin="20 10 20 10"/>
-            <Border CornerRadius="10"
+                        Margin="0 10 20 10"/>
+                    <Border CornerRadius="10"
                         HorizontalAlignment="Left"
                         Background="#212A3E"
                         Margin="0 0 0 0"
                         Width="200"
                         Height="30">
-                <TextBox
+                        <TextBox
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
                             HorizontalAlignment="Left"
@@ -83,31 +85,32 @@
                     
                             Text="{Binding SelectedOrder.CustomerPhone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
-            </Border>
+                    </Border>
                 </StackPanel>
             </Grid>
-        
-        <Grid Grid.Row="1"
-                    Margin="10"
+
+            <Grid Grid.Row="1"
+                  
+              HorizontalAlignment="Center" Width="450"
                    
                     >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Shipping Address: "
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Shipping Address: "
                        Foreground="White"
-                       FontSize="15"
+                       FontSize="20"
                        Margin="0 10 20 10"
                        VerticalAlignment="Center"/>
-            <Border CornerRadius="10"
+                    <Border CornerRadius="10"
                         HorizontalAlignment="Left"
                         Background="#212A3E"
                         Margin="0 0 0 0"
-                        Width="200"
+                        Width="425"
                         Height="30">
-                <TextBox                                 
+                        <TextBox                                 
                             materialDesign:HintAssist.Foreground="White"
                             materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
                             HorizontalAlignment="Left"
@@ -115,141 +118,133 @@
                             Background="Transparent"
                             Foreground="#F1F6F9"
                             Opacity="1"
-                            Margin="10 0 10 0"
-                            Width="200"
+                            Margin="10,0,10,0"
+                            Width="420"
                             Height="30"
                             FontSize="16"
                     
                             Text="{Binding SelectedOrder.ShippingAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             BorderThickness="0"/>
-            </Border>
+                    </Border>
                 </StackPanel>
-        
-            <Button Grid.Column="1"
+
+                <Button Grid.Row="1"
                                 Width="150"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom"
                                 materialDesign:ButtonAssist.CornerRadius="10"
-                                Background="#212A3E"
-                                Foreground="AntiqueWhite"
-                                BorderBrush="#212A3E"
-                                HorizontalAlignment="Right"
-                                Margin="20,0,0,0"
+                                Background="#305da8"               
+                                Foreground="white"
+                                BorderBrush="#305da8"
+                              
+                                Margin="0 10"
                                 Command="{Binding AddNewOrderItemCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <Icon:PackIconMaterial Kind="Plus" 
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="Plus" 
                                            VerticalAlignment="Center"
                                            Margin="0 1 8 0" Width="11" 
                                            Height="11"/>
-                    <TextBlock Text="Add New Item"/>
-                </StackPanel>
-            </Button>
-        </Grid>
+                        <TextBlock Text="Add New Item"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
 
-        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="10">
-            <DataGrid ItemsSource="{Binding OrderItems}"
+
+            <DataGrid  Grid.Row="2" Margin="10" ItemsSource="{Binding OrderItems}"
                      
-                      Margin="0,10,0,0" 
-                      HorizontalAlignment="Stretch"
                       AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    
-                    <DataGridTemplateColumn Header="Book Title" 
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="Book Title" 
                                             IsReadOnly="True" 
                                             CanUserResize="False"
                                             Width="300">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Book.Title, UpdateSourceTrigger=PropertyChanged}" 
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Book.Title, UpdateSourceTrigger=PropertyChanged}" 
                                                VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="Author" 
+                        <DataGridTextColumn Header="Author" 
                                         Binding="{Binding Book.Author, UpdateSourceTrigger=PropertyChanged}" 
                                         IsReadOnly="True" 
                                         CanUserResize="True"
                                         Width="Auto"/>
-                    <DataGridTextColumn Header="Category" 
+                        <DataGridTextColumn Header="Category" 
                                         Binding="{Binding Book.Category.CategoryName, UpdateSourceTrigger=PropertyChanged}" 
                                         IsReadOnly="True" 
                                         CanUserResize="True"
                                         Width="Auto"/>
 
-                    <DataGridTextColumn Header="Price" 
+                        <DataGridTextColumn Header="Price" 
                                         Binding="{Binding Book.Price, UpdateSourceTrigger=PropertyChanged}" 
                                         IsReadOnly="True" 
                                         CanUserResize="False"
                                         Width="Auto"/>
 
-                    <DataGridTextColumn Header="In Stock" 
+                        <DataGridTextColumn Header="In Stock" 
                                         Binding="{Binding Book.Quantity, UpdateSourceTrigger=PropertyChanged}" 
                                         IsReadOnly="True" 
                                         CanUserResize="True"
                                         Width="Auto"/>
 
-                    <DataGridTextColumn Header="Quantity" 
+                        <DataGridTextColumn Header="Quantity" 
                                         Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}"                                         
                                         CanUserResize="False"
                                         Width="Auto"/>
 
-                </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                <DataGrid.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Delete" 
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Delete" 
                                   Command="{Binding DeleteOrderItemCommand}" 
                                   CommandParameter="{Binding SelectedOrderItem, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
 
-            </DataGrid>
+                </DataGrid>
 
-        </StackPanel>
+          
 
-        <StackPanel Grid.Row="4" VerticalAlignment="Center">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition>
-                    </ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-
-                <Button Grid.Column="3"
+            <StackPanel Grid.Row="4" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button
                                 Width="150"
                                 materialDesign:ButtonAssist.CornerRadius="10"
-                                Background="#212A3E"
-                                Foreground="AntiqueWhite"
-                                BorderBrush="#212A3E"
-                                HorizontalAlignment="Right"
+                                 Background="#305da8"
+                              
+                                Foreground="white"
+                               
+                                BorderBrush="#305da8"
                                 Margin="0, 0 ,10, 0"
                                 Command="{Binding SaveEditedOrder}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Save"/>
-                    </StackPanel>
-                </Button>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Save"/>
+                        </StackPanel>
+                    </Button>
 
-                <Button Grid.Column="2"
+                    <Button
                                 Width="150"
                                 materialDesign:ButtonAssist.CornerRadius="10"
                                 Background="#212A3E"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
-                                HorizontalAlignment="Right"
                                 Margin="0, 0 ,10, 0"
                                 Command="{Binding MarkOrderAsDoneCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Mark Order Done"/>
-                    </StackPanel>
-                </Button>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Mark Order Done"/>
+                        </StackPanel>
+                    </Button>
 
-            </Grid>
+                </StackPanel>
 
 
-        </StackPanel>
-    </Grid>
+            </StackPanel>
+        </Grid>
     </Border>
 </Window>
