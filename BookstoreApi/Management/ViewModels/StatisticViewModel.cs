@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Markup;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Management.ViewModels
@@ -39,8 +40,8 @@ namespace Management.ViewModels
         private Func<decimal, string> _currencyLabelFormatter;
         public Func<decimal, string> CurrencyLabelFormatter { get { return _currencyLabelFormatter; } set { _currencyLabelFormatter = value; OnPropertyChanged(); } }
 
-        private Func<decimal, string> _dateLabelFormatter;
-        public Func<decimal, string> DateLabelFormatter { get { return _dateLabelFormatter; } set {_dateLabelFormatter = value;OnPropertyChanged();} }
+        private List<string> _dateLabelFormatter;
+        public List<string> DateLabelFormatter { get { return _dateLabelFormatter; } set {_dateLabelFormatter = value;OnPropertyChanged();} }
 
         private ICommand _generateChartCommand;
         public ICommand GenerateChartCommand
@@ -63,20 +64,27 @@ namespace Management.ViewModels
                             {
                                 string jsonResponse = await response.Content.ReadAsStringAsync();
                                 List<RevenueByDay> revenueData = JsonConvert.DeserializeObject<List<RevenueByDay>>(jsonResponse);
-
                                 // Update RevenueValues property with the fetched data
-                                RevenueValues = new SeriesCollection
-                            {
-                                new ColumnSeries
+                                RevenueValues = new SeriesCollection();                                
+                                foreach (var revenue in revenueData)
                                 {
-                                    Title = "Revenue",
-                                    Values = new ChartValues<double>((IEnumerable<double>)revenueData.Select(rd => rd.TotalRevenue)),
+                                    // Set the date label formatter                                                                        
+                                    // Create a new ColumnSeries for each day
+                                    ColumnSeries daySeries = new ColumnSeries
+                                    {
+                                        Title = revenue.Date.ToString("yyyy-MM-dd"),
+                                        Values = new ChartValues<double> { revenue.TotalRevenue },
+                                        
+                                    };
+                                    RevenueValues.Add(daySeries);                                    
                                 }
-                            };
+                                // Set the date label formatter
+                               
                             }
                         }
                     });
                 }
+
                 return _generateChartCommand;
             }
         }

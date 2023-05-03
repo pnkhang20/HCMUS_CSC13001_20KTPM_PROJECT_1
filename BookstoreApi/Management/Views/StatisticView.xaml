@@ -40,16 +40,19 @@
             </StackPanel>
             <lvc:CartesianChart Grid.Row="1" 
                                 Margin="10"
-                                Series="{Binding RevenueValues}">
+                                Series="{Binding RevenueValues}"
+                                LegendLocation="Bottom">
                 <lvc:CartesianChart.AxisX>
-                    <lvc:Axis Title="Date" LabelFormatter="{Binding DateLabelFormatter}">
+                    <lvc:Axis Title="Date" 
+                              LabelFormatter="{Binding DateLabelFormatter}">
                         <lvc:Axis.Separator>
                             <lvc:Separator Step="1"></lvc:Separator>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Title="Revenue" MinValue="0" LabelFormatter="{Binding CurrencyLabelFormatter}" />
+                    <lvc:Axis Title="Revenue" MinValue="0.0" 
+                              LabelFormatter="{Binding CurrencyLabelFormatter}" />
                 </lvc:CartesianChart.AxisY>
             </lvc:CartesianChart>
         </Grid>
