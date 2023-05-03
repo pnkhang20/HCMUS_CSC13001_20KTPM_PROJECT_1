@@ -28,18 +28,24 @@ public class UsersController : ControllerBase
         return user;
     }
 
-    [HttpPost("{id:length(24)}")]
+    [HttpPost]
     public async Task<IActionResult> Post(User newUser)
     {
+        // Hash the password using bcrypt
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+
+        // Replace the plain-text password with the hashed password
+        newUser.Password = hashedPassword;
+        newUser.Id = null;
         await _usersService.CreateAsync(newUser);
 
-        return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+        return Ok(newUser);
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string userName, User updatedUser)
+    public async Task<IActionResult> Update(string id, User updatedUser)
     {
-        var user = await _usersService.GetAsync(userName);
+        var user = await _usersService.GetAsync(id);
 
         if (user is null)
         {
@@ -48,15 +54,15 @@ public class UsersController : ControllerBase
 
         updatedUser.Id = user.Id;
 
-        await _usersService.UpdateAsync(userName, updatedUser);
+        await _usersService.UpdateAsync(id, updatedUser);
 
         return NoContent();
     }
 
     [HttpDelete("{id:length(24)}")]
-    public async Task<IActionResult> Delete(string userName)
+    public async Task<IActionResult> Delete(string id)
     {
-        var user = await _usersService.GetAsync(userName);
+        var user = await _usersService.GetAsync(id);
 
         if (user is null)
         {

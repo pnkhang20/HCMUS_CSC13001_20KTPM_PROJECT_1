@@ -18,8 +18,6 @@ namespace Management.ViewModels
     class OrderViewModel : ObservableObject
     {
 
-        private const string BookApiUrl = "https://localhost:7122/api/Books";
-        private const string CategoryApiUrl = "https://localhost:7122/api/Categories";
         private const string OrderApiUrl = "https://localhost:7122/api/Orders";
         private readonly HttpClient httpClient = new HttpClient();
 
@@ -214,8 +212,8 @@ namespace Management.ViewModels
                     foreach (var order in orders)
                     {
                         // Filter the orders based on the selected date range
-                        if ((startDate == null || order.OrderedDate >= startDate.Value.AddDays(-1)) &&
-                            (endDate == null || order.OrderedDate <= endDate.Value.AddDays(1)))
+                        if ((startDate == null || order.OrderedDate.AddDays(1) >= startDate.Value) &&
+                            (endDate == null || order.OrderedDate.AddDays(-1) <= endDate.Value))
                         {
                             var existingOrder = Orders.FirstOrDefault(b => b.Id == order.Id);
                             if (existingOrder == null)

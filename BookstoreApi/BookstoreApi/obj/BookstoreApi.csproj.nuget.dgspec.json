@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[12.16.0, )"
             },
+            "BCrypt.Net-Core": {
+              "target": "Package",
+              "version": "[1.6.0, )"
+            },
             "Bunifu.UI.WinForms": {
               "target": "Package",
               "version": "[6.1.0, )"
