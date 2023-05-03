@@ -48,13 +48,9 @@
               "target": "Package",
               "version": "[12.16.0, )"
             },
-            "Bunifu.UI.WinForms": {
+            "BCrypt.Net-Core": {
               "target": "Package",
-              "version": "[6.1.0, )"
-            },
-            "LiveCharts.Wpf": {
-              "target": "Package",
-              "version": "[0.9.7, )"
+              "version": "[1.6.0, )"
             },
             "MaterialDesignColors": {
               "target": "Package",

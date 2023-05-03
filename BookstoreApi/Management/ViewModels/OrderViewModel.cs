@@ -18,8 +18,6 @@ namespace Management.ViewModels
     class OrderViewModel : ObservableObject
     {
 
-        private const string BookApiUrl = "https://localhost:7122/api/Books";
-        private const string CategoryApiUrl = "https://localhost:7122/api/Categories";
         private const string OrderApiUrl = "https://localhost:7122/api/Orders";
         private readonly HttpClient httpClient = new HttpClient();
 

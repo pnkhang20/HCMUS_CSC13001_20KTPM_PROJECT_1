@@ -29,14 +29,8 @@ public class UsersService
 
     public async Task CreateAsync(User newUser)
     {
-        var existedUser = await _userCollection.Find(x => x.UserName == newUser.UserName).FirstOrDefaultAsync();
-        if (existedUser != null)
-        {
-            throw new Exception("Username already exists!");
-        }
         await _userCollection.InsertOneAsync(newUser);
     }
-
 
     public async Task UpdateAsync(string Id, User updatedUser) =>
         await _userCollection.ReplaceOneAsync(x => x.Id == Id, updatedUser);

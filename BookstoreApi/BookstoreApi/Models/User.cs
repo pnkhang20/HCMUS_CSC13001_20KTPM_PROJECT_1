@@ -6,10 +6,8 @@ namespace BookstoreApi.Models;
 public class User
 {
     [BsonId]
-    [BsonElement("Id")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-
+    public string Id { get; set; } = null!;
     [BsonElement("Username")]
     [BsonRequired]
     public string UserName { get; set; } = null!;
@@ -20,4 +18,9 @@ public class User
 
     [BsonElement("FullName")]
     public string FullName { get; set; } = null!;
+
+    public User()
+    {
+        Id = ObjectId.GenerateNewId().ToString();
+    }
 }
