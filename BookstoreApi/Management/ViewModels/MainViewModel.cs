@@ -31,10 +31,21 @@ namespace Management.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public void ReloadHomeView()
+        {
+            // Reload what you call here
+            //HomeVM.LoadCategory();           
+        }
+
         public void ReloadProductView()
         {
             ProductVM.LoadCategory();
             ProductVM.LoadBooks();
+        }
+        public void ReloadOrderView()
+        {
+            OrderVM.LoadOrders();
         }
         public void ReloadRevenueView()
         {
@@ -72,6 +83,7 @@ namespace Management.ViewModels
 
             OrderViewCommand = new RelayCommand(obj =>
             {
+                ReloadOrderView();
                 CurrentView = OrderVM;
             });
 
