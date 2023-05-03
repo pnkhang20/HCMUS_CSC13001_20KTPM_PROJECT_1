@@ -10,7 +10,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Management.Views;
 using Microsoft.Win32;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -20,11 +19,8 @@ using System.Net.Http.Headers;
 using Azure;
 using System.Windows;
 using System.Windows.Input;
-using System;
-using System.Linq;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Text;
+
+
 
 namespace Management.ViewModels
 {
@@ -34,27 +30,30 @@ namespace Management.ViewModels
         private const string BookApiUrl = "https://localhost:7122/api/Books";
         private const string CategoryApiUrl = "https://localhost:7122/api/Categories";
         private readonly HttpClient httpClient = new HttpClient();
-        public ObservableCollection<Book> Books { get; } = new ObservableCollection<Book>();
-        private Book selectedBook;
+        public ObservableCollection<Book> Books { get; set; } = new ObservableCollection<Book>();
+
+
+        public ObservableCollection<Book> AppearBooks { get; set; } = new ObservableCollection<Book>();
+        private Book _selectedBook;
         public Book SelectedBook
         {
-            get { return selectedBook; }
-            set { selectedBook = value; OnPropertyChanged(); }
+            get { return _selectedBook; }
+            set { _selectedBook = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<Category> Categories { get; } = new ObservableCollection<Category>();
-        private Category selectedCategory;
+        private Category _selectedCategory;
 
         public Category SelectedCategory
         {
-            get { return selectedCategory; }
-            set { selectedCategory = value; OnPropertyChanged(); }
+            get { return _selectedCategory; }
+            set { _selectedCategory = value; OnPropertyChanged(); }
         }
-        private string searchText;
+        private string _searchText;
         public string SearchText
         {
-            get { return searchText; }
-            set { searchText = value; OnPropertyChanged(); }
+            get { return _searchText; }
+            set { _searchText = value; OnPropertyChanged(); }
         }
 
         private string _minPrice;
@@ -71,21 +70,7 @@ namespace Management.ViewModels
             set { _maxPrice = value; OnPropertyChanged(); }
         }
 
-        public bool HasNextPage;
-        public bool HasPrevPage;
-        public int _page;
-        public int Page
-        {
-            get { return _page; }
-            set { _page = value; OnPropertyChanged(); }
-        }
-
-        private int _totalPageCount;
-        public int TotalPageCount
-        {
-            get { return _totalPageCount; }
-            set { _totalPageCount = value; OnPropertyChanged(); }
-        }
+      
 
 
         private ICommand _nextPageCommand;
@@ -98,12 +83,19 @@ namespace Management.ViewModels
                     _nextPageCommand = new RelayCommand(
                         async (param) =>
                         {
-                            if (HasNextPage)
+                          
+                            if (CurrentPage + 1 <= TotalPageCount)
                             {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page + 1);
+                                CurrentPage += 1;
+                                AppearBooks = new ObservableCollection<Book>(Books.Skip((CurrentPage - 1) * 5).Take(5));
+                                SelectedPage = CurrentPage - 1;
+
+                                if (CurrentPage == TotalPageCount)
+                                {
+                                    HasNextPage = false;
+                                }
                             }
-                        },
-                        (param) => HasNextPage
+                        }
                     );
                 }
 
@@ -121,26 +113,33 @@ namespace Management.ViewModels
                     _previousPageCommand = new RelayCommand(
                         async (param) =>
                         {
-                            if (HasPrevPage)
+                            if (CurrentPage - 1 >=1)
                             {
-                                await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, Page - 1);
+                                CurrentPage -= 1;
+                                AppearBooks = new ObservableCollection<Book>(Books.Skip((CurrentPage - 1) * 5).Take(5));
+                                SelectedPage = CurrentPage - 1;
+
+                                if (CurrentPage == TotalPageCount)
+                                {
+                                    HasPrevPage = false;
+                                }
                             }
-                        },
-                        (param) => HasPrevPage
+                        }
+                       
                     );
                 }
                 return _previousPageCommand;
             }
         }
 
-        private ICommand deleteCommand;
+        private ICommand _deleteCommand;
         public ICommand DeleteCommand
         {
             get
             {
-                if (deleteCommand == null)
+                if (_deleteCommand == null)
                 {
-                    deleteCommand = new RelayCommand(async (param) =>
+                    _deleteCommand = new RelayCommand(async (param) =>
                     {
                         if (SelectedBook != null)
                         {
@@ -153,8 +152,10 @@ namespace Management.ViewModels
 
                                     if (response.IsSuccessStatusCode)
                                     {
-                                        Books.Remove(SelectedBook);
+                                        
+                                        await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
                                         SelectedBook = null;
+                                        SelectedPage = CurrentPage - 1;
                                     }
                                 }
                                 catch (Exception ex)
@@ -165,7 +166,7 @@ namespace Management.ViewModels
                         }
                     });
                 }
-                return deleteCommand;
+                return _deleteCommand;
             }
         }
 
@@ -182,7 +183,8 @@ namespace Management.ViewModels
                         var addBookWindow = new AddProductView();
                         addBookWindow.DataContext = addBookVM;
                         addBookWindow.ShowDialog();
-                        await LoadBooks();
+                        await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                        SelectedPage = Pages.Count()-1;
                     });
                 }
                 return _addProductCommand;
@@ -322,7 +324,8 @@ namespace Management.ViewModels
                                         {
                                             
                                             MessageBox.Show("Successfully imported new product!");
-                                            await LoadBooks();
+                                            await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                                            SelectedPage = Pages.Count() - 1;
                                         }
                                     }
 
@@ -361,7 +364,8 @@ namespace Management.ViewModels
                             var editBookWindow = new EditProductView();
                             editBookWindow.DataContext = editBookVM;
                             editBookWindow.ShowDialog();
-                            await LoadBooks();
+                            await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                            SelectedPage = CurrentPage - 1;
                         }
                     });
                 }
@@ -370,23 +374,29 @@ namespace Management.ViewModels
         }
         public ProductViewModel()
         {
-            Page = 1;
+            CurrentPage = 1;
+    
             LoadBooks();
             LoadCategory();
+            SelectedPage = 0;
+            updatePagingInfo(CurrentPage);
+            
             SelectedBook = Books.FirstOrDefault();
             // Wire up the SearchText property
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(SearchText))
                 {
-                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                    SelectedPage = 0;
                 }
             };
             this.PropertyChanged += async (sender, e) =>
             {
                 if (e.PropertyName == nameof(MinPrice))
                 {
-                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                    SelectedPage = 0;
                 }
             };
 
@@ -394,7 +404,8 @@ namespace Management.ViewModels
             {
                 if (e.PropertyName == nameof(MaxPrice))
                 {
-                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice);
+                    await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                    SelectedPage = 0;
                 }
             };
         }
@@ -403,7 +414,7 @@ namespace Management.ViewModels
         {
             try
             {
-                Page = pageNumber;
+                CurrentPage = pageNumber;
 
                 var urlBuilder = new StringBuilder(BookApiUrl);
                 urlBuilder.Append("/search");
@@ -450,17 +461,17 @@ namespace Management.ViewModels
                     }
                 }
                 // Add query parameters for pagination
-                if (pageNumber != 0)
-                {
-                    if (urlBuilder.ToString().Contains("?"))
-                    {
-                        urlBuilder.AppendFormat("&pageNumber={0}&pageSize={1}", pageNumber, pageSize);
-                    }
-                    else
-                    {
-                        urlBuilder.AppendFormat("?pageNumber={0}&pageSize={1}", pageNumber, pageSize);
-                    }
-                }
+                //if (pageNumber != 0)
+                //{
+                //    if (urlBuilder.ToString().Contains("?"))
+                //    {
+                //        urlBuilder.AppendFormat("&pageNumber={0}&pageSize={1}", pageNumber, pageSize);
+                //    }
+                //    else
+                //    {
+                //        urlBuilder.AppendFormat("?pageNumber={0}&pageSize={1}", pageNumber, pageSize);
+                //    }
+                //}
 
 
                 var response = await httpClient.GetAsync(urlBuilder.ToString());
@@ -470,14 +481,22 @@ namespace Management.ViewModels
 
                     var content = await response.Content.ReadAsStringAsync();
                     var books = JsonConvert.DeserializeObject<List<Book>>(content);
-                    HasNextPage = books.Count == pageSize;
-                    HasPrevPage = Page > 1;
+                    //HasNextPage = books.Count == pageSize;
+                    //HasPrevPage = CurrentPage > 1;
 
                     Books.Clear();
                     foreach (var book in books)
                     {
                         Books.Add(book);
                     }
+
+                    TotalItem = Books.Count();
+                    AppearBooks = new ObservableCollection<Book>(Books.Skip((CurrentPage - 1) * pageSize).Take(pageSize));
+                    
+                        updatePagingInfo(CurrentPage);
+                    
+                       
+
                 }
             }
             catch (Exception ex) { }
@@ -519,19 +538,103 @@ namespace Management.ViewModels
 
 
 
-        private ICommand categorySelectionChangedCommand;
+        private ICommand _categorySelectionChangedCommand;
         public ICommand CategorySelectedCommand
         {
             get
             {
-                if (categorySelectionChangedCommand == null)
+                if (_categorySelectionChangedCommand == null)
                 {
-                    categorySelectionChangedCommand = new RelayCommand(async (param) =>
+                    _categorySelectionChangedCommand = new RelayCommand(async (param) =>
                     {
-                        await LoadBooks(SearchText, SelectedCategory);
+                        await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice, CurrentPage);
+                        SelectedPage = 0;
                     });
                 }
-                return categorySelectionChangedCommand;
+                return _categorySelectionChangedCommand;
+            }
+        }
+
+
+
+        public bool HasNextPage;
+        public bool HasPrevPage;
+
+
+
+        public int _currentPage;
+        public int CurrentPage
+        {
+            get { return _currentPage; }
+            set { _currentPage = value; OnPropertyChanged(); }
+        }
+
+        private int _totalPageCount;
+        public int TotalPageCount
+        {
+            get { return _totalPageCount; }
+            set { _totalPageCount = value; OnPropertyChanged(); }
+        }
+
+
+        private int _totalItem;
+        public int TotalItem
+        {
+            get { return _totalItem; }
+            set { _totalItem = value; OnPropertyChanged(); }
+        }
+
+
+
+
+        private void updatePagingInfo(int currentPage)
+        {
+            TotalPageCount = TotalItem / 5 +
+                   (TotalItem % 5 == 0 ? 0 : 1);
+
+            // Cập nhật ComboBox
+
+            Pages.Clear();
+            CurrentPage = currentPage;
+            for (int i = 1; i <= TotalPageCount; i++)
+            {
+                Pages.Add(i.ToString());
+            }
+
+         
+        }
+
+
+        public ObservableCollection<string> Pages { get; set; } = new ObservableCollection<string>();
+
+        private int _selectedPage = 0;
+
+        public int SelectedPage
+        {
+            get { return _selectedPage; }
+            set { _selectedPage = value; OnPropertyChanged(); }
+        }
+
+        private ICommand _pageSelectionChangedCommand;
+        public ICommand PageSelectedCommand
+        {
+            get
+            {
+                if ( _pageSelectionChangedCommand == null)
+                {
+                    _pageSelectionChangedCommand = new RelayCommand(async (param) =>
+                    {
+
+                          
+                            CurrentPage = SelectedPage+1;
+                            AppearBooks = new ObservableCollection<Book>(Books.Skip((CurrentPage-1) * 5).Take(5));
+                           // updatePagingInfo();
+
+                            //await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice,CurrentPage);
+                    
+                    });
+                }
+                return _pageSelectionChangedCommand;
             }
         }
     }

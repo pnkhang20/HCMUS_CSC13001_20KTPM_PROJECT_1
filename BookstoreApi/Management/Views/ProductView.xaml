@@ -145,7 +145,7 @@
             <ScrollViewer Background="#394867" Margin="50,0,20,40" Grid.Row="2">
                 <ListView x:Name="ListViewProducts" 
                           PreviewMouseWheel="OnPreviewMouseWheel" 
-                          ItemsSource="{Binding Books, UpdateSourceTrigger=PropertyChanged}" 
+                          ItemsSource="{Binding AppearBooks, UpdateSourceTrigger=PropertyChanged}" 
                           SelectedItem="{Binding SelectedBook}"                           
                           ScrollViewer.CanContentScroll="True" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"                           
@@ -210,36 +210,97 @@
 
             </ScrollViewer>
 
-            <Grid Grid.Row="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="45"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="1">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="Previous"
-                                Width="200"
-                                materialDesign:ButtonAssist.CornerRadius="10"
-                                Margin="0,0,5,0"
+            <Border Grid.Row="3" Padding="0 20 0 20">
+                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Content="Previous"                
+                                Margin="0,0,10,0"
                                 Background="#212A3E"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
                                 Command="{Binding PrevPageCommand}"
-                                IsEnabled="{Binding HasPrevPage}"/>
-
-                        <Button Content="Next" 
-                                Width="200"
-                                materialDesign:ButtonAssist.CornerRadius="10"
+                                IsEnabled="{Binding HasPrevPage}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border 
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5">
+                                                    <StackPanel Orientation="Horizontal">
+                                                    <Icon:PackIconMaterial Kind="MenuLeft" Foreground="White" Height="20" Width="20"  VerticalAlignment="Center" Margin="0 3 5 0"/>
+                                                </StackPanel>
+                                                </Border>
+                                           
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <ComboBox x:Name="pageList"
+                            HorizontalAlignment="Center"
+                            Margin="10 0"
+                            Width="120"
+                            Height="30"
+                            FontSize="16"                                      
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            materialDesign:ColorZoneAssist.Mode="Dark"
+                            materialDesign:ComboBoxAssist.MaxLength="15"                               
+                            materialDesign:HintAssist.Hint="Page"
+                            materialDesign:HintAssist.HintOpacity="0.8"
+                            materialDesign:HintAssist.Foreground="White"                            
+                            IsEditable="False"                            
+                            ItemsSource="{Binding Pages}"
+                           
+                            SelectedIndex="{Binding SelectedPage}"
+                            
+                           >
+                        
+                        <ComboBox.Resources>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter Property="Foreground" Value="White" />
+                            </Style>
+                        </ComboBox.Resources>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding PageSelectedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <Button Content="Next" 
+                               
                                 Background="#212A3E"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
-                                Margin="5,0,0,0"
+                                Margin="10,0,0,0"
                                 Command="{Binding NextPageCommand}" 
-                                IsEnabled="{Binding HasNextPage}" />
-                    </StackPanel>
+                                IsEnabled="{Binding HasNextPage}" >
 
-                </Grid>
-            </Grid>
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border 
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Icon:PackIconMaterial Kind="MenuRight" Foreground="White" Height="20" Width="20" VerticalAlignment="Center" Margin="5 3 0 0"/>
+                                                </StackPanel>
+                                            </Border>
+
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+            </Border>
             <StackPanel>
 </StackPanel>
         </Grid>

@@ -13,6 +13,7 @@ using System.Net.Http.Json;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace Management.ViewModels
 {
@@ -131,10 +132,13 @@ namespace Management.ViewModels
                                     client.DefaultRequestHeaders.Accept.Clear();
                                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                                    string imageUrl = await UploadImage(CoverImg);
-
+                                    if (string.IsNullOrEmpty(CoverImg))
+                                    {
+                                        string imageUrl = await UploadImage(CoverImg);
+                                        SelectedBook.Cover = imageUrl;
+                                    }
                                     // Set the Cover property of the new book to the URL of the uploaded blob
-                                    SelectedBook.Cover = imageUrl;
+                                   
 
                                     SelectedBook.Category = SelectedCategory;
                                     // Use the SelectedBook object (which is a clone of the original book) to make the PUT request
