@@ -43,7 +43,7 @@ namespace BookstoreApi.Controllers
             [FromQuery] decimal? minPrice = null,
             [FromQuery] decimal? maxPrice = null,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10)
+            [FromQuery] int pageSize = 100)
         {
             var allBooks = await _booksService.GetAsync();
             var filteredBooks = allBooks;
