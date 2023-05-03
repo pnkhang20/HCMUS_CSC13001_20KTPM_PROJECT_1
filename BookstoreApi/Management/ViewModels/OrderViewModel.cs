@@ -1,4 +1,6 @@
-﻿using Management.Cores;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Management.Cores;
 using Management.Models;
 using Management.Views;
 using Newtonsoft.Json;
@@ -35,7 +37,8 @@ namespace Management.ViewModels
             set { _endDate = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<Order> Orders { get; } = new ObservableCollection<Order>();
+        public ObservableCollection<Order> Orders { get; set; } = new ObservableCollection<Order>();
+        public ObservableCollection<Order> AppearOrders { get; set; } = new ObservableCollection<Order>();
 
         private Order _selectedOrder;
         public Order SelectedOrder
@@ -46,7 +49,14 @@ namespace Management.ViewModels
 
         public OrderViewModel()
         {
+           
+
+            CurrentPage = 1;
+            
             LoadOrders();
+           
+            updatePagingInfo(CurrentPage);
+            SelectedPage = 0;
         }
         private ICommand _filterOrdersCommand;
         public ICommand FilterOrdersCommand
@@ -57,7 +67,8 @@ namespace Management.ViewModels
                 {
                     _filterOrdersCommand = new RelayCommand(param =>
                     {
-                        LoadOrders(StartDate, EndDate);
+                        LoadOrders(StartDate, EndDate,CurrentPage);
+                        SelectedPage = 0;
                     });
                 }
                 return _filterOrdersCommand;
@@ -86,6 +97,7 @@ namespace Management.ViewModels
                                     {
                                         Orders.Remove(SelectedOrder);
                                         SelectedOrder = null;
+                                        SelectedPage = CurrentPage - 1;
                                     }
                                     else
                                     {
@@ -128,7 +140,8 @@ namespace Management.ViewModels
                         var editOrderWindow = new EditOrderView();
                         editOrderWindow.DataContext = editOrderVM;
                         editOrderWindow.ShowDialog();
-                        await LoadOrders();
+                        await LoadOrders(StartDate,EndDate,CurrentPage);
+                        SelectedPage = CurrentPage - 1;
                     });
                 }
                 return _editOrderCommand;
@@ -175,7 +188,8 @@ namespace Management.ViewModels
                                         // Display a success message to the user                                        
                                         MessageBox.Show("Successfully added new order! Please edit it later on!");
                                         // Close the current window and update the parent view
-                                        LoadOrders();
+                                        LoadOrders(StartDate,EndDate,CurrentPage);
+                                        SelectedPage = Pages.Count() - 1;
 
                                     }
                                     else
@@ -198,10 +212,11 @@ namespace Management.ViewModels
         }
 
 
-        public async Task LoadOrders(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task LoadOrders(DateTime? startDate = null, DateTime? endDate = null,int pageNumber = 1, int pageSize = 7)
         {
             try
             {
+                CurrentPage = pageNumber;
                 Orders.Clear();
                 var response = await httpClient.GetAsync(OrderApiUrl);
                 if (response.IsSuccessStatusCode)
@@ -227,6 +242,10 @@ namespace Management.ViewModels
                             }
                         }
                     }
+                    TotalItem = Orders.Count();
+                    AppearOrders = new ObservableCollection<Order>(Orders.Skip((CurrentPage - 1) * pageSize).Take(pageSize));
+
+                    updatePagingInfo(CurrentPage);
                 }
             }
             catch (Exception ex)
@@ -234,7 +253,146 @@ namespace Management.ViewModels
             }
         }
 
+        public bool HasNextPage;
+        public bool HasPrevPage;
 
+
+
+        public int _currentPage;
+        public int CurrentPage
+        {
+            get { return _currentPage; }
+            set { _currentPage = value; OnPropertyChanged(); }
+        }
+
+        private int _totalPageCount;
+        public int TotalPageCount
+        {
+            get { return _totalPageCount; }
+            set { _totalPageCount = value; OnPropertyChanged(); }
+        }
+
+
+        private int _totalItem;
+        public int TotalItem
+        {
+            get { return _totalItem; }
+            set { _totalItem = value; OnPropertyChanged(); }
+        }
+
+
+
+
+        private void updatePagingInfo(int currentPage)
+        {
+            TotalPageCount = TotalItem / 7 +
+                   (TotalItem % 7 == 0 ? 0 : 1);
+
+            // Cập nhật ComboBox
+
+            Pages.Clear();
+            CurrentPage = currentPage;
+            for (int i = 1; i <= TotalPageCount; i++)
+            {
+                Pages.Add(i.ToString());
+            }
+
+
+        }
+
+
+        public ObservableCollection<string> Pages { get; set; } = new ObservableCollection<string>();
+
+        private int _selectedPage = 0;
+
+        public int SelectedPage
+        {
+            get { return _selectedPage; }
+            set { _selectedPage = value; OnPropertyChanged(); }
+        }
+
+        private ICommand _pageSelectionChangedCommand;
+        public ICommand PageSelectedCommand
+        {
+            get
+            {
+                if (_pageSelectionChangedCommand == null)
+                {
+                    _pageSelectionChangedCommand = new RelayCommand(async (param) =>
+                    {
+
+
+                        CurrentPage = SelectedPage + 1;
+                        AppearOrders = new ObservableCollection<Order>(Orders.Skip((CurrentPage - 1) * 7).Take(7));
+                        // updatePagingInfo();
+
+                        //await LoadBooks(SearchText, SelectedCategory, MinPrice, MaxPrice,CurrentPage);
+
+                    });
+                }
+                return _pageSelectionChangedCommand;
+            }
+        }
+
+
+        private ICommand _nextPageCommand;
+        public ICommand NextPageCommand
+        {
+            get
+            {
+                if (_nextPageCommand == null)
+                {
+                    _nextPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+
+                            if (CurrentPage + 1 <= TotalPageCount)
+                            {
+                                CurrentPage += 1;
+                                AppearOrders = new ObservableCollection<Order>(Orders.Skip((CurrentPage - 1) * 7).Take(7));
+                                SelectedPage = CurrentPage - 1;
+
+                                if (CurrentPage == TotalPageCount)
+                                {
+                                    HasNextPage = false;
+                                }
+                            }
+                        }
+                    );
+                }
+
+                return _nextPageCommand;
+            }
+        }
+
+        private ICommand _previousPageCommand;
+        public ICommand PrevPageCommand
+        {
+            get
+            {
+                if (_previousPageCommand == null)
+                {
+                    _previousPageCommand = new RelayCommand(
+                        async (param) =>
+                        {
+                            if (CurrentPage - 1 >= 1)
+                            {
+                                CurrentPage -= 1;
+                                AppearOrders = new ObservableCollection<Order>(Orders.Skip((CurrentPage - 1) * 7).Take(7));
+                                SelectedPage = CurrentPage - 1;
+
+                                if (CurrentPage == TotalPageCount)
+                                {
+                                    HasPrevPage = false;
+                                }
+                            }
+                        }
+
+                    );
+                }
+                return _previousPageCommand;
+            }
+        }
 
 
     }
