@@ -26,6 +26,8 @@ namespace Management.ViewModels
             set { _selectedOrder = value; OnPropertyChanged(); }
         }
 
+
+       
         private ObservableCollection<OrderItem> _orderItems;
         public ObservableCollection<OrderItem> OrderItems
         {
@@ -50,10 +52,14 @@ namespace Management.ViewModels
         public EditOrderViewModel(Order selectedOrder)
         {
             SelectedOrder = selectedOrder;
+          
             SelectedOrderItem = SelectedOrder.OrderItemsList.FirstOrDefault();
             OrderItems = new ObservableCollection<OrderItem>(SelectedOrder.OrderItemsList);
             LoadBooksAsync();
         }
+
+
+      
 
         private ICommand _deleteOrderItemCommand;
         public ICommand DeleteOrderItemCommand

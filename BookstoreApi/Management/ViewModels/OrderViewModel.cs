@@ -57,6 +57,8 @@ namespace Management.ViewModels
            
             updatePagingInfo(CurrentPage);
             SelectedPage = 0;
+
+           
         }
         private ICommand _filterOrdersCommand;
         public ICommand FilterOrdersCommand
@@ -73,6 +75,8 @@ namespace Management.ViewModels
                 }
                 return _filterOrdersCommand;
             }
+
+           
         }
 
         private ICommand _removeOrderCommand;

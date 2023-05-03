@@ -111,7 +111,7 @@
                                         CanUserResize="False"
                                         Width="auto"/>
                     <DataGridTextColumn Header="Subtotal" 
-                                        Binding="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged}" 
+                                        Binding="{Binding TotalPrice,UpdateSourceTrigger=PropertyChanged,StringFormat=\{0\}$}" 
                                         IsReadOnly="True" 
                                         CanUserResize="False"
                                         Width="auto"/>
