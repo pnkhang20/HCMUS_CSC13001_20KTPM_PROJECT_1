@@ -67,6 +67,7 @@ namespace Management.ViewModels
 
             HomeViewCommand = new RelayCommand(obj =>
             {
+                ReloadHomeView();
                 CurrentView = HomeVM;
             });
 
