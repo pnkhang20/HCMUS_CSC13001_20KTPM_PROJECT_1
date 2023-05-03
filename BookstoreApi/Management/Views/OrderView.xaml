@@ -17,11 +17,11 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Management"
+            <TextBlock Grid.Row="0" Text="Order"
                    Foreground="White"
                    FontSize="28"
-                   Margin="25,10"/>
-            <Grid Grid.Row="1">
+                   Margin="25 20 80 0"/>
+            <Grid Grid.Row="1" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="500"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -41,7 +41,7 @@
                         <TextBlock Text="Add New Order"/>
                     </StackPanel>
                 </Button>
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20 0 20 0">
                     <DatePicker x:Name="StartDatePicker" 
                                 Margin="50, 0 ,0 ,0"
                                 Width="100"         
@@ -52,7 +52,7 @@
                                 DisplayDateEnd="{Binding EndDate}" />
                         
                     <DatePicker x:Name="EndDatePicker" 
-                                Margin="50, 0 ,0 ,0"
+                                Margin="20, 0 ,0 ,0"
                                 Width="100"
                                 materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
                                 materialDesign:ThemeAssist.Theme="Dark"
@@ -76,15 +76,11 @@
                       ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
                       RowStyle="{DynamicResource DataGridRowStyle1}" 
                       ItemsSource="{Binding Orders, UpdateSourceTrigger=PropertyChanged}"
+                      Margin="20"
                       SelectedItem="{Binding SelectedOrder}"                           
                       Grid.Row="2" x:Name="ordersDataGrid">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="Status" 
-                                            CanUserResize="False" 
-                                            Width="auto" 
-                                            IsReadOnly="True"                                            
-                                            Binding="{Binding OrderIsDone, UpdateSourceTrigger=PropertyChanged }">
-                    </DataGridCheckBoxColumn>
+                   
                     
                     <DataGridTextColumn Header="Id" 
                                         IsReadOnly="True" 
@@ -121,7 +117,12 @@
                                         IsReadOnly="True" 
                                         CanUserResize="False"
                                         Width="auto"/>
-
+                    <DataGridCheckBoxColumn Header="Status" 
+                                            CanUserResize="False" 
+                                            Width="auto" 
+                                            IsReadOnly="True"                                            
+                                            Binding="{Binding OrderIsDone, UpdateSourceTrigger=PropertyChanged }">
+                    </DataGridCheckBoxColumn>
                     <DataGridTemplateColumn Header="Operations" 
                                             IsReadOnly="True" 
                                             CanUserResize="False"
