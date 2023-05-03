@@ -19,6 +19,7 @@ namespace Management.ViewModels
     class HomeViewModel:ObservableObject
     {
         private const string BookApiUrl = "https://localhost:7122/api/Books";
+        private const string OrderApiUrl = "https://localhost:7122/api/Orders";
         private readonly HttpClient httpClient = new HttpClient();
         public ObservableCollection<Book> Books { get; set; } = new ObservableCollection<Book>();
 
@@ -32,12 +33,45 @@ namespace Management.ViewModels
                 _total = value;
             }
         }
+
+        public int _totalOrder = 0;
+        public int TotalOrder
+        {
+            get { return _totalOrder; }
+            set
+            {
+                _totalOrder = value;
+            }
+        }
         public HomeViewModel()
         {
           
             LoadBooks();
+            LoadOrders();
 
         }
+
+        public async Task LoadOrders()
+        {
+            try
+            {
+
+                var toDate = DateTime.Today.ToString("yyyy-MM-dd");
+                var fromDate = DateTime.Today.AddDays(-7).ToString("yyyy-MM-dd");
+                var apiUrl = $"https://localhost:7122/api/Orders/total/day?fromDate={fromDate}&toDate={toDate}";
+                var urlBuilder = new StringBuilder(OrderApiUrl);
+                var response = await httpClient.GetAsync(urlBuilder.ToString());
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var orders = JsonConvert.DeserializeObject<List<Order>>(content);
+                    TotalOrder = orders.Count;
+                   
+                }
+            }
+            catch (Exception ex) { }
+        }
+
 
         public async Task LoadBooks()
         {

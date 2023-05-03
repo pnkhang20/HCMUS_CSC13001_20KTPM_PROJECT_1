@@ -251,6 +251,15 @@ namespace BookstoreApi.Controllers
             return NoContent();
         }
 
+        [HttpGet("total/day")]
+        public async Task<ActionResult<List<Order>>> NewOrderPerWeek([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            return orders;
+        }
+
+
 
         [HttpGet("revenue/day")]
         public async Task<ActionResult<List<RevenueByDay>>> GetRevenueByDay([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
