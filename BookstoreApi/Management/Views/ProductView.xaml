@@ -142,7 +142,7 @@
                             Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
             </WrapPanel>
             </Border>
-            <ScrollViewer Background="#394867" Margin="50,0,20,40" Grid.Row="2">
+            <ScrollViewer Background="#394867" Margin="50,0,20,15" Grid.Row="2">
                 <ListView x:Name="ListViewProducts" 
                           PreviewMouseWheel="OnPreviewMouseWheel" 
                           ItemsSource="{Binding AppearBooks, UpdateSourceTrigger=PropertyChanged}" 
