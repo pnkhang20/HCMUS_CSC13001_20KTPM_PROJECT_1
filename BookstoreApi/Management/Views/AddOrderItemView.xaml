@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Management.Views"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="AddOrderItemView" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -30,6 +31,7 @@
             </ListView.View>
         </ListView>
         <Button Grid.Row="1"
+                Background="#305da8"
                 Content="Add Order Item"
                 Command="{Binding AddNewOrderItemCommand}" />
     </Grid>

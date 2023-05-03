@@ -8,62 +8,131 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         mc:Ignorable="d"
         Background="#394867"
-        Title="EditOrderView" Height="600" Width="800">
+        Title="EditOrderView" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        >
+    <Border Padding="20">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="60"/>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="60"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0"
-                    Orientation="Horizontal" 
+        <Grid Grid.Row="0"     
                     Margin="10">
-            <TextBlock Text="Customer Name: "
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="Customer Name: "
                        Foreground="White"
                        FontSize="15"
+                       Margin="0 10 20 10"
                        VerticalAlignment="Center"/>
-            <TextBox Text="{Binding SelectedOrder.CustomerName}" 
-                     Foreground="White"
-                     FontSize="15"
-                     Width="200" 
-                     Margin="5"/>
-            
-            <TextBlock Text="Phone: " 
+                    <Border CornerRadius="10"
+                        HorizontalAlignment="Left"
+                        Background="#212A3E"
+                        Margin="0 0 0 0"
+                        Width="200"
+                        Height="30">
+                        <TextBox                                 
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Opacity="1"
+                            Margin="10 0 10 0"
+                            Width="200"
+                            Height="30"
+                            FontSize="16"
+                    
+                            Text="{Binding SelectedOrder.CustomerName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Text="Phone: " 
                        FontSize="15"
                        Foreground="White"
                        VerticalAlignment="Center"
-                       Margin="10,0,0,0"/>
-            <TextBox Text="{Binding SelectedOrder.CustomerPhone}" 
-                     Foreground="White"
-                     FontSize="15"
-                     Width="150"
-                     Margin="5"/>
-        </StackPanel>
+                        Margin="20 10 20 10"/>
+            <Border CornerRadius="10"
+                        HorizontalAlignment="Left"
+                        Background="#212A3E"
+                        Margin="0 0 0 0"
+                        Width="200"
+                        Height="30">
+                <TextBox
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Opacity="1"
+                            Margin="10 0 10 0"
+                            Width="200"
+                            Height="30"
+                            FontSize="16"
+                    
+                            Text="{Binding SelectedOrder.CustomerPhone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
+            </Border>
+                </StackPanel>
+            </Grid>
         
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal" 
-                    Margin="10">
-
-            <TextBlock Text="Shipping Address: "
+        <Grid Grid.Row="1"
+                    Margin="10"
+                   
+                    >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Shipping Address: "
                        Foreground="White"
                        FontSize="15"
+                       Margin="0 10 20 10"
                        VerticalAlignment="Center"/>
-            <TextBox Text="{Binding SelectedOrder.ShippingAddress}" 
-                     Foreground="White"
-                     FontSize="15"
-                     Width="200" 
-                     Margin="5"/>
-
-            <Button Grid.Column="2"
+            <Border CornerRadius="10"
+                        HorizontalAlignment="Left"
+                        Background="#212A3E"
+                        Margin="0 0 0 0"
+                        Width="200"
+                        Height="30">
+                <TextBox                                 
+                            materialDesign:HintAssist.Foreground="White"
+                            materialDesign:TextFieldAssist.UnderlineBrush="#F1F6F9"
+                            HorizontalAlignment="Left"
+                            VerticalContentAlignment="Center"
+                            Background="Transparent"
+                            Foreground="#F1F6F9"
+                            Opacity="1"
+                            Margin="10 0 10 0"
+                            Width="200"
+                            Height="30"
+                            FontSize="16"
+                    
+                            Text="{Binding SelectedOrder.ShippingAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            BorderThickness="0"/>
+            </Border>
+                </StackPanel>
+        
+            <Button Grid.Column="1"
                                 Width="150"
                                 materialDesign:ButtonAssist.CornerRadius="10"
                                 Background="#212A3E"
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
                                 HorizontalAlignment="Right"
-                                Margin="250, 0 ,0, 0"
+                                Margin="20,0,0,0"
                                 Command="{Binding AddNewOrderItemCommand}">
                 <StackPanel Orientation="Horizontal">
                     <Icon:PackIconMaterial Kind="Plus" 
@@ -73,12 +142,13 @@
                     <TextBlock Text="Add New Item"/>
                 </StackPanel>
             </Button>
-        </StackPanel>
+        </Grid>
 
         <StackPanel Grid.Row="2" Orientation="Vertical" Margin="10">
             <DataGrid ItemsSource="{Binding OrderItems}"
+                     
                       Margin="0,10,0,0" 
-                      HorizontalAlignment="Left"
+                      HorizontalAlignment="Stretch"
                       AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     
@@ -138,7 +208,7 @@
 
         </StackPanel>
 
-        <StackPanel Grid.Row="3">
+        <StackPanel Grid.Row="4" VerticalAlignment="Center">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -155,7 +225,7 @@
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
                                 HorizontalAlignment="Right"
-                                Margin="0, 0 ,30, 0"
+                                Margin="0, 0 ,10, 0"
                                 Command="{Binding SaveEditedOrder}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Save"/>
@@ -169,7 +239,7 @@
                                 Foreground="AntiqueWhite"
                                 BorderBrush="#212A3E"
                                 HorizontalAlignment="Right"
-                                Margin="0, 0 ,30, 0"
+                                Margin="0, 0 ,10, 0"
                                 Command="{Binding MarkOrderAsDoneCommand}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mark Order Done"/>
@@ -181,4 +251,5 @@
 
         </StackPanel>
     </Grid>
+    </Border>
 </Window>
