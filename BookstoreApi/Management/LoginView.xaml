@@ -45,7 +45,12 @@
                              Margin="0,5" 
                              VerticalAlignment="Center" 
                              HorizontalAlignment="Stretch"/>
-
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <CheckBox x:Name="RememberMeCheckBox"
+                  Content="Remember me"
+                  Foreground="White"
+                  Margin="0,0,10,0"/>
+                </StackPanel>
                 <Button x:Name="LoginButton" 
                     Content="Login" 
                     Margin="0,20,0,0" 
@@ -57,6 +62,7 @@
                     BorderBrush="#212A3E"
                     Click="LoginButton_Click"/>
             </StackPanel>
+            
 
             <TextBlock x:Name="ErrorMessageTextBlock" Grid.Row="2" Foreground="Red" Margin="30,10,30,0"/>
 

@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Management.Models;
+using System.Net;
 
 namespace Management.Views
 {
@@ -33,7 +34,7 @@ namespace Management.Views
             ErrorMessageTextBlock.Text = string.Empty;
 
             var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("https://example.com/"); // Replace with your API base address
+            httpClient.BaseAddress = new Uri("https://localhost:7122/api/Users"); // Replace with your API base address
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var loginRequest = new { usr = EmailTextBox.Text, pwd = PasswordBox.Password };
@@ -48,6 +49,18 @@ namespace Management.Views
                 if (matchingUser != null && BCrypt.Net.BCrypt.Verify(loginRequest.pwd, matchingUser.Password))
                 {
                     MessageBox.Show("Successfully Logged In!");
+                    // Save the username and password if the user checked the "Remember Me" checkbox
+                    if (RememberMeCheckBox.IsChecked == true)
+                    {
+                        if (RememberMeCheckBox.IsChecked == true)
+                        {
+                            // Store the login information in the credential manager
+                            var cm = new { Target = "MyApp", UserName = loginRequest.usr, Password = loginRequest.pwd };
+                            
+                        }
+                        var credentialCache = new CredentialCache();
+                        credentialCache.Add(new Uri(httpClient.BaseAddress.ToString()), "Basic", new NetworkCredential(loginRequest.usr, loginRequest.pwd));
+                    }
                     // The password is correct, so login was successful
                     var mainWindow = new MainWindow();
                     mainWindow.Show();
@@ -58,6 +71,7 @@ namespace Management.Views
                     // Display an error message to the user
                     MessageBox.Show("Invalid email or password", "Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+
             }
             else
             {
@@ -65,6 +79,8 @@ namespace Management.Views
                 MessageBox.Show($"Failed to login {response.ReasonPhrase}");
             }
         }
+
+
     }
 }
 

@@ -102,6 +102,7 @@ namespace Management.ViewModels
                                         // Get the view model of the parent window
                                         var parentViewModel = parentWindow.DataContext as EditOrderViewModel;
                                         parentViewModel.LoadOrderItems();
+
                                         //var editOrderView = (OrderViewModel)mainViewModel.LoadOrder();
                                         MessageBox.Show($"{SelectedBook.Title} added to cartsuccessfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                                         Window curWin = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);

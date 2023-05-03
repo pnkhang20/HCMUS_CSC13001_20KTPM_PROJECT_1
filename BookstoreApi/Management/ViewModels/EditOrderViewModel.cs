@@ -176,8 +176,8 @@ namespace Management.ViewModels
                                         var newOrderVM = new OrderViewModel();
                                         var mainWindow = Application.Current.MainWindow;
                                         var mainViewModel = (MainViewModel)mainWindow.DataContext;
-                                        var orderView = (OrderViewModel)mainViewModel.OrderVM;
-                                        orderView.LoadOrders();
+                                        //var orderView = (OrderViewModel)mainViewModel.OrderVM;
+                                        //orderView.LoadOrders();                                        
                                         Window parentWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(w => w.IsActive);
                                         parentWindow?.Close();
                                         MessageBox.Show("Changes saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
