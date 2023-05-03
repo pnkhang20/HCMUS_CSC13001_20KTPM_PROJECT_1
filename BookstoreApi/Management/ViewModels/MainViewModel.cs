@@ -4,6 +4,8 @@ namespace Management.ViewModels
 {
     class MainViewModel : ObservableObject
     {
+        private const string LastViewedPageKey = "LastViewedPage";
+
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand ProductViewCommand { get; set; }
         public RelayCommand ManagementViewCommand { get; set; }
@@ -59,6 +61,7 @@ namespace Management.ViewModels
 
             ProductViewCommand = new RelayCommand(obj =>
             {
+                ReloadProductView();
                 CurrentView = ProductVM;
             });
 
