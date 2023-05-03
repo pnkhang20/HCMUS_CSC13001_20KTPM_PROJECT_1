@@ -61,9 +61,15 @@
                              FontSize="20"
                              Command="{Binding CategoryViewCommand, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource MenuButtonTheme}"/>
-                <RadioButton Content="Statistics"
+                <RadioButton Content="Revenue"
                              Height="50"                             
                              FontSize="20"
+                             Command="{Binding RevenueViewCommand, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource MenuButtonTheme}"/>
+                <RadioButton Content="Statistic"
+                             Height="50"                             
+                             FontSize="20"
+                             Command="{Binding StatisticViewCommand, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource MenuButtonTheme}"/>
 
             </StackPanel>

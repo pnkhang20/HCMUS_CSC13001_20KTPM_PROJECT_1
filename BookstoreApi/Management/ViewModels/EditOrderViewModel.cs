@@ -271,7 +271,7 @@ namespace Management.ViewModels
                 }
                 else
                 {
-                    // Handle error
+
                 }
             }
         }

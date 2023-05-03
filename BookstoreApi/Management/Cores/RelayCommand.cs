@@ -7,6 +7,12 @@ namespace Management.Cores
     {
         private readonly Action<object> _execute;
         private readonly Func<object, bool> _canExecute;
+        private Action generateChart;
+
+        public RelayCommand(Action generateChart)
+        {
+            this.generateChart = generateChart;
+        }
 
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {

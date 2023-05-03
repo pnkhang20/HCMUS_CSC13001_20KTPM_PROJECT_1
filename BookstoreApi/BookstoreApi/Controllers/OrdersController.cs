@@ -2,6 +2,7 @@
 using BookstoreApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BookstoreApi.Controllers
 {
@@ -249,6 +250,139 @@ namespace BookstoreApi.Controllers
             }
             return NoContent();
         }
+
+
+        [HttpGet("revenue/day")]
+        public async Task<ActionResult<List<RevenueByDay>>> GetRevenueByDay([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            var revenueByDay = new List<RevenueByDay>();
+            var currentDate = fromDate.Date;
+
+            while (currentDate <= toDate.Date)
+            {
+                var ordersOnCurrentDate = orders.Where(order => order.OrderedDate.Date == currentDate);
+                var totalRevenue = ordersOnCurrentDate.Sum(order => order.OrderItemsList.Sum(orderItem => orderItem.Book.Price * orderItem.Quantity));
+
+                revenueByDay.Add(new RevenueByDay
+                {
+                    Date = currentDate,
+                    TotalRevenue = totalRevenue
+                });
+
+                currentDate = currentDate.AddDays(1);
+            }
+
+            return revenueByDay;
+        }
+
+        [HttpGet("revenue/month")]
+        public async Task<ActionResult<List<RevenueByMonth>>> GetRevenueByMonth([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            var revenueByMonth = orders.GroupBy(
+                order => new { order.OrderedDate.Year, order.OrderedDate.Month },
+                (key, group) => new RevenueByMonth
+                {
+                    Year = key.Year,
+                    Month = key.Month,
+                    TotalRevenue = group.Sum(order => order.OrderItemsList.Sum(orderItem => orderItem.Book.Price * orderItem.Quantity))
+                }
+            ).ToList();
+
+            return revenueByMonth;
+        }
+
+        [HttpGet("revenue/year")]
+        public async Task<ActionResult<List<RevenueByYear>>> GetRevenueByYear([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+
+            var revenueByYear = orders.GroupBy(
+                order => order.OrderedDate.Year,
+                (key, group) => new RevenueByYear
+                {
+                    Year = key,
+                    TotalRevenue = group.Sum(order => order.OrderItemsList.Sum(orderItem => orderItem.Book.Price * orderItem.Quantity))
+                }
+            ).ToList();
+
+            return revenueByYear;
+        }
+
+        //[HttpGet("books/sold")]
+        //public async Task<ActionResult<IEnumerable<Book>>> GetSoldBooks()
+        //{
+        //    var orders = await _ordersService.GetAsync(); // get all orders from the database
+        //    var soldBooks = new List<Book>(); // initialize an empty list to store the sold books
+
+        //    foreach (var order in orders)
+        //    {
+        //        foreach (var orderItem in order.OrderItemsList)
+        //        {
+        //            // check if the book has already been sold before
+        //            var soldBook = soldBooks.FirstOrDefault(b => b.Id == orderItem.Book.Id);
+        //            if (soldBook != null)
+        //            {
+        //                // increment the total sold count for the existing book
+        //                soldBook.TotalSold += orderItem.Quantity;
+        //            }
+        //            else
+        //            {
+        //                // add the book to the list of sold books with the current quantity
+        //                soldBooks.Add(new Book
+        //                {
+        //                    Id = orderItem.Book.Id,
+        //                    Title = orderItem.Book.Title,
+        //                    Author = orderItem.Book.Author,
+        //                    Price = orderItem.Book.Price,
+        //                    Quantity = orderItem.Quantity,
+        //                    Cover = orderItem.Book.Cover,
+        //                    Category = orderItem.Book.Category,
+        //                    TotalSold = orderItem.Quantity
+        //                });
+        //            }
+        //        }
+        //    }
+
+        //    return soldBooks;
+        //}
+
+        [HttpGet("sold")]
+        public async Task<ActionResult<IEnumerable<BookSold>>> GetBooksSoldByDateRange(DateTime fromDate, DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+            var bookSoldList = new List<BookSold>();
+
+            foreach (var order in orders)
+            {
+                foreach (var orderItem in order.OrderItemsList)
+                {
+                    var book = orderItem.Book;
+                    var existingBookSold = bookSoldList.FirstOrDefault(x => x.BookName == book.Title);
+
+                    if (existingBookSold != null)
+                    {
+                        existingBookSold.Sold += orderItem.Quantity;
+                    }
+                    else
+                    {
+                        var newBookSold = new BookSold
+                        {
+                            BookName = book.Title,
+                            Sold = orderItem.Quantity
+                        };
+
+                        bookSoldList.Add(newBookSold);
+                    }
+                }
+            }
+
+            return bookSoldList;
+        }
+
 
     }
 }
