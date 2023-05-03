@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Management"
         xmlns:viewmodel="clr-namespace:Management.ViewModels"
-        mc:Ignorable="d"
-        Height="720" Width="1280"    
         WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
+        Height="720" Width="1280"   
         Background="Transparent">
     <Window.DataContext>
         <viewmodel:MainViewModel/>
@@ -15,7 +15,7 @@
     <Border Background="#212A3E">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"></ColumnDefinition>
+                <ColumnDefinition Width="180"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
@@ -24,28 +24,19 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-            </Grid>
+            
 
 
             <ContentControl Grid.Row="1"
                                 Grid.Column="1"
-                                Margin="5,5,10,73"
+                                Margin="5,5,10,50"
                                 Content="{Binding CurrentView}"/>
             <TextBlock Text="Online Shop"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
+                       HorizontalAlignment="Center"
                        Foreground="#F1F6F9"
                        FontSize="22"
-                       Margin="35, 0, 0, 0"/>
+                       Margin="20"/>
             <StackPanel Grid.Row="1"
                         Margin="4">
                 <RadioButton Content="Home"

@@ -35,7 +35,7 @@ namespace Management.ViewModels
         public void ReloadHomeView()
         {
             // Reload what you call here
-            //HomeVM.LoadCategory();           
+            HomeVM.LoadBooks();
         }
 
         public void ReloadProductView()

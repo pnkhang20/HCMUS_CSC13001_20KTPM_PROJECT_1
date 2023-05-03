@@ -9,6 +9,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Management.Views;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.Win32;
+using Azure;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -240,6 +245,104 @@ namespace Management.ViewModels
         }
 
 
+        private ICommand _importNewCategoryCommand;
+        public ICommand ImportNewCategoryCommand
+        {
+            get
+            {
+                if (_importNewCategoryCommand == null)
+                {
+                    _importNewCategoryCommand = new RelayCommand(async (param) =>
+                    {
+
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                    openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+                        if (openFileDialog.ShowDialog() == true)
+                        {
+                            string filename = openFileDialog.FileName;
+                            var document = SpreadsheetDocument.Open(filename, false);
+                            var wbPart = document.WorkbookPart!;
+                            var sheets = wbPart.Workbook.Descendants<Sheet>()!;
+
+                            var sheet = sheets.FirstOrDefault(s => s.Name == "Categories");
+                            var wsPart = (WorksheetPart)(wbPart!.GetPartById(sheet.Id!));
+                            var cells = wsPart.Worksheet.Descendants<Cell>();
+
+                            int row = 2;
+                            Cell categoryCell;
+                            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+                            do
+                            {
+                                categoryCell = cells.FirstOrDefault(
+                                    c => c?.CellReference == $"A{row}"
+                                )!;
+
+                                if (categoryCell?.InnerText.Length > 0)
+                                {
+
+
+
+                                    var stringTable = wbPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault()!;
+
+                                    string categoryId = categoryCell!.InnerText;
+                                    string category = stringTable.SharedStringTable.ElementAt(int.Parse(categoryId)).InnerText;
+
+
+                                    if (!Categories.Any(c => c.CategoryName == category))
+                                    {
+                                        // Create a new category object with the EditedCategoryName
+                                        Category newCategory = new Category() { CategoryName = category };
+
+                                        // Send a POST request to add the new category
+                                        using (HttpClient client = new HttpClient())
+                                        {
+                                            client.BaseAddress = new Uri("https://localhost:7122/");
+                                            client.DefaultRequestHeaders.Accept.Clear();
+                                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                                            var response = await client.PostAsJsonAsync("api/Categories", newCategory);
+                                            if (response.IsSuccessStatusCode)
+                                            {
+
+                                                MessageBox.Show("Successfully added a new category!");
+                                                // Clear the EditedCategoryName property
+                                                NewCategoryText = string.Empty;
+                                                // Reload the categories list
+                                                var mainWindow = Application.Current.MainWindow;
+                                                var mainViewModel = (MainViewModel)mainWindow.DataContext;
+                                                var productView = (ProductViewModel)mainViewModel.ProductVM;
+                                                productView.LoadCategory();
+                                                productView.LoadBooks();
+                                                await LoadCategory();
+                                            }
+                                            else
+                                            {
+                                                // Display an error message to the user
+                                                MessageBox.Show($"Failed to add a new category! {response.ReasonPhrase}");
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Display an error message to the user
+                                        MessageBox.Show("This category already exists!");
+                                    }
+
+                                    
+                                }
+
+                                row++;
+
+                            } while (categoryCell?.InnerText.Length > 0);
+
+                        }
+                    });
+                }
+                return _importNewCategoryCommand;
+            }
+        }
+        
         public CategoryViewModel()
         {
             LoadCategory();

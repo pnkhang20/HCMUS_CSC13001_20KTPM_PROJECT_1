@@ -13,6 +13,11 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Net.Http.Json;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace Management.ViewModels
 {
@@ -75,8 +80,14 @@ namespace Management.ViewModels
                             // Check if the cover image is set
                             if (string.IsNullOrEmpty(CoverImg))
                             {
-                                MessageBox.Show("Please select a cover image.");
-                                return;
+                                //MessageBox.Show("Please select a cover image.");
+                                //return;
+
+                                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                                CoverImg = Path.Combine(baseDirectory, "Images\\default-thumbnail.jpg");
+                               
+
+
                             }
                             // Make a POST request to update the book
                             using (HttpClient client = new HttpClient())

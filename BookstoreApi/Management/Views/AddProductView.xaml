@@ -10,7 +10,8 @@
         mc:Ignorable="d"
         Title="Add New Product" Height="800" Width="800">
     
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+        
         <Border HorizontalAlignment="Center"
                     CornerRadius="10"
                     Margin="0 30 0 0"
@@ -35,8 +36,9 @@
 
         <StackPanel Orientation="Vertical"
                     HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
                     Width="300"
-                    Margin="0 5 0 0">
+                    Margin="10 30 10 0">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Book Title" 
                            Foreground="white"
@@ -59,8 +61,8 @@
                             Background="Transparent"
                             Foreground="#F1F6F9"
                             Opacity="1"
-                            Margin="10 0 20 0"
-                            Width="150"
+                            Margin="10 0 10 0"
+                            Width="300"
                             Height="30"
                             FontSize="16"
                             Text="{Binding NewBook.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -90,8 +92,8 @@
                             Background="Transparent"
                             Foreground="#F1F6F9"
                             Opacity="1"
-                            Margin="10 0 0 0"
-                            Width="150"
+                            Margin="10 0 10 0"
+                            Width="300"
                             Height="30"
                             FontSize="16"
                             Text="{Binding NewBook.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -110,7 +112,7 @@
                     <Border CornerRadius="10"
                         HorizontalAlignment="Left"
                         Background="#212A3E"
-                        Margin="0 0 0 0"
+                       
                         Width="120"
                         Height="30">
                         <TextBox x:Name="bookPrice"                                                              
@@ -122,7 +124,7 @@
                             Foreground="#F1F6F9"
                             Opacity="1"
                             Margin="10 0 20 0"
-                            Width="150"
+                            Width="120"
                             Height="30"
                             FontSize="16"
                             Text="{Binding NewBook.Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
@@ -144,7 +146,6 @@
                     <Border CornerRadius="10"
                         HorizontalAlignment="Right"
                         Background="#212A3E"
-                        Margin="0 0 0 0"
                         Width="120"
                         Height="30">
                         <TextBox x:Name="Quantity"                                                              
@@ -155,8 +156,8 @@
                             Background="Transparent"
                             Foreground="#F1F6F9"
                             Opacity="1"
-                            Margin="10 0 0 0"
-                            Width="100"
+                            Margin="10 0 10 0"
+                            Width="120"
                             Height="30"
                             FontSize="16"
                             Text="{Binding NewBook.Quantity, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
@@ -201,24 +202,27 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal"   
-                    Margin="0 40 0 0"
+                    Margin="10"
                     Width="450"
+                    VerticalAlignment="Center"
                     HorizontalAlignment="Center">
             <Button Content="Cancel" 
                     materialDesign:ButtonAssist.CornerRadius="10"
                     Width="200"
-                    Margin="0,0,50,0"
+                    Margin="0,0,10,0"
                     Background="#74777f"
                     Foreground="AntiqueWhite"
                     BorderBrush="#74777f"
                     HorizontalAlignment="Center"
+                    
                     Command="{Binding CancelCommand}"/>
             <Button Content="Add Product" 
                     materialDesign:ButtonAssist.CornerRadius="10"
                     Width="200"
-                    Margin="0,0,100,0"
+                    Margin="10,0,0,0"
                     Background="#305da8"
                     Foreground="white"
+                   
                     HorizontalAlignment="Center"
                     BorderBrush="#305da8"
                     Command="{Binding AddProductCommand}"/>
