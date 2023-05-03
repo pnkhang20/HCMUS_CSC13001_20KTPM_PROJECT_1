@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {}
+    "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {
+    "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+        "projectUniqueName": "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
         "projectName": "BookstoreApi",
-        "projectPath": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
-        "packagesPath": "C:\\Users\\kp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kp\\Desktop\\windows\\HCMUS_CSC13001_20KTPM_PROJECT_1\\BookstoreApi\\BookstoreApi\\obj\\",
+        "projectPath": "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\BookstoreApi.csproj",
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+        "outputPath": "D:\\DELL\\Documents\\WINDOW\\Project\\BookstoreApi\\BookstoreApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\kp\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -120,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

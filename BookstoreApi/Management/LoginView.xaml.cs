@@ -17,6 +17,8 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Management.Models;
 using System.Net;
+using System.Configuration;
+using System.Security.Cryptography;
 
 namespace Management.Views
 {
@@ -55,11 +57,39 @@ namespace Management.Views
                         if (RememberMeCheckBox.IsChecked == true)
                         {
                             // Store the login information in the credential manager
-                            var cm = new { Target = "MyApp", UserName = loginRequest.usr, Password = loginRequest.pwd };
-                            
+                            // var cm = new { Target = "MyApp", UserName = loginRequest.usr, Password = loginRequest.pwd };
+
+                            var config = System.Configuration.ConfigurationManager.OpenExeConfiguration(
+                      ConfigurationUserLevel.None);
+                            config.AppSettings.Settings["Username"].Value = EmailTextBox.Text;
+
+                            // Ma hoa mat khau
+                            var passwordInBytes = Encoding.UTF8.GetBytes(PasswordBox.Password);
+                            var entropy = new byte[20];
+                            using (var rng = RandomNumberGenerator.Create())
+                            {
+                                rng.GetBytes(entropy);
+                            }
+
+                            var cypherText = ProtectedData.Protect(
+                                passwordInBytes,
+                                entropy,
+                                DataProtectionScope.CurrentUser
+                            );
+
+                            var passwordIn64 = Convert.ToBase64String(cypherText);
+                            var entropyIn64 = Convert.ToBase64String(entropy);
+                            config.AppSettings.Settings["Password"].Value = passwordIn64;
+                            config.AppSettings.Settings["Entropy"].Value = entropyIn64;
+
+                            config.Save(ConfigurationSaveMode.Full);
+                            System.Configuration.ConfigurationManager.RefreshSection("appSettings");
+
+
+
                         }
-                        var credentialCache = new CredentialCache();
-                        credentialCache.Add(new Uri(httpClient.BaseAddress.ToString()), "Basic", new NetworkCredential(loginRequest.usr, loginRequest.pwd));
+                        //var credentialCache = new CredentialCache();
+                        //credentialCache.Add(new Uri(httpClient.BaseAddress.ToString()), "Basic", new NetworkCredential(loginRequest.usr, loginRequest.pwd));
                     }
                     // The password is correct, so login was successful
                     var mainWindow = new MainWindow();
@@ -80,7 +110,31 @@ namespace Management.Views
             }
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            string username = System.Configuration.ConfigurationManager.AppSettings["Username"]!;
+            string passwordIn64 = System.Configuration.ConfigurationManager.AppSettings["Password"]!;
+            string entropyIn64 = System.Configuration.ConfigurationManager.AppSettings["Entropy"]!;
 
+            if (passwordIn64.Length != 0)
+            {
+                byte[] entropyInBytes = Convert.FromBase64String(entropyIn64);
+                byte[] cypherTextInBytes = Convert.FromBase64String(passwordIn64);
+
+                byte[] passwordInBytes = ProtectedData.Unprotect(cypherTextInBytes,
+                    entropyInBytes,
+                    DataProtectionScope.CurrentUser
+                );
+
+                string password = Encoding.UTF8.GetString(passwordInBytes);
+
+                EmailTextBox.Text = username;
+                PasswordBox.Password = password;
+            }
+
+
+
+        }
     }
 }
 
