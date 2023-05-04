@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Component\" />
     <Folder Include="Images\" />
     <Folder Include="Base\" />
     <Folder Include="Fonts\" />

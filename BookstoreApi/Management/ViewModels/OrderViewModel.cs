@@ -214,8 +214,8 @@ namespace Management.ViewModels
                     foreach (var order in orders)
                     {
                         // Filter the orders based on the selected date range
-                        if ((startDate == null || order.OrderedDate >= startDate.Value.AddDays(-1)) &&
-                            (endDate == null || order.OrderedDate <= endDate.Value.AddDays(1)))
+                        if ((startDate == null || order.OrderedDate.AddDays(1) >= startDate.Value) &&
+                            (endDate == null || order.OrderedDate.AddDays(-1) <= endDate.Value))
                         {
                             var existingOrder = Orders.FirstOrDefault(b => b.Id == order.Id);
                             if (existingOrder == null)
