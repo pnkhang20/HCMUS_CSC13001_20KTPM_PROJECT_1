@@ -49,17 +49,22 @@ namespace Management.ViewModels
 
         public OrderViewModel()
         {
-           
+
 
             CurrentPage = 1;
-            
-            LoadOrders();
-           
+            new RelayCommand(async (param) =>
+            {
+                await LoadOrders();
+                SelectedPage = 0;
+            });
             updatePagingInfo(CurrentPage);
-            SelectedPage = 0;
 
-           
+
+
         }
+
+
+
         private ICommand _filterOrdersCommand;
         public ICommand FilterOrdersCommand
         {
@@ -67,16 +72,16 @@ namespace Management.ViewModels
             {
                 if (_filterOrdersCommand == null)
                 {
-                    _filterOrdersCommand = new RelayCommand(param =>
+                    _filterOrdersCommand = new RelayCommand(async (param) =>
                     {
-                        LoadOrders(StartDate, EndDate,CurrentPage);
+                        await LoadOrders(StartDate, EndDate, CurrentPage);
                         SelectedPage = 0;
                     });
                 }
                 return _filterOrdersCommand;
             }
 
-           
+
         }
 
         private ICommand _removeOrderCommand;
@@ -100,10 +105,10 @@ namespace Management.ViewModels
                                     if (response.IsSuccessStatusCode)
                                     {
                                         Orders.Remove(SelectedOrder);
-                                        LoadOrders(StartDate, EndDate, CurrentPage);
+                                        await LoadOrders(StartDate, EndDate, CurrentPage);
                                         SelectedOrder = null;
                                         SelectedPage = CurrentPage - 1;
-                                        
+
                                     }
                                     else
                                     {
@@ -146,7 +151,7 @@ namespace Management.ViewModels
                         var editOrderWindow = new EditOrderView();
                         editOrderWindow.DataContext = editOrderVM;
                         editOrderWindow.ShowDialog();
-                        await LoadOrders(StartDate,EndDate,CurrentPage);
+                        await LoadOrders(StartDate, EndDate, CurrentPage);
                         SelectedPage = CurrentPage - 1;
                     });
                 }
@@ -194,7 +199,7 @@ namespace Management.ViewModels
                                         // Display a success message to the user                                        
                                         MessageBox.Show("Successfully added new order! Please edit it later on!");
                                         // Close the current window and update the parent view
-                                        LoadOrders(StartDate,EndDate,CurrentPage);
+                                        await LoadOrders(StartDate, EndDate, CurrentPage);
                                         SelectedPage = Pages.Count() - 1;
 
                                     }
@@ -218,7 +223,7 @@ namespace Management.ViewModels
         }
 
 
-        public async Task LoadOrders(DateTime? startDate = null, DateTime? endDate = null,int pageNumber = 1, int pageSize = 7)
+        public async Task LoadOrders(DateTime? startDate = null, DateTime? endDate = null, int pageNumber = 1, int pageSize = 7)
         {
             try
             {
