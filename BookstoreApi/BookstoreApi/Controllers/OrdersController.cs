@@ -2,6 +2,7 @@
 using BookstoreApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BookstoreApi.Controllers
 {
@@ -310,6 +311,78 @@ namespace BookstoreApi.Controllers
 
             return revenueByYear;
         }
+
+        //[HttpGet("books/sold")]
+        //public async Task<ActionResult<IEnumerable<Book>>> GetSoldBooks()
+        //{
+        //    var orders = await _ordersService.GetAsync(); // get all orders from the database
+        //    var soldBooks = new List<Book>(); // initialize an empty list to store the sold books
+
+        //    foreach (var order in orders)
+        //    {
+        //        foreach (var orderItem in order.OrderItemsList)
+        //        {
+        //            // check if the book has already been sold before
+        //            var soldBook = soldBooks.FirstOrDefault(b => b.Id == orderItem.Book.Id);
+        //            if (soldBook != null)
+        //            {
+        //                // increment the total sold count for the existing book
+        //                soldBook.TotalSold += orderItem.Quantity;
+        //            }
+        //            else
+        //            {
+        //                // add the book to the list of sold books with the current quantity
+        //                soldBooks.Add(new Book
+        //                {
+        //                    Id = orderItem.Book.Id,
+        //                    Title = orderItem.Book.Title,
+        //                    Author = orderItem.Book.Author,
+        //                    Price = orderItem.Book.Price,
+        //                    Quantity = orderItem.Quantity,
+        //                    Cover = orderItem.Book.Cover,
+        //                    Category = orderItem.Book.Category,
+        //                    TotalSold = orderItem.Quantity
+        //                });
+        //            }
+        //        }
+        //    }
+
+        //    return soldBooks;
+        //}
+
+        [HttpGet("sold")]
+        public async Task<ActionResult<IEnumerable<BookSold>>> GetBooksSoldByDateRange(DateTime fromDate, DateTime toDate)
+        {
+            var orders = await _ordersService.GetOrdersBetweenDatesAsync(fromDate, toDate);
+            var bookSoldList = new List<BookSold>();
+
+            foreach (var order in orders)
+            {
+                foreach (var orderItem in order.OrderItemsList)
+                {
+                    var book = orderItem.Book;
+                    var existingBookSold = bookSoldList.FirstOrDefault(x => x.BookName == book.Title);
+
+                    if (existingBookSold != null)
+                    {
+                        existingBookSold.Sold += orderItem.Quantity;
+                    }
+                    else
+                    {
+                        var newBookSold = new BookSold
+                        {
+                            BookName = book.Title,
+                            Sold = orderItem.Quantity
+                        };
+
+                        bookSoldList.Add(newBookSold);
+                    }
+                }
+            }
+
+            return bookSoldList;
+        }
+
 
     }
 }

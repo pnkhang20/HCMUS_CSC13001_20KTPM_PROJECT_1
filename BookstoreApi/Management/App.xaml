@@ -43,7 +43,6 @@
                 <view:OrderView/>
             </DataTemplate>
 
-
             <DataTemplate DataType="{x:Type viewmodel:EditOrderViewModel}">
                 <view:EditOrderView/>
             </DataTemplate>
@@ -54,6 +53,10 @@
 
             <DataTemplate DataType="{x:Type viewmodel:StatisticViewModel}">
                 <view:StatisticView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodel:RevenueViewModel}">
+                <view:RevenueView/>
             </DataTemplate>
             <!--grid styling-->
             <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">

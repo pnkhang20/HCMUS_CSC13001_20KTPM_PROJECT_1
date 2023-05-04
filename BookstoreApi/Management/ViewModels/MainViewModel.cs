@@ -10,12 +10,14 @@ namespace Management.ViewModels
         public RelayCommand CategoryViewCommand { get; set; }
         public RelayCommand OrderViewCommand { get; set; }
         public RelayCommand StatisticViewCommand { get; set; }
+        public RelayCommand RevenueViewCommand { get; set; }
 
         public HomeViewModel HomeVM { get; set; }
         public ProductViewModel ProductVM { get; set; }
         public CategoryViewModel CategoryVM { get; set; }
         public OrderViewModel OrderVM { get; set; }
         public StatisticViewModel StatisticVM { get; set; }
+        public RevenueViewModel RevenueVM { get; set; }
 
         private object _currentView;
         public object CurrentView
@@ -32,6 +34,14 @@ namespace Management.ViewModels
             ProductVM.LoadCategory();
             ProductVM.LoadBooks();
         }
+        public void ReloadRevenueView()
+        {
+            RevenueVM.ReloadChart();            
+        }
+        public void ReloadStatisticView()
+        {
+            StatisticVM.ReloadChart();
+        }
         public MainViewModel()
         {
             HomeVM = new HomeViewModel();
@@ -39,6 +49,7 @@ namespace Management.ViewModels
             CategoryVM = new CategoryViewModel();
             OrderVM = new OrderViewModel();
             StatisticVM = new StatisticViewModel();
+            RevenueVM = new RevenueViewModel();
             CurrentView = HomeVM;
 
             HomeViewCommand = new RelayCommand(obj =>
@@ -63,7 +74,15 @@ namespace Management.ViewModels
 
             StatisticViewCommand = new RelayCommand(obj =>
             {
+                StatisticVM.ReloadChart();
                 CurrentView = StatisticVM;
+                
+            });
+
+            RevenueViewCommand = new RelayCommand(obj =>
+            {
+                RevenueVM.ReloadChart();
+                CurrentView = RevenueVM;
             });
         }
     }

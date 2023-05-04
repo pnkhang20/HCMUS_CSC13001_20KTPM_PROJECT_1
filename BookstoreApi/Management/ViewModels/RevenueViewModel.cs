@@ -2,7 +2,6 @@
 using LiveCharts.Wpf;
 using LiveCharts.Wpf.Charts;
 using Management.Cores;
-using Management.Models;
 using Mangement.Models;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
@@ -20,9 +19,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Management.ViewModels
 {
-    class StatisticViewModel : ObservableObject
+    class RevenueViewModel : ObservableObject
     {
-        private const string totalSoldApi = "https://localhost:7122/api/Orders/sold?";
+        private const string dailyRevenueApi = "https://localhost:7122/api/Orders/revenue/day?";
+        private const string monthlyRevenueApi = "https://localhost:7122/api/Orders/revenue/month?";
+        private const string yearlyRevenueApi = "https://localhost:7122/api/Orders/revenue/year?";
 
         private DateTime _fromDate = DateTime.Today.AddDays(-7);
         public DateTime FromDate
@@ -123,22 +124,22 @@ namespace Management.ViewModels
             set
             {
                 _selectedGroupByOption = value;
-                OnPropertyChanged(); 
+                OnPropertyChanged();
             }
         }
 
         private List<string> _groupByOptions = new List<string> { "Daily", "Monthly", "Yearly" };
-        public List<string> GroupByOptions { get { return _groupByOptions; } set { _groupByOptions = value; OnPropertyChanged(); } } 
+        public List<string> GroupByOptions { get { return _groupByOptions; } set { _groupByOptions = value; OnPropertyChanged(); } }
 
-        private SeriesCollection _statisticValues;
-        public SeriesCollection StatisticValues { get {  return _statisticValues; } set { _statisticValues = value; OnPropertyChanged(); } }
+        private SeriesCollection _revenueValues;
+        public SeriesCollection RevenueValues { get { return _revenueValues; } set { _revenueValues = value; OnPropertyChanged(); } }
 
-        private Func<int, string> _currencyLabelFormatter;
-        public Func<int, string> CurrencyLabelFormatter { get { return _currencyLabelFormatter; } set { _currencyLabelFormatter = value; OnPropertyChanged(); } }
+        private Func<decimal, string> _currencyLabelFormatter;
+        public Func<decimal, string> CurrencyLabelFormatter { get { return _currencyLabelFormatter; } set { _currencyLabelFormatter = value; OnPropertyChanged(); } }
 
         private List<string> _dateLabelFormatter;
-        public List<string> DateLabelFormatter { get { return _dateLabelFormatter; } set {_dateLabelFormatter = value;OnPropertyChanged();} }
-        public int maxBook = 0;
+        public List<string> DateLabelFormatter { get { return _dateLabelFormatter; } set { _dateLabelFormatter = value; OnPropertyChanged(); } }
+        public Double maxRevenue = 0;
 
 
         private ICommand _generateChartCommand;
@@ -150,8 +151,21 @@ namespace Management.ViewModels
                 {
                     _generateChartCommand = new RelayCommand(async (param) =>
                     {
-                        string apiUrl = totalSoldApi;
+                        string apiUrl = string.Empty;
                         string queryString = $"fromDate={FromDate.ToString("yyyy-MM-dd")}&toDate={ToDate.ToString("yyyy-MM-dd")}";
+
+                        switch (SelectedGroupByOption)
+                        {
+                            case "Daily":
+                                apiUrl = dailyRevenueApi;
+                                break;
+                            case "Monthly":
+                                apiUrl = monthlyRevenueApi;
+                                break;
+                            case "Yearly":
+                                apiUrl = yearlyRevenueApi;
+                                break;
+                        }
 
                         string apiUrlWithQuery = $"{apiUrl}{queryString}";
 
@@ -162,61 +176,64 @@ namespace Management.ViewModels
                             if (response.IsSuccessStatusCode)
                             {
                                 string jsonResponse = await response.Content.ReadAsStringAsync();
-                                List<dynamic> bookSoldList = JsonConvert.DeserializeObject<List<dynamic>>(jsonResponse);
+                                List<dynamic> revenueData = JsonConvert.DeserializeObject<List<dynamic>>(jsonResponse);
 
                                 // Update RevenueValues property with the fetched data
-                                StatisticValues = new SeriesCollection();
+                                RevenueValues = new SeriesCollection();
                                 DateLabelFormatter = new List<string>();
                                 switch (SelectedGroupByOption)
                                 {
                                     case "Daily":
-                                        foreach (var bookSold in bookSoldList)
+                                        foreach (var revenue in revenueData)
                                         {
- 
-                                            BookSold bookSoldByDay = JsonConvert.DeserializeObject<BookSold>(bookSold.ToString());
-                                            List<string> labels = new List<string> { bookSoldByDay.BookName };
+
+                                            RevenueByDay revenueByDay = JsonConvert.DeserializeObject<RevenueByDay>(revenue.ToString());
+                                            List<string> labels = new List<string> { revenueByDay.Date.ToString("yy-M-d") };
                                             // Create a new ColumnSeries for each day
-                                            maxBook = 10;
+                                            maxRevenue = 100;
                                             ColumnSeries daySeries = new ColumnSeries
                                             {
-                                                Title = bookSoldByDay.BookName,
-                                                Values = new ChartValues<int> { bookSoldByDay.Sold},                                                
+                                                Title = revenueByDay.Date.ToString("yy-MM-d"),
+                                                Values = new ChartValues<double> { revenueByDay.TotalRevenue },
+                                                LabelPoint = point => $"{point.Y:C}"
                                             };
                                             //DateLabelFormatter.Add(revenueByDay.Date.ToString("yy-M-d"));
-                                            StatisticValues.Add(daySeries);
+                                            RevenueValues.Add(daySeries);
                                         }
                                         break;
                                     case "Monthly":
 
-                                        foreach (var bookSold in bookSoldList)
+                                        foreach (var revenue in revenueData)
                                         {
-                                            BookSold bookSoldByMonth = JsonConvert.DeserializeObject<BookSold>(bookSold.ToString());
-                                            List<string> labels = new List<string> { bookSoldByMonth.BookName };
-                                            maxBook = 30;
+                                            RevenueByMonth revenueByMonth = JsonConvert.DeserializeObject<RevenueByMonth>(revenue.ToString());
+                                            maxRevenue = 500;
                                             // Create a new ColumnSeries for each month
                                             ColumnSeries monthSeries = new ColumnSeries
                                             {
-                                                Title = bookSoldByMonth.BookName,
-                                                Values = new ChartValues<int> { bookSoldByMonth.Sold },                                                
+                                                Title = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(revenueByMonth.Month)} {revenueByMonth.Year}",
+                                                Values = new ChartValues<double> { (double)revenueByMonth.TotalRevenue },
+                                                LabelPoint = point => $"{point.Y:C}"
+
                                             };
-                                            StatisticValues.Add(monthSeries);
+                                            RevenueValues.Add(monthSeries);
                                         }
                                         break;
                                     case "Yearly":
-                                        foreach (var bookSold in bookSoldList)
+                                        foreach (var revenue in revenueData)
                                         {
-                                            BookSold bookSoldByYear = JsonConvert.DeserializeObject<BookSold>(bookSold.ToString());
-                                            maxBook = 50;
+                                            RevenueByYear revenueByYear = JsonConvert.DeserializeObject<RevenueByYear>(revenue.ToString());
+                                            maxRevenue = 1000;
                                             // Create a new ColumnSeries for each year
                                             ColumnSeries yearSeries = new ColumnSeries
                                             {
-                                                Title = bookSoldByYear.BookName,
-                                                Values = new ChartValues<int> { bookSoldByYear.Sold }
+                                                Title = revenueByYear.Year.ToString(),
+                                                Values = new ChartValues<double> { (double)revenueByYear.TotalRevenue },
+                                                LabelPoint = point => $"{point.Y:C}"
                                             };
-                                            StatisticValues.Add(yearSeries);
+                                            RevenueValues.Add(yearSeries);
                                         }
                                         break;
-                                }                                
+                                }
                             }
                         }
 
@@ -230,8 +247,7 @@ namespace Management.ViewModels
         {
             GenerateChartCommand.Execute(null);
         }
-
-        public StatisticViewModel()
+        public RevenueViewModel()
         {
             // Set default selected group by option
             SelectedGroupByOption = "Daily";
